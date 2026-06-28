@@ -1,14 +1,396 @@
-model User {
-  id                String   @id @default(uuid())
-  email             String   @unique
-  name              String?
-  saved_property_ids String[]
-  // Add other required fields as needed
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
 }
+
 datasource db {
   provider = "postgresql"
 }
-generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+
+enum UserRole {
+  admin  @map("ADMIN")
+  agent  @map("AGENT")
+  owner  @map("OWNER")
+  client @map("CLIENT")
+
+  @@map("user_role")
+}
+
+model User {
+  id                            Int       @id @default(autoincrement())
+  email                         String    @unique
+  emailVerified                 DateTime? @map("email_verified")
+  email_verification_token_hash String?   @unique
+  email_verification_expires    DateTime?
+  password_reset_token_hash     String?   @unique
+  password_reset_expires        DateTime?
+  password                      String?
+  full_name                     String
+  image                         String?
+  role                          UserRole  @default(client)
+  is_active                     Boolean   @default(true)
+  is_verified                   Boolean   @default(false)
+  map_access_paid               Boolean   @default(false) @map("map_access_paid")
+  nationality                   String?
+  national_id                   String?
+  sector_id                     Int?
+  created_at                    DateTime  @default(now())
+  updated_at                    DateTime  @updatedAt
+
+  sector              Sector?         @relation(fields: [sector_id], references: [id])
+  owned_properties    Property[]      @relation("OwnerProperties")
+  assigned_properties Property[]      @relation("AgentProperties")
+  uploaded_media      PropertyMedia[]
+  payments            Payment[]
+  visits              VisitRequest[]
+  refunds             Refund[]
+  payouts             Payout[]
+  created_invites     AgentInvite[]
+  verifications       Verification[]  @relation("AgentVerifications")
+
+  accounts Account[]
+  sessions Session[]
+
+  @@map("users")
+}
+
+model Account {
+  id                Int     @id @default(autoincrement())
+  userId            Int     @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  sessionToken String   @unique @map("session_token")
+  userId       Int      @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Sector {
+  id         Int      @id @default(autoincrement())
+  district   String
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  agents     User[]
+  properties Property[]
+  invites    AgentInvite[]
+
+  @@unique([district, name], name: "uq_sector_district_name")
+  @@map("sectors")
+}
+
+enum PropertyPurpose {
+  rent @map("RENT")
+  sale @map("SALE")
+
+  @@map("property_purpose")
+}
+
+enum PropertyStatus {
+  pending_verification @map("PENDING_VERIFICATION")
+  agent_assigned       @map("AGENT_ASSIGNED")
+  verified             @map("VERIFIED")
+  published            @map("PUBLISHED")
+  rejected             @map("REJECTED")
+  reserved             @map("RESERVED")
+  paid                 @map("PAID")
+  completed            @map("COMPLETED")
+
+  @@map("property_status")
+}
+
+model Property {
+  id               Int             @id @default(autoincrement())
+  title            String
+  description      String          @db.Text
+  purpose          PropertyPurpose
+  district         String
+  sector_id        Int
+  sector           String
+  city             String          @default("Kigali")
+  cell             String?
+  village          String?
+  street           String?
+  address          String
+  property_type    String
+  bedrooms         Int
+  bathrooms        Int
+  kitchens         Int             @default(1)
+  living_rooms     Int             @default(1)
+  size_sq_m        Decimal?        @db.Decimal(10, 2)
+  parking_capacity Int             @default(0)
+
+  // Security
+  has_fence          Boolean @default(false)
+  has_cctv           Boolean @default(false)
+  has_security_guard Boolean @default(false)
+  is_gated_community Boolean @default(false)
+
+  // Internet
+  has_fiber      Boolean @default(false)
+  has_canalbox   Boolean @default(false)
+  other_internet String?
+
+  // Owner Trust Info
+  owner_full_name   String?
+  owner_phone       String?
+  owner_whatsapp    String?
+  owner_email       String?
+  owner_alt_phone   String?
+  owner_id_url      String?
+  is_owner_verified Boolean @default(false)
+
+  owner_price         Decimal        @db.Decimal(12, 2)
+  commission_rate     Decimal        @db.Decimal(5, 4)
+  commission_amount   Decimal        @db.Decimal(12, 2)
+  final_display_price Decimal        @db.Decimal(12, 2)
+  contact_info        String         @db.Text
+  location            String?        @db.VarChar(500)
+  latitude            Decimal?       @db.Decimal(10, 8)
+  longitude           Decimal?       @db.Decimal(11, 8)
+  status              PropertyStatus @default(pending_verification)
+  owner_id            Int
+  assigned_agent_id   Int?
+  rejection_reason    String?        @db.Text
+  created_at          DateTime       @default(now())
+  updated_at          DateTime       @updatedAt
+
+  owner          User            @relation("OwnerProperties", fields: [owner_id], references: [id])
+  assigned_agent User?           @relation("AgentProperties", fields: [assigned_agent_id], references: [id])
+  sector_ref     Sector          @relation(fields: [sector_id], references: [id])
+  media          PropertyMedia[]
+  verification   Verification?
+  payments       Payment[]
+  visits         VisitRequest[]
+  refunds        Refund[]
+  payouts        Payout[]
+
+  @@map("properties")
+}
+
+enum PropertyMediaType {
+  image @map("IMAGE")
+  video @map("VIDEO")
+
+  @@map("property_media_type")
+}
+
+model PropertyMedia {
+  id               Int               @id @default(autoincrement())
+  property_id      Int
+  uploaded_by_id   Int
+  media_type       PropertyMediaType
+  url              String
+  label            String?
+  storage_provider String            @default("local")
+  public_id        String?
+  created_at       DateTime          @default(now())
+  updated_at       DateTime          @updatedAt
+
+  property    Property @relation(fields: [property_id], references: [id], onDelete: Cascade)
+  uploaded_by User     @relation(fields: [uploaded_by_id], references: [id])
+
+  @@map("property_media")
+}
+
+enum VerificationStatus {
+  pending  @map("PENDING")
+  approved @map("APPROVED")
+  rejected @map("REJECTED")
+
+  @@map("verification_status")
+}
+
+model Verification {
+  id               Int                @id @default(autoincrement())
+  property_id      Int                @unique
+  agent_id         Int
+  notes            String?            @db.Text
+  status           VerificationStatus @default(pending)
+  rejection_reason String?            @db.Text
+  created_at       DateTime           @default(now())
+  updated_at       DateTime           @updatedAt
+
+  property Property @relation(fields: [property_id], references: [id], onDelete: Cascade)
+  agent    User     @relation("AgentVerifications", fields: [agent_id], references: [id])
+
+  @@map("verifications")
+}
+
+enum PaymentStatus {
+  pending  @map("PENDING")
+  paid     @map("PAID")
+  failed   @map("FAILED")
+  refunded @map("REFUNDED")
+
+  @@map("payment_status")
+}
+
+model Payment {
+  id                 Int           @id @default(autoincrement())
+  property_id        Int
+  client_id          Int
+  amount             Decimal       @db.Decimal(12, 2)
+  status             PaymentStatus @default(pending)
+  provider           String        @default("simulated")
+  provider_reference String?
+  created_at         DateTime      @default(now())
+  updated_at         DateTime      @updatedAt
+
+  property Property      @relation(fields: [property_id], references: [id])
+  client   User          @relation(fields: [client_id], references: [id])
+  visit    VisitRequest?
+  refund   Refund?
+  payout   Payout?
+
+  @@map("payments")
+}
+
+enum PayoutStatus {
+  pending   @map("PENDING")
+  completed @map("COMPLETED")
+  failed    @map("FAILED")
+
+  @@map("payout_status")
+}
+
+model Payout {
+  id                 Int          @id @default(autoincrement())
+  property_id        Int
+  owner_id           Int
+  payment_id         Int          @unique
+  amount             Decimal      @db.Decimal(12, 2)
+  status             PayoutStatus @default(pending)
+  provider_reference String?
+  created_at         DateTime     @default(now())
+  updated_at         DateTime     @updatedAt
+
+  property Property @relation(fields: [property_id], references: [id])
+  owner    User     @relation(fields: [owner_id], references: [id])
+  payment  Payment  @relation(fields: [payment_id], references: [id])
+
+  @@map("payouts")
+}
+
+enum RefundStatus {
+  requested @map("REQUESTED")
+  approved  @map("APPROVED")
+  rejected  @map("REJECTED")
+  completed @map("COMPLETED")
+
+  @@map("refund_status")
+}
+
+model Refund {
+  id          Int          @id @default(autoincrement())
+  property_id Int
+  payment_id  Int          @unique
+  client_id   Int
+  amount      Decimal      @db.Decimal(12, 2)
+  status      RefundStatus @default(requested)
+  reason      String?      @db.Text
+  admin_note  String?      @db.Text
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+
+  property Property @relation(fields: [property_id], references: [id])
+  payment  Payment  @relation(fields: [payment_id], references: [id])
+  client   User     @relation(fields: [client_id], references: [id])
+
+  @@map("refunds")
+}
+
+enum InviteStatus {
+  pending @map("PENDING")
+  used    @map("USED")
+  expired @map("EXPIRED")
+
+  @@map("invite_status")
+}
+
+model AgentInvite {
+  id            Int          @id @default(autoincrement())
+  email         String
+  name          String?
+  token         String       @unique
+  status        InviteStatus @default(pending)
+  sector_id     Int
+  created_by_id Int
+  expires_at    DateTime
+  used_at       DateTime?
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
+
+  sector     Sector @relation(fields: [sector_id], references: [id])
+  created_by User   @relation(fields: [created_by_id], references: [id])
+
+  @@map("agent_invites")
+}
+
+model CommissionSetting {
+  id         Int      @id @default(autoincrement())
+  rate       Decimal  @db.Decimal(5, 4)
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("commission_settings")
+}
+
+enum VisitStatus {
+  pending_payment @map("PENDING_PAYMENT")
+  scheduled       @map("SCHEDULED")
+  visited         @map("VISITED")
+  accepted        @map("ACCEPTED")
+  cancelled       @map("CANCELLED")
+
+  @@map("visit_status")
+}
+
+model VisitRequest {
+  id          Int         @id @default(autoincrement())
+  property_id Int
+  client_id   Int
+  payment_id  Int?        @unique
+  status      VisitStatus @default(pending_payment)
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+
+  property Property @relation(fields: [property_id], references: [id])
+  client   User     @relation(fields: [client_id], references: [id])
+  payment  Payment? @relation(fields: [payment_id], references: [id])
+
+  @@map("visit_requests")
 }

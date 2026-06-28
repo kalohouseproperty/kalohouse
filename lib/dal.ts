@@ -408,6 +408,7 @@ export async function getPropertyDetails(propertyId: number, userId?: number) {
     }),
     userId ? prisma.payment.findFirst({
       where: { property_id: propertyId, client_id: userId, status: "paid" },
+      include: { refund: true },
     }) : Promise.resolve(null),
     userId ? prisma.payment.findFirst({
       where: {
@@ -433,6 +434,8 @@ export async function getPropertyDetails(propertyId: number, userId?: number) {
     hasPaid: Boolean(payment),
     hasUnlockedContact: Boolean(commissionPayment) || property.is_owner_verified,
     isSaved: userSaved ? (userSaved as any).saved_property_ids?.includes(String(propertyId)) : false,
+    paymentId: payment ? payment.id : null,
+    hasRefund: payment?.refund ? true : false,
   };
 }
 

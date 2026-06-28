@@ -9,12 +9,14 @@ const prismaClientSingleton = () => {
     console.warn("DATABASE_URL is not set. Prisma might fail if executed.");
   }
 
+  const isNeon = connectionString?.includes("neon.tech");
+  
   const pool = new Pool({ 
-    connectionString: connectionString?.replace(/\?.*/, ""),
+    connectionString: connectionString,
     max: 5,
     idleTimeoutMillis: 30000,
-    // Using the higher value from remote while ensuring our fix is integrated
     connectionTimeoutMillis: 30000,
+    ssl: isNeon ? { rejectUnauthorized: false } : undefined,
   });
   const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });

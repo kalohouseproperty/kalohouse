@@ -107,6 +107,93 @@ export async function sendAgentInviteEmail(email: string, name: string, token: s
   });
 }
 
+export async function sendRefundRequestEmail({
+  userEmail,
+  userName,
+  propertyTitle,
+  propertyId,
+  amount,
+  reason,
+}: {
+  userEmail: string;
+  userName: string;
+  propertyTitle: string;
+  propertyId: number;
+  amount: number;
+  reason: string;
+}) {
+  const appUrl = getAppUrl();
+  const adminEmail = process.env.RESEND_FROM_EMAIL || "support@kalohouse.rw";
+
+  await sendEmail({
+    to: adminEmail,
+    subject: `Refund Request — ${propertyTitle}`,
+    html: `
+      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#111827;max-width:560px;margin:0 auto">
+        <div style="background:#111827;padding:32px;border-radius:12px 12px 0 0;text-align:center">
+          <h1 style="color:#C9A646;margin:0;font-size:24px">Kalohouse</h1>
+        </div>
+        <div style="padding:32px;background:#ffffff;border-radius:0 0 12px 12px">
+          <h2 style="color:#111827;margin-top:0">New Refund Request</h2>
+          <p>A client has requested a refund for a property purchase.</p>
+          <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:20px 0">
+            <p style="margin:4px 0"><strong>Client:</strong> ${userName} (${userEmail})</p>
+            <p style="margin:4px 0"><strong>Property:</strong> ${propertyTitle}</p>
+            <p style="margin:4px 0"><strong>Property ID:</strong> #${propertyId}</p>
+            <p style="margin:4px 0"><strong>Amount:</strong> RWF ${amount.toLocaleString()}</p>
+            <p style="margin:4px 0"><strong>Reason:</strong> ${reason}</p>
+          </div>
+          <p style="text-align:center;margin:32px 0">
+            <a href="${appUrl}/dashboard/admin" style="display:inline-block;background:#C9A646;color:#111827;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:16px">Review Refund</a>
+          </p>
+          <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0" />
+          <p style="font-size:12px;color:#6b7280">Kalohouse — Kigali, Rwanda</p>
+        </div>
+      </div>
+    `,
+  });
+}
+
+export async function sendRefundConfirmationEmail({
+  userEmail,
+  userName,
+  propertyTitle,
+  status,
+}: {
+  userEmail: string;
+  userName: string;
+  propertyTitle: string;
+  status: "approved" | "rejected";
+}) {
+  const appUrl = getAppUrl();
+
+  await sendEmail({
+    to: userEmail,
+    subject: `Refund ${status === "approved" ? "Approved" : "Update"} — ${propertyTitle}`,
+    html: `
+      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#111827;max-width:560px;margin:0 auto">
+        <div style="background:#111827;padding:32px;border-radius:12px 12px 0 0;text-align:center">
+          <h1 style="color:#C9A646;margin:0;font-size:24px">Kalohouse</h1>
+        </div>
+        <div style="padding:32px;background:#ffffff;border-radius:0 0 12px 12px">
+          <h2 style="color:#111827;margin-top:0">Refund ${status === "approved" ? "Approved" : "Update"}</h2>
+          <p>Hello ${userName},</p>
+          <p>Your refund request for <strong>${propertyTitle}</strong> has been <strong style="color:${status === "approved" ? "#22c55e" : "#ef4444"}">${status}</strong>.</p>
+          ${status === "approved"
+            ? "<p>The refund will be processed to your original payment method within 5-10 business days.</p>"
+            : "<p>If you believe this decision was made in error, please contact our support team.</p>"
+          }
+          <p style="text-align:center;margin:32px 0">
+            <a href="${appUrl}/dashboard/client" style="display:inline-block;background:#C9A646;color:#111827;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:16px">View Dashboard</a>
+          </p>
+          <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0" />
+          <p style="font-size:12px;color:#6b7280">Kalohouse — Kigali, Rwanda</p>
+        </div>
+      </div>
+    `,
+  });
+}
+
 export async function sendPasswordResetEmail(email: string, token: string) {
   const url = `${getAppUrl()}/auth/reset?token=${encodeURIComponent(token)}`;
 

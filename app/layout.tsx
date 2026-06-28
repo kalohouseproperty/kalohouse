@@ -3,6 +3,7 @@ import { AuthSessionProvider } from "@/components/providers/AuthSessionProvider"
 import { Poppins } from "next/font/google";
 import { ClientLayout } from "@/components/layout/ClientLayout";
 import { parseLanguage } from "@/lib/i18n-server";
+import type { Metadata } from "next";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
@@ -14,9 +15,76 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-export const metadata = {
-  title: "Kalohouse - Trust-First Property Marketplace",
-  description: "Verified properties in Kigali, Rwanda.",
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://kalohouse.rw";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: "Kalohouse — Rwanda's Trust-First Property Marketplace",
+    template: "%s | Kalohouse",
+  },
+  description:
+    "Find verified properties for sale and rent in Kigali, Rwanda. Secure escrow payments, agent-verified listings, and buyer protection on Kalohouse.",
+  keywords: [
+    "real estate Rwanda",
+    "property for sale Kigali",
+    "house for rent Kigali",
+    "verified properties Rwanda",
+    "Rwanda real estate marketplace",
+    "property marketplace Kigali",
+    "escrow payments Rwanda",
+    "Kalohouse",
+    "Nyumbani marketplace",
+    "apartment Kigali",
+    "villa Rwanda",
+    "land for sale Rwanda",
+  ],
+  authors: [{ name: "Kalohouse" }],
+  creator: "Kalohouse",
+  publisher: "Kalohouse",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: baseUrl,
+    siteName: "Kalohouse",
+    title: "Kalohouse — Rwanda's Trust-First Property Marketplace",
+    description:
+      "Find verified properties for sale and rent in Kigali, Rwanda. Secure escrow payments, agent-verified listings, and buyer protection.",
+    images: [
+      {
+        url: "/kalohouse.png",
+        width: 1200,
+        height: 630,
+        alt: "Kalohouse — Rwanda's Property Marketplace",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kalohouse — Rwanda's Trust-First Property Marketplace",
+    description:
+      "Find verified properties for sale and rent in Kigali, Rwanda. Secure escrow payments and buyer protection.",
+    images: ["/kalohouse.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: baseUrl,
+  },
+  icons: {
+    icon: "/kalohouse.png",
+    shortcut: "/kalohouse.png",
+    apple: "/kalohouse.png",
+  },
 };
 
 export default async function RootLayout({

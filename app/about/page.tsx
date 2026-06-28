@@ -1,8 +1,20 @@
+import type { Metadata } from "next";
 import { ShieldCheck, Users, Mail, Phone, MapPin, Building2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LandingNavbar } from "@/components/layout/LandingNavbar";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "Learn about Kalohouse — Rwanda's most trusted real estate marketplace. Our mission, team, and commitment to transparency.",
+  openGraph: {
+    title: "About Kalohouse | Rwanda's Property Marketplace",
+    description:
+      "Learn about Kalohouse — Rwanda's most trusted real estate marketplace.",
+  },
+};
 
 export default function AboutPage() {
   return (

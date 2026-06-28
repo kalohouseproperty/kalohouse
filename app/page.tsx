@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import type { Metadata } from "next";
 import { unstable_noStore as noStore } from "next/cache";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
@@ -7,6 +8,15 @@ import { getPublishedProperties } from "@/lib/dal";
 import { getTranslations, parseLanguage } from "@/lib/i18n-server";
 import { LandingV2Content } from "@/components/home/LandingV2Content";
 import type { User } from "@/types/models";
+
+export const metadata: Metadata = {
+  title: "Kalohouse — Rwanda's Trust-First Property Marketplace",
+  description:
+    "Find verified properties for sale and rent in Kigali, Rwanda. Secure escrow payments, agent-verified listings, and buyer protection.",
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_APP_URL || "https://kalohouse.rw",
+  },
+};
 
 type LandingPageProps = {
   searchParams?: Promise<{ lang?: string | string[] }>;

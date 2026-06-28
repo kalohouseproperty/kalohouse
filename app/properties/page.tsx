@@ -1,11 +1,23 @@
 export const dynamic = "force-dynamic";
 
+import type { Metadata } from "next";
 import { unstable_noStore as noStore } from "next/cache";
 import { getPublishedProperties } from "@/lib/dal";
 import { PropertiesContent } from "./PropertiesContent";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import type { User, UserRole } from "@/types/models";
+
+export const metadata: Metadata = {
+  title: "Properties for Sale & Rent in Kigali, Rwanda",
+  description:
+    "Browse verified properties for sale and rent in Kigali and across Rwanda. Find apartments, houses, villas, and land with secure escrow payments.",
+  openGraph: {
+    title: "Properties for Sale & Rent | Kalohouse",
+    description:
+      "Browse verified properties for sale and rent in Kigali and across Rwanda.",
+  },
+};
 
 export default async function PropertiesPage() {
   noStore();

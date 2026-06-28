@@ -52,59 +52,42 @@ export function Footer() {
         <div>
           <h4 className="font-bold text-gold uppercase tracking-[0.2em] text-[11px] mb-8">Legal</h4>
           <ul className="space-y-4 text-sm text-text-secondary font-medium">
-            <li><Link href="#" className="hover:text-gold transition-all flex items-center gap-2 group"><div className="w-0 h-[1px] bg-gold transition-all group-hover:w-3" />Terms of Service</Link></li>
-            <li><Link href="#" className="hover:text-gold transition-all flex items-center gap-2 group"><div className="w-0 h-[1px] bg-gold transition-all group-hover:w-3" />Privacy Policy</Link></li>
-            <li><Link href="#" className="hover:text-gold transition-all flex items-center gap-2 group"><div className="w-0 h-[1px] bg-gold transition-all group-hover:w-3" />Cookie Settings</Link></li>
-            <li><Link href="#" className="hover:text-gold transition-all flex items-center gap-2 group"><div className="w-0 h-[1px] bg-gold transition-all group-hover:w-3" />Anti-Fraud</Link></li>
+            <li><Link href="/terms-of-service" className="hover:text-gold transition-all flex items-center gap-2 group"><div className="w-0 h-[1px] bg-gold transition-all group-hover:w-3" />Terms of Service</Link></li>
+            <li><Link href="/privacy-policy" className="hover:text-gold transition-all flex items-center gap-2 group"><div className="w-0 h-[1px] bg-gold transition-all group-hover:w-3" />Privacy Policy</Link></li>
+            <li><Link href="/cookie-settings" className="hover:text-gold transition-all flex items-center gap-2 group"><div className="w-0 h-[1px] bg-gold transition-all group-hover:w-3" />Cookie Settings</Link></li>
+            <li><Link href="/anti-fraud" className="hover:text-gold transition-all flex items-center gap-2 group"><div className="w-0 h-[1px] bg-gold transition-all group-hover:w-3" />Anti-Fraud</Link></li>
           </ul>
         </div>
       </div>
       
       <div className="mx-auto max-w-7xl mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-widest font-bold text-text-secondary/40">
         <p>© 2026 NYUMBANI MARKETPLACE. ALL RIGHTS RESERVED.</p>
-        <div className="flex gap-8 items-center">
+        <div className="flex gap-6 items-center flex-wrap justify-center">
             <span>KIGALI, RWANDA</span>
-            <span>SECURED BY TRUST OPS</span>
+            <span>2MORETECHS PROTECTED</span>
+            <span className="w-px h-3 bg-white/10" />
+            <a
+              href="https://2moretechs.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group/dev inline-flex items-center gap-1.5 hover:text-gold transition-colors duration-300"
+            >
+              <span>Crafted by</span>
+              <div className="relative h-4 w-auto rounded overflow-hidden">
+                <Image src="/2moretechs.png" alt="2MoreTechs" width={40} height={16} className="object-contain h-4 w-auto" />
+              </div>
+              <span className="text-gold">2MoreTechs</span>
+            </a>
+            <a
+              href="mailto:admin@2moretechs.com"
+              className="group/email inline-flex items-center gap-1 hover:text-gold transition-colors duration-300"
+            >
+              <svg className="size-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span>admin@2moretechs.com</span>
+            </a>
         </div>
-      </div>
-
-      <div className="mx-auto max-w-7xl mt-8 flex flex-col items-center gap-4 animate-fade-in-up">
-        <a
-          href="https://2moretechs.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group relative flex items-center gap-4 px-8 py-4 rounded-2xl border border-gold/30 bg-gradient-to-r from-gold/5 via-gold/10 to-gold/5 hover:from-gold/10 hover:via-gold/20 hover:to-gold/10 transition-all duration-500 shadow-[0_0_20px_rgba(201,166,70,0.08)] hover:shadow-[0_0_40px_rgba(201,166,70,0.2)] animate-glow-pulse"
-        >
-          <span className="text-xs uppercase tracking-[0.2em] font-bold text-text-secondary/70 group-hover:text-white transition-colors duration-300">
-            Crafted by
-          </span>
-          <div className="relative h-7 w-auto rounded-lg overflow-hidden animate-breathe">
-            <Image
-              src="/2moretechs.png"
-              alt="2MoreTechs Logo"
-              width={100}
-              height={28}
-              className="object-contain h-7 w-auto"
-            />
-          </div>
-          <span className="text-xs uppercase tracking-[0.2em] font-bold text-gold group-hover:text-gold-light transition-colors duration-300 drop-shadow-[0_0_8px_rgba(201,166,70,0.4)]">
-            2MoreTechs
-          </span>
-          <svg
-            className="w-4 h-4 text-gold/40 group-hover:text-gold group-hover:translate-x-1 transition-all duration-300"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
-        </a>
-        <a
-          href="mailto:hello@2moretechs.com"
-          className="text-[10px] uppercase tracking-[0.15em] font-semibold text-text-secondary/40 hover:text-gold transition-colors duration-300"
-        >
-          Contact 2MoreTechs
-        </a>
       </div>
     </footer>
   );

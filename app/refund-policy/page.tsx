@@ -192,7 +192,7 @@ export default function RefundPolicyPage() {
                   </div>
                   <div>
                     <p className="font-bold text-sm">Via Email</p>
-                    <p className="text-xs text-text-secondary">Send a request to support@kalohouse.rw with your payment details</p>
+                    <p className="text-xs text-text-secondary">Send a request to dushimimanaelie@kalohouse.com with your payment details</p>
                   </div>
                 </div>
               </div>

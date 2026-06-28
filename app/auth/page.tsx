@@ -8,6 +8,7 @@ import { ShieldCheck, Mail, Lock, User as UserIcon } from "lucide-react";
 
 import "./auth.css";
 import { useKalohouse } from "@/components/providers/KalohouseProvider";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -21,7 +22,7 @@ function AuthPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
-  const { toast } = useKalohouse();
+  const { toast, t } = useKalohouse();
   const redirectTo = searchParams.get("next") || "";
   const requestedMode = searchParams.get("mode");
 
@@ -140,6 +141,10 @@ function AuthPageContent() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="fixed right-4 top-4 z-20">
+        <LanguageSwitcher />
+      </div>
+
       <div className="auth-wrapper relative overflow-hidden flex flex-col items-center">
         <div className="flex justify-center mb-8">
           <div className="relative size-20 overflow-hidden rounded-full border border-gold/30 shadow-[0_0_20px_rgba(201,166,70,0.3)]">
@@ -149,7 +154,7 @@ function AuthPageContent() {
 
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Kalohouse</h1>
-          <p className="text-text-secondary text-sm">Rwanda&apos;s trust-first property marketplace.</p>
+          <p className="text-text-secondary text-sm">{t("heroSubtitle")}</p>
         </div>
 
         <div className="w-full flex flex-col gap-4">
@@ -159,13 +164,13 @@ function AuthPageContent() {
               onClick={() => setAuthMode("login")}
               className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${authMode === "login" || authMode === "forgot" ? "bg-gold text-navy-dark" : "text-text-secondary hover:text-white"}`}
             >
-              LOGIN
+              {t("login")}
             </button>
             <button 
               onClick={() => setAuthMode("signup")}
               className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${authMode === "signup" ? "bg-gold text-navy-dark" : "text-text-secondary hover:text-white"}`}
             >
-              SIGN UP
+              {t("signup")}
             </button>
           </div>
 
@@ -173,7 +178,7 @@ function AuthPageContent() {
             {authMode === "signup" && (
               <>
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest font-bold text-gold/80 ml-1">Full Name</label>
+                  <label className="text-[10px] uppercase tracking-widest font-bold text-gold/80 ml-1">{t("name")}</label>
                   <div className="relative">
                     <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-text-secondary/50" />
                     <Input 
@@ -234,7 +239,7 @@ function AuthPageContent() {
             )}
 
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest font-bold text-gold/80 ml-1">Email Address</label>
+              <label className="text-[10px] uppercase tracking-widest font-bold text-gold/80 ml-1">{t("email")}</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-text-secondary/50" />
                 <Input 
@@ -250,7 +255,7 @@ function AuthPageContent() {
 
             {authMode !== "forgot" && (
             <div className="space-y-2">
-              <label className="text-[10px] uppercase tracking-widest font-bold text-gold/80 ml-1">Password</label>
+              <label className="text-[10px] uppercase tracking-widest font-bold text-gold/80 ml-1">{t("password")}</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-text-secondary/50" />
                 <Input 
@@ -280,7 +285,7 @@ function AuthPageContent() {
               disabled={isLoading}
               className="w-full h-12 bg-gold text-navy-dark hover:bg-gold-light font-bold rounded-xl transition-all shadow-lg shadow-gold/10"
             >
-              {isLoading ? "Processing..." : authMode === "login" ? "Sign In" : authMode === "forgot" ? "Send Reset Link" : "Create Account"}
+              {isLoading ? "Processing..." : authMode === "login" ? t("signin") : authMode === "forgot" ? "Send Reset Link" : t("createAccount")}
             </Button>
 
             {authMode === "forgot" && (
@@ -290,7 +295,7 @@ function AuthPageContent() {
                 onClick={() => setAuthMode("login")}
                 className="w-full"
               >
-                Back to login
+              {t("backToLogin")}
               </Button>
             )}
           </form>
@@ -318,9 +323,9 @@ function AuthPageContent() {
             Continue with Google
           </Button>
 
-          <p className="text-[11px] text-center text-text-secondary/60 leading-relaxed px-4 mt-2">
-            By continuing, you agree to Kalohouse&apos;s <a href="#" className="underline hover:text-gold transition-colors">Terms of Service</a> and <a href="#" className="underline hover:text-gold transition-colors">Privacy Policy</a>.
-          </p>
+            <p className="text-[11px] text-center text-text-secondary/60 leading-relaxed px-4 mt-2">
+              By continuing, you agree to Kalohouse&apos;s <a href="#" className="underline hover:text-gold transition-colors">{t("termsOfService")}</a> and <a href="#" className="underline hover:text-gold transition-colors">{t("privacyPolicy")}</a>.
+            </p>
         </div>
 
         <div className="mt-8 flex gap-2 items-center justify-center text-[10px] uppercase tracking-widest text-gold/30 font-bold border-t border-white/5 pt-6 w-full">

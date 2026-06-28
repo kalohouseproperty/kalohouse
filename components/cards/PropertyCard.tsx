@@ -25,7 +25,7 @@ export function PropertyCard({
 
   const imageCount = property.media?.images?.length ?? 0;
   const [cardImageIndex, setCardImageIndex] = useState(0);
-  const { toggleSaveProperty, saved_property_ids } = useKalohouse();
+  const { toggleSaveProperty, saved_property_ids, t } = useKalohouse();
   const isSaved = saved_property_ids.includes(property.id);
 
   const prevImage = (e: React.MouseEvent) => {
@@ -127,12 +127,12 @@ export function PropertyCard({
                   : "bg-blue-600/90 text-white"
               )}
             >
-              {property.purpose === "Rent" ? "Rent" : "Sale"}
+              {property.purpose === "Rent" ? t("rent") : t("sale")}
             </span>
             {property.isOwnerVerified && (
               <span className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 px-3 py-1.5 text-xs font-bold text-white shadow-lg shadow-emerald-500/25">
                 <CheckCircle2 className="size-3.5" />
-                Verified
+                {t("verified")}
               </span>
             )}
           </div>
@@ -186,7 +186,7 @@ export function PropertyCard({
           {!isUserVerified && property.commissionAmount > 0 && (
             <div className="mt-2">
               <span className="rounded-md bg-amber-500/10 px-2.5 py-1 text-[11px] font-medium text-amber-400/80">
-                +{formatMoney(property.commissionAmount)} commission
+                +{formatMoney(property.commissionAmount)} {t("commission")}
               </span>
             </div>
           )}
@@ -211,7 +211,7 @@ export function PropertyCard({
         )}
       </div>
       <div className="flex items-center gap-1.5 text-sm font-semibold text-gold/60 group-hover:text-gold transition-colors">
-        Details
+        {t("details")}
         <ChevronRight className="size-4" />
       </div>
     </div>

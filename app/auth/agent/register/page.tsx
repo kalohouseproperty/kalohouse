@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { registerAgentWithInvite, getInviteByToken } from "@/app/actions/auth";
 import { Building2, ShieldCheck, Lock, MapPin } from "lucide-react";
 import Image from "next/image";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 
 function RegistrationForm() {
   const router = useRouter();
@@ -56,7 +57,7 @@ function RegistrationForm() {
       } else {
         router.push("/auth?message=registration_success");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
     } finally {
       setLoading(false);
@@ -65,6 +66,10 @@ function RegistrationForm() {
 
   return (
     <div className="min-h-screen bg-navy-dark flex flex-col items-center justify-center p-4">
+      <div className="fixed right-4 top-4 z-20">
+        <LanguageSwitcher />
+      </div>
+
       <div className="mb-8 text-center">
         <Image src="/kalohouse.png" alt="Kalohouse" width={180} height={60} className="mx-auto" />
         <p className="text-gold font-serif mt-4 text-xl tracking-tight">Agent Onboarding</p>

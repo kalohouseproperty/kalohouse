@@ -8,6 +8,7 @@ import { PropertyGrid } from "@/components/ui/property-grid";
 import { LandingNavbar } from "@/components/layout/LandingNavbar";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
+import { useKalohouse } from "@/components/providers/KalohouseProvider";
 import { rwandaLocation } from "@devrw/rwanda-location";
 import type { Property, User } from "@/types/models";
 import { cn } from "@/lib/utils";
@@ -24,6 +25,7 @@ const propertyTypes = [
 ];
 
 export function PropertiesContent({ properties, currentUser }: PropertiesContentProps) {
+  const { t } = useKalohouse();
   const [storyIndex, setStoryIndex] = useState<number | null>(null);
   const [filters, setFilters] = useState({
     query: "",
@@ -96,22 +98,19 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
               <div>
                 <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-gold/20 bg-gold/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-gold-light">
                   <Building2 className="size-3.5" />
-                  Verified Marketplace
+                  {t("verified")}
                 </p>
                 <h1 className="font-serif text-4xl text-white sm:text-5xl lg:text-6xl tracking-tight">
-                  Browse verified <br className="hidden sm:block" />
-                  <span className="bg-gradient-to-r from-gold-light via-gold to-amber-300 bg-clip-text text-transparent">
-                    Kigali homes
-                  </span>
+                  {t("browseHomes")}
                 </h1>
                 <p className="mt-4 max-w-xl text-sm leading-relaxed text-text-secondary/70">
-                  Every home listed here has been physically verified by our authorized sector agents to ensure 100% accuracy and trust.
+                  {t("heroSubtitle")}
                 </p>
               </div>
               <div className="glass-card shrink-0 rounded-xl border border-gold/20 bg-gold/5 px-5 py-3 sm:text-right">
                 <p className="text-3xl font-bold text-gold-light tracking-tighter">{filteredProperties.length}</p>
                 <p className="text-xs uppercase tracking-widest text-text-secondary font-semibold mt-0.5">
-                  {filteredProperties.length === 1 ? "Listing" : "Listings"}
+                  {filteredProperties.length === 1 ? t("properties") : t("properties")}
                 </p>
               </div>
             </div>
@@ -124,7 +123,7 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-text-secondary/40" />
                     <input
                       type="text"
-                      placeholder="Search by title, area, or description..."
+                      placeholder={t("searchPlaceholder")}
                       value={filters.query}
                       onChange={(e) => updateFilter("query", e.target.value)}
                       className="h-12 w-full rounded-xl border border-white/[0.06] bg-white/[0.04] pl-11 pr-4 text-sm text-white/80 placeholder:text-text-secondary/30 outline-none transition-all duration-200 focus:border-gold/30 focus:bg-white/[0.06]"
@@ -136,9 +135,9 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
                       onChange={(e) => updateFilter("purpose", e.target.value)}
                       className="h-12 rounded-xl border-white/[0.06] bg-white/[0.04] hover:bg-white/[0.08] text-sm"
                     >
-                      <option value="">Rent or Buy</option>
-                      <option value="Rent">For Rent</option>
-                      <option value="Sale">For Sale</option>
+                    <option value="">{t("rentOrBuy")}</option>
+                    <option value="Rent">{t("forRent")}</option>
+                    <option value="Sale">{t("forSale")}</option>
                     </Select>
                     <Button
                       variant="secondary"
@@ -162,7 +161,7 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
                         onChange={(e) => updateFilter("district", e.target.value)}
                         className="h-11 rounded-xl border-white/[0.06] bg-white/[0.04] text-sm"
                       >
-                        <option value="">All Districts</option>
+                        <option value="">{t("allRwanda")}</option>
                         {districtOptions.map((opt) => (
                           <option key={opt.value} value={opt.value} disabled={opt.disabled}>
                             {opt.label}
@@ -174,21 +173,21 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
                         onChange={(e) => updateFilter("propertyType", e.target.value)}
                         className="h-11 rounded-xl border-white/[0.06] bg-white/[0.04] text-sm"
                       >
-                        <option value="">All Types</option>
+                        <option value="">{t("allTypes")}</option>
                         {propertyTypes.map((t) => (
                           <option key={t} value={t}>{t}</option>
                         ))}
                       </Select>
                       <input
                         type="number"
-                        placeholder="Min Price (RWF)"
+                        placeholder={t("minPrice")}
                         value={filters.minPrice}
                         onChange={(e) => updateFilter("minPrice", e.target.value)}
                         className="h-11 rounded-xl border border-white/[0.06] bg-white/[0.04] px-4 text-sm text-white/80 placeholder:text-text-secondary/30 outline-none focus:border-gold/30"
                       />
                       <input
                         type="number"
-                        placeholder="Max Price (RWF)"
+                        placeholder={t("maxPrice")}
                         value={filters.maxPrice}
                         onChange={(e) => updateFilter("maxPrice", e.target.value)}
                         className="h-11 rounded-xl border border-white/[0.06] bg-white/[0.04] px-4 text-sm text-white/80 placeholder:text-text-secondary/30 outline-none focus:border-gold/30"
@@ -197,14 +196,14 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
                     {hasFilters && (
                       <div className="mt-3 flex items-center gap-2">
                         <span className="text-xs text-text-secondary/50">
-                          {filteredProperties.length} property{filteredProperties.length !== 1 ? "ies" : "y"} match your filters
+                          {filteredProperties.length} {filteredProperties.length !== 1 ? t("propertiesFound") : t("propertyFound")}
                         </span>
                         <button
                           onClick={clearFilters}
                           className="flex items-center gap-1 text-xs text-gold hover:text-gold-light transition-colors"
                         >
                           <RotateCcw className="size-3" />
-                          Clear all
+                          {t("clearAllFilters")}
                         </button>
                       </div>
                     )}
@@ -219,7 +218,7 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
         {filteredProperties.length > 0 && (
           <section className="mx-auto max-w-7xl px-4 pt-8 sm:hidden">
             <p className="mb-4 text-xs font-black uppercase tracking-[0.2em] text-gold-light/60">
-              Featured stories
+              {t("featuredProperties")}
             </p>
             <div className="flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {filteredProperties.slice(0, 12).map((property, idx) => (
@@ -249,7 +248,7 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
                     )}
                   </div>
                   <span className="max-w-[80px] truncate text-xs font-medium text-text-secondary text-center">
-                    {property.ownerFullName || "Owner"}
+                    {property.ownerFullName || t("owner")}
                   </span>
                 </button>
               ))}
@@ -281,7 +280,7 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
                 </div>
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-white">
-                    {filteredProperties[storyIndex].ownerFullName || "Owner"}
+                    {filteredProperties[storyIndex].ownerFullName || t("owner")}
                   </p>
                   <p className="truncate text-[10px] text-white/50">{filteredProperties[storyIndex].title}</p>
                 </div>
@@ -326,7 +325,7 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
                 onClick={() => setStoryIndex(null)}
                 className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gold py-4 text-sm font-black text-navy-dark shadow-lg shadow-gold/20 active:scale-95 transition-transform"
               >
-                View Details <ArrowRight className="size-4" />
+                {t("viewDetails")} <ArrowRight className="size-4" />
               </Link>
             </div>
           </div>
@@ -345,9 +344,9 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
               <div className="mb-6 flex size-16 items-center justify-center rounded-2xl border border-white/[0.06] bg-white/[0.04]">
                 <Search className="size-8 text-text-secondary/40" />
               </div>
-              <h3 className="font-serif text-2xl text-white">No properties found</h3>
+              <h3 className="font-serif text-2xl text-white">{t("noPropertiesFound")}</h3>
               <p className="mt-2 text-sm text-text-secondary/60">
-                Try adjusting your search or filters to find what you&apos;re looking for.
+                {t("tryAdjustingFilters")}
               </p>
               <Button
                 variant="secondary"
@@ -355,7 +354,7 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
                 className="mt-6 rounded-xl border-white/[0.06] bg-white/[0.04] hover:bg-white/[0.08]"
               >
                 <RotateCcw className="size-3.5 mr-2" />
-                Reset Filters
+                {t("clearAllFilters")}
               </Button>
             </div>
           )}

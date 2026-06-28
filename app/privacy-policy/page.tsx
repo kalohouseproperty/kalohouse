@@ -136,7 +136,7 @@ export default function PrivacyPolicyPage() {
                 <li className="flex items-start gap-3"><span className="text-gold mt-1">&#x2022;</span><strong className="text-text-primary">Object</strong> to certain processing of your data.</li>
                 <li className="flex items-start gap-3"><span className="text-gold mt-1">&#x2022;</span><strong className="text-text-primary">Withdraw consent</strong> where processing is based on your consent.</li>
               </ul>
-              <p>To exercise these rights, contact us at support@kalohouse.rw.</p>
+              <p>To exercise these rights, contact us at dushimimanaelie@kalohouse.com.</p>
             </div>
           </div>
 

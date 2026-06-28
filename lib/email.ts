@@ -219,3 +219,42 @@ export async function sendPasswordResetEmail(email: string, token: string) {
     `,
   });
 }
+
+export async function sendContactFormEmail({
+  firstName,
+  lastName,
+  email,
+  message,
+}: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  message: string;
+}) {
+  const adminEmail = process.env.RESEND_FROM_EMAIL || "dushimimanaelie@kalohouse.com";
+
+  await sendEmail({
+    to: adminEmail,
+    subject: `Contact Form — ${firstName} ${lastName}`,
+    html: `
+      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#111827;max-width:560px;margin:0 auto">
+        <div style="background:#111827;padding:32px;border-radius:12px 12px 0 0;text-align:center">
+          <h1 style="color:#C9A646;margin:0;font-size:24px">Kalohouse</h1>
+        </div>
+        <div style="padding:32px;background:#ffffff;border-radius:0 0 12px 12px">
+          <h2 style="color:#111827;margin-top:0">New Contact Form Submission</h2>
+          <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:20px 0">
+            <p style="margin:4px 0"><strong>Name:</strong> ${firstName} ${lastName}</p>
+            <p style="margin:4px 0"><strong>Email:</strong> ${email}</p>
+          </div>
+          <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:20px 0">
+            <p style="margin:0"><strong>Message:</strong></p>
+            <p style="margin:8px 0 0">${message}</p>
+          </div>
+          <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0" />
+          <p style="font-size:12px;color:#6b7280">Kalohouse — Kigali, Rwanda</p>
+        </div>
+      </div>
+    `,
+  });
+}

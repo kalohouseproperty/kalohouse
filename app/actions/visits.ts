@@ -6,6 +6,7 @@ import prisma from "../../lib/prisma";
 import { authorizeRole, getAuthorizedUser } from "../../lib/auth-utils";
 import { PaymentStatus, PropertyStatus, UserRole, VisitStatus } from "@/prisma/generated/client";
 import crypto from "node:crypto";
+import { sendRefundRequestEmail } from "../../lib/email";
 
 function getStripe() {
   if (!process.env.STRIPE_SECRET_KEY) return null;
@@ -472,7 +473,7 @@ export async function requestRefund(paymentId: number, reason?: string) {
 
   const payment = await prisma.payment.findUnique({
     where: { id: paymentId },
-    include: { refund: true },
+    include: { refund: true, property: true },
   });
 
   if (!payment || payment.client_id !== client.id) {
@@ -497,6 +498,19 @@ export async function requestRefund(paymentId: number, reason?: string) {
       reason: reason || "Client requested refund",
     },
   });
+
+  try {
+    await sendRefundRequestEmail({
+      userEmail: client.email,
+      userName: client.full_name || "Client",
+      propertyTitle: payment.property.title,
+      propertyId: payment.property_id,
+      amount: Number(payment.amount),
+      reason: reason || "Client requested refund",
+    });
+  } catch (e) {
+    console.error("Failed to send refund request email:", e);
+  }
 
   revalidatePath("/dashboard/client");
   return { success: true };

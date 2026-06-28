@@ -46,6 +46,8 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
       hasUnlockedContact={data.hasUnlockedContact}
       currentUser={dbUser}
       isSaved={data.isSaved}
+      paymentId={data.paymentId}
+      hasRefund={data.hasRefund}
     />
   );
 }

@@ -5,13 +5,14 @@ import {
   Bed, Bath, Utensils, Sofa, Car, Navigation,  
   Shield, Wifi, CreditCard, Video, Play,  
   CheckCircle2, XCircle, MapPinned,  
-  Phone, Mail, Lock, Unlock, UserRound  
+  Phone, Mail, Lock, Unlock, UserRound, RefreshCw, RotateCcw  
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { requestRefund } from "../../actions/visits";
 
 const LeafletMap = dynamic(() => import("@/components/map/LeafletMap"), {
   ssr: false,
@@ -36,6 +37,8 @@ interface PropertyDetailsContentProps {
   hasUnlockedContact: boolean;
   currentUser: User | null;
   isSaved?: boolean;
+  paymentId?: number | null;
+  hasRefund?: boolean;
 }
 
 export function PropertyDetailsContent({
@@ -43,7 +46,9 @@ export function PropertyDetailsContent({
   hasPaid,
   hasUnlockedContact,
   currentUser,
-  isSaved
+  isSaved,
+  paymentId,
+  hasRefund,
 }: PropertyDetailsContentProps) {
   const { toggleSaveProperty, saved_property_ids } = useKalohouse();
 
@@ -77,6 +82,24 @@ export function PropertyDetailsContent({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [heroMedia, setHeroMedia] = useState<"video" | "image">(property.media.video ? "video" : "image");
   const [isPaused, setIsPaused] = useState(false);
+  const [refunding, setRefunding] = useState(false);
+  const [refundRequested, setRefundRequested] = useState(hasRefund || false);
+  const [showRefundModal, setShowRefundModal] = useState(false);
+  const [refundReason, setRefundReason] = useState("");
+
+  const handleRequestRefund = async () => {
+    if (!paymentId) return;
+    setRefunding(true);
+    try {
+      await requestRefund(paymentId, refundReason || "Client requested refund via property page");
+      setRefundRequested(true);
+      setShowRefundModal(false);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setRefunding(false);
+    }
+  };
 
   const nextImage = useCallback(() => {
     setCurrentImageIndex(prev => (prev + 1) % property.media.images.length);
@@ -519,6 +542,25 @@ export function PropertyDetailsContent({
                     <p className="text-center text-xs leading-relaxed text-text-secondary/70">
                       Your payment goes to Nyumbanziza, commission is deducted, and the remaining is transferred to the verified owner.
                     </p>
+                    {hasPaid && !refundRequested && (
+                      <Button
+                        variant="danger"
+                        className="w-full h-14 rounded-2xl font-bold transition-all active:scale-95"
+                        onClick={() => setShowRefundModal(true)}
+                      >
+                        <RotateCcw className="size-4 mr-2" />
+                        Request Refund
+                      </Button>
+                    )}
+                    {refundRequested && (
+                      <div className="rounded-2xl border border-warning/30 bg-warning/10 p-4">
+                        <p className="text-sm font-bold text-warning flex items-center gap-2">
+                          <RefreshCw className="size-4" />
+                          Refund Requested
+                        </p>
+                        <p className="mt-1 text-xs text-text-secondary">Your refund request is being reviewed. You will be notified via email.</p>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
@@ -570,6 +612,71 @@ export function PropertyDetailsContent({
                 </button>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Refund Request Modal */}
+      {showRefundModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+          <div className="glass-card rounded-3xl p-8 sm:p-10 border border-white/10 max-w-lg w-[90vw] space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-full bg-danger/10 flex items-center justify-center">
+                  <RotateCcw className="size-5 text-danger" />
+                </div>
+                <h3 className="font-serif text-2xl">Request Refund</h3>
+              </div>
+              <button
+                onClick={() => setShowRefundModal(false)}
+                className="p-2 rounded-full hover:bg-white/10 transition-colors"
+              >
+                <XCircle className="size-5 text-text-secondary" />
+              </button>
+            </div>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              You are requesting a refund for <strong className="text-text-primary">{property.title}</strong>. Please provide a reason for your refund request.
+            </p>
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-widest font-bold text-text-secondary">Reason for Refund</label>
+              <textarea
+                value={refundReason}
+                onChange={(e) => setRefundReason(e.target.value)}
+                rows={4}
+                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-gold/50 transition-colors resize-none text-sm"
+                placeholder="Describe why you are requesting a refund..."
+              />
+            </div>
+            <div className="flex gap-3">
+              <Button
+                variant="secondary"
+                className="flex-1 h-12 rounded-xl"
+                onClick={() => setShowRefundModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="danger"
+                className="flex-1 h-12 rounded-xl font-bold"
+                onClick={handleRequestRefund}
+                disabled={refunding}
+              >
+                {refunding ? (
+                  <>
+                    <RefreshCw className="size-4 mr-2 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <RotateCcw className="size-4 mr-2" />
+                    Submit Request
+                  </>
+                )}
+              </Button>
+            </div>
+            <p className="text-[10px] text-center text-muted-text">
+              By submitting, you agree to our <Link href="/refund-policy" className="text-gold hover:underline">Refund Policy</Link>.
+            </p>
           </div>
         </div>
       )}

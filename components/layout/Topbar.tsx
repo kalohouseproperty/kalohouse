@@ -13,7 +13,7 @@ import { ProfileDropdown } from "./ProfileDropdown";
 import { NavbarSearch } from "./NavbarSearch";
 
 export function Topbar({ title, onMenuToggle, fullWidth }: { title: string; onMenuToggle?: () => void; fullWidth?: boolean }) {
-  const { currentUser, saved_property_ids, openSavedPanel } = useKalohouse();
+  const { currentUser, saved_property_ids, openSavedPanel, t } = useKalohouse();
   const isAuthenticated = !!currentUser;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -79,13 +79,13 @@ export function Topbar({ title, onMenuToggle, fullWidth }: { title: string; onMe
           {isAuthenticated ? (
             <>
               <Button variant="secondary" asChild className="hidden xl:inline-flex">
-                <Link href={getDashboardPath(currentUser.role)}>My Dashboard</Link>
+                <Link href={getDashboardPath(currentUser.role)}>{t("myDashboard")}</Link>
               </Button>
               <ProfileDropdown />
             </>
           ) : (
             <Button asChild className="hidden sm:flex">
-              <Link href="/auth">Login / Sign Up</Link>
+              <Link href="/auth">{t("loginSignUp")}</Link>
             </Button>
           )}
           {!onMenuToggle && (
@@ -109,21 +109,21 @@ export function Topbar({ title, onMenuToggle, fullWidth }: { title: string; onMe
           </div>
           <Link href="/" className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-text-secondary hover:bg-white/5 hover:text-white" onClick={() => setIsMenuOpen(false)}>
             <Home className="size-4 text-gold" />
-            Home
+            {t("home")}
           </Link>
           <Link href="/map" className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-text-secondary hover:bg-white/5 hover:text-white" onClick={() => setIsMenuOpen(false)}>
             <MapIcon className="size-4 text-gold" />
-            Map
+            {t("map")}
           </Link>
           {isAuthenticated ? (
             <Link href={getDashboardPath(currentUser.role)} className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-text-secondary hover:bg-white/5 hover:text-white" onClick={() => setIsMenuOpen(false)}>
               <LogIn className="size-4 text-gold" />
-              My Dashboard
+              {t("myDashboard")}
             </Link>
           ) : (
             <Link href="/auth" className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-text-secondary hover:bg-white/5 hover:text-white" onClick={() => setIsMenuOpen(false)}>
               <LogIn className="size-4 text-gold" />
-              Login / Sign Up
+              {t("loginSignUp")}
             </Link>
           )}
           <div className="px-1 pt-1">

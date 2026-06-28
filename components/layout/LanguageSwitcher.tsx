@@ -17,7 +17,7 @@ export function LanguageSwitcher() {
   const { language, setLanguage } = useKalohouse();
 
   const handleLanguageChange = (lang: Language) => {
-    setLanguage(lang);
+    void setLanguage(lang);
 
     const params = new URLSearchParams(window.location.search);
     params.set("lang", lang);

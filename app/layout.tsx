@@ -93,21 +93,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const searchParams = new URLSearchParams(); // This is a workaround to access query params on server
-  
-  // In server components, we need to use the request to get query params
-  // We'll use a workaround to get the query params from the request
   const langFromCookie = cookieStore.get("language")?.value || "en";
-  
-  // Since we can't get the request object here, we'll rely on the cookie and assume the client has updated it
-  // But we can't access the URL query params in this server component
-  // So we must ensure the client updates the cookie correctly on language change
+  const language = parseLanguage(langFromCookie);
   
   return (
-    <html lang="en" className={poppins.variable}>
+    <html lang={language} className={poppins.variable}>
       <body className="antialiased">
         <AuthSessionProvider>
-          <ClientLayout lang={parseLanguage(langFromCookie)}>
+          <ClientLayout lang={language}>
             {children}
           </ClientLayout>
         </AuthSessionProvider>

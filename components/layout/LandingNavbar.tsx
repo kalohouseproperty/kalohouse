@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Heart, Menu, Search, ShoppingBag, X } from "lucide-react";
+import { Menu, ShoppingBag, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
@@ -18,17 +18,17 @@ interface LandingNavbarProps {
 }
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/properties", label: "Properties" },
-  { href: "/map", label: "Map" },
-  { href: "/about", label: "About" },
+  { href: "/", labelKey: "home" },
+  { href: "/properties", labelKey: "properties" },
+  { href: "/map", labelKey: "map" },
+  { href: "/about", labelKey: "about" },
 ];
 
 export function LandingNavbar({ currentUser }: LandingNavbarProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isAuthenticated = !!currentUser;
-  const { saved_property_ids, openSavedPanel } = useKalohouse();
+  const { saved_property_ids, openSavedPanel, t } = useKalohouse();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50">
@@ -61,7 +61,7 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
                       : "text-text-secondary/60 hover:text-white hover:bg-white/[0.04]"
                   }`}
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                   {isActive && (
                     <span className="absolute -bottom-px left-1/2 -translate-x-1/2 h-px w-6 bg-gold rounded-full" />
                   )}
@@ -95,7 +95,7 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
                 size="sm"
                 className="hidden lg:inline-flex h-9 rounded-lg border border-white/[0.06] bg-white/[0.04] px-4 text-xs font-semibold text-text-secondary/70 hover:bg-white/[0.08] hover:text-white"
               >
-                <Link href={getDashboardPath(currentUser.role)}>Dashboard</Link>
+                <Link href={getDashboardPath(currentUser.role)}>{t("dashboard")}</Link>
               </Button>
               <ProfileDropdown />
             </>
@@ -107,14 +107,14 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
                 size="sm"
                 className="hidden sm:inline-flex h-9 rounded-lg border border-white/[0.06] bg-white/[0.04] px-4 text-xs font-semibold text-text-secondary/70 hover:bg-white/[0.08] hover:text-white hover:scale-105 active:scale-95 transition-all"
               >
-                <Link href="/auth">Sign In</Link>
+                <Link href="/auth">{t("signin")}</Link>
               </Button>
               <Button
                 asChild
                 size="sm"
                 className="h-9 rounded-lg px-5 bg-gold hover:bg-gold-light text-navy-dark font-semibold text-xs shadow-lg shadow-gold/20 transition-all hover:scale-105 active:scale-95"
               >
-                <Link href="/auth">Create Account</Link>
+                <Link href="/auth">{t("createAccount")}</Link>
               </Button>
             </>
           )}
@@ -146,7 +146,7 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
                   }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </Link>
               );
             })}
@@ -157,7 +157,7 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
                   className="flex items-center justify-center rounded-xl bg-white/[0.06] px-3 py-2.5 text-sm font-semibold text-white"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Dashboard
+                  {t("dashboard")}
                 </Link>
               ) : (
                 <>
@@ -166,14 +166,14 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
                     className="flex items-center justify-center rounded-xl bg-gold px-3 py-2.5 text-sm font-semibold text-navy-dark"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    Create Account
+                    {t("createAccount")}
                   </Link>
                   <Link
                     href="/auth"
                     className="flex items-center justify-center rounded-xl px-3 py-2.5 text-sm font-medium text-text-secondary/70 hover:text-white transition-colors mt-1"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    Sign In
+                    {t("signin")}
                   </Link>
                 </>
               )}

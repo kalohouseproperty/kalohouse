@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { KalohouseProvider } from "@/components/providers/KalohouseProvider";
+import { AutoTranslate } from "@/components/providers/AutoTranslate";
 import { Footer } from "@/components/layout/Footer";
 import type { Language } from "@/lib/translations";
 
@@ -11,8 +12,10 @@ export function ClientLayout({ children, lang }: { children: React.ReactNode; la
 
   return (
     <KalohouseProvider initialLanguage={lang}>
-      {children}
-      {showFooter && <Footer />}
+      <AutoTranslate>
+        {children}
+        {showFooter && <Footer />}
+      </AutoTranslate>
     </KalohouseProvider>
   );
 }

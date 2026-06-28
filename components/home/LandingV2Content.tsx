@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  Star,
   Search,
   Building2,
   Home,
@@ -21,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { LandingNavbar } from "@/components/layout/LandingNavbar";
 import { PropertyCard } from "@/components/cards/PropertyCard";
+import { useKalohouse } from "@/components/providers/KalohouseProvider";
 import type { Property, User } from "@/types/models";
 import type { Translations } from "@/lib/i18n-server";
 import { cn } from "@/lib/utils";
@@ -46,47 +46,26 @@ const howItWorks = [
   {
     step: "01",
     icon: Search,
-    title: "Browse & Compare",
-    description: "Explore verified properties with detailed photos, virtual tours, and neighborhood insights.",
+    titleKey: "browseCompare" as keyof Translations,
+    descKey: "browseCompareDesc" as keyof Translations,
   },
   {
     step: "02",
     icon: ShieldCheck,
-    title: "Book a Viewing",
-    description: "Select your preferred date and time. Pay a small booking fee to secure your visit.",
+    titleKey: "bookViewing" as keyof Translations,
+    descKey: "bookViewingDesc" as keyof Translations,
   },
   {
     step: "03",
     icon: Building2,
-    title: "Visit with Confidence",
-    description: "Tour the property with a dedicated sector agent. Zero pressure, honest answers.",
+    titleKey: "visitConfidence" as keyof Translations,
+    descKey: "visitConfidenceDesc" as keyof Translations,
   },
   {
     step: "04",
     icon: CheckCircle2,
-    title: "Move In or Get Refunded",
-    description: "Love it? Move in. Not the one? Get a full refund, no questions asked.",
-  },
-];
-
-const testimonials = [
-  {
-    quote: "I was skeptical about online property listings, but Kalohouse's verification process gave me peace of mind. Found my dream apartment in just 3 days!",
-    author: "Marie Claire",
-    location: "Kicukiro",
-    rating: 5,
-  },
-  {
-    quote: "As a landlord, having a dedicated sector agent handle viewings saved me countless hours. The escrow payment system is a game-changer.",
-    author: "Jean Baptiste",
-    location: "Nyarugenge",
-    rating: 5,
-  },
-  {
-    quote: "The market intelligence dashboard helped me price my property competitively. It sold within a week at full asking price.",
-    author: "Alice Uwimana",
-    location: "Gasabo",
-    rating: 5,
+    titleKey: "moveInOrRefunded" as keyof Translations,
+    descKey: "moveInOrRefundedDesc" as keyof Translations,
   },
 ];
 
@@ -97,7 +76,8 @@ interface LandingV2ContentProps {
 }
 
 export function LandingV2Content({ properties, currentUser, tData }: LandingV2ContentProps) {
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const { t: tKey } = useKalohouse();
+  const t = (key: keyof Translations) => tData?.[key] || tKey(key);
   const [storyIndex, setStoryIndex] = useState<number | null>(null);
 
   const [filters, setFilters] = useState({
@@ -177,20 +157,15 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
           <div className="mx-auto max-w-3xl text-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-gold/20 bg-gold/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-gold-light mb-8">
               <Sparkles className="size-3.5" />
-              Rwanda&apos;s Most Trusted Property Marketplace
+              {t("kigaliPropertyVerified")}
             </div>
 
             <h1 className="font-serif text-5xl leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">
-              Find Your Perfect
-              <br />
-              <span className="bg-gradient-to-r from-gold-light via-gold to-amber-300 bg-clip-text text-transparent">
-                Home in Kigali
-              </span>
+              {t("heroTitle")}
             </h1>
 
             <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-text-secondary/80">
-              Every property is physically verified. Secure payments, zero surprises &mdash;
-              just honest listings from Rwanda&apos;s best neighborhoods.
+              {t("heroSubtitle")}
             </p>
           </div>
 
@@ -204,7 +179,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
                     value={filters.district}
                     onChange={(e) => updateFilter("district", e.target.value)}
                   >
-                    <option value="">All Rwanda</option>
+                    <option value="">{t("allRwanda")}</option>
                     {districtOptions.map((opt) => (
                       <option key={opt.value} value={opt.value} disabled={opt.disabled}>
                         {opt.label}
@@ -218,9 +193,9 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
                     value={filters.propertyType}
                     onChange={(e) => updateFilter("propertyType", e.target.value)}
                   >
-                    <option value="">All Types</option>
-                    {propertyTypes.map((t) => (
-                      <option key={t} value={t}>{t}</option>
+                    <option value="">{t("allTypes")}</option>
+                    {propertyTypes.map((pt) => (
+                      <option key={pt} value={pt}>{pt}</option>
                     ))}
                   </Select>
                 </div>
@@ -230,9 +205,9 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
                     value={filters.purpose}
                     onChange={(e) => updateFilter("purpose", e.target.value)}
                   >
-                    <option value="">Rent or Buy</option>
-                    <option value="Rent">For Rent</option>
-                    <option value="Sale">For Sale</option>
+                    <option value="">{t("rentOrBuy")}</option>
+                    <option value="Rent">{t("forRent")}</option>
+                    <option value="Sale">{t("forSale")}</option>
                   </Select>
                 </div>
                 <Button
@@ -243,7 +218,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
                     Object.entries(filters).filter(([, v]) => v).map(([k, v]) => [k, v])
                   ).toString()}` : "/properties"}>
                     <Search className="size-4 mr-2" />
-                    Search
+                    {t("search")}
                   </Link>
                 </Button>
               </div>
@@ -252,14 +227,14 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
             {hasFilters && (
               <div className="mt-3 flex items-center justify-center gap-2 text-xs text-text-secondary/60">
                 <span>
-                  {filteredProperties.length} property{filteredProperties.length !== 1 ? "ies" : "y"} found
+                  {filteredProperties.length} {filteredProperties.length !== 1 ? t("propertiesFound") : t("propertyFound")}
                 </span>
                 <button
                   onClick={clearFilters}
                   className="flex items-center gap-1 text-gold hover:text-gold-light transition-colors"
                 >
                   <X className="size-3" />
-                  Clear filters
+                  {t("clearFilters")}
                 </button>
               </div>
             )}
@@ -268,7 +243,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
           {/* Trust Stats */}
           <div className="mx-auto mt-12 grid max-w-2xl grid-cols-3 gap-8">
             {[
-              { value: `${properties.length}+`, label: "Verified Properties" },
+              { value: `${properties.length}+`, label: t("totalProperties") },
               { value: "98.7%", label: "Satisfaction Rate" },
               { value: "30+", label: "Sectors Covered" },
             ].map((s) => (
@@ -358,7 +333,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
                 )}
               </div>
               <span className="max-w-[68px] truncate text-[10px] font-medium text-text-secondary text-center">
-                {property.ownerFullName || "Owner"}
+                {property.ownerFullName || t("owner")}
               </span>
             </button>
           ))}
@@ -391,7 +366,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
               </div>
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold text-white">
-                  {filteredProperties[storyIndex].ownerFullName || "Owner"}
+                  {filteredProperties[storyIndex].ownerFullName || t("owner")}
                 </p>
                 <p className="truncate text-[10px] text-white/50">{filteredProperties[storyIndex].title}</p>
               </div>
@@ -439,7 +414,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
               onClick={() => setStoryIndex(null)}
               className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gold py-4 text-sm font-black text-navy-dark shadow-lg shadow-gold/20 active:scale-95 transition-transform"
             >
-              View Details <ArrowRight className="size-4" />
+              {t("viewDetails")} <ArrowRight className="size-4" />
             </Link>
           </div>
         </div>
@@ -451,14 +426,12 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
           <div className="flex items-end justify-between mb-12">
             <div>
               <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-gold">
-                {hasFilters ? "Search Results" : "Featured Properties"}
+                {hasFilters ? t("searchResults") : t("featuredProperties")}
               </p>
               <h2 className="font-serif text-3xl text-white sm:text-4xl lg:text-5xl">
                 {hasFilters
-                  ? `${filteredProperties.length} ${
-                      filteredProperties.length === 1 ? "Property" : "Properties"
-                    } Found`
-                  : "Popular Properties in Kigali"}
+                  ? `${filteredProperties.length} ${t("propertiesFoundCount")}`
+                  : t("popularProperties")}
               </h2>
             </div>
             <Button
@@ -468,7 +441,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
               className="hidden sm:flex rounded-xl px-5 h-10 border-white/10 bg-white/5 hover:bg-white/10 text-sm"
             >
               <Link href="/properties">
-                View All <ArrowRight className="size-3.5 ml-1.5" />
+                {t("viewAll")} <ArrowRight className="size-3.5 ml-1.5" />
               </Link>
             </Button>
           </div>
@@ -476,15 +449,15 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
           {filteredProperties.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <Building2 className="size-16 text-white/10 mb-4" />
-              <p className="text-lg font-medium text-white">No properties found</p>
+              <p className="text-lg font-medium text-white">{t("noPropertiesFound")}</p>
               <p className="mt-1 text-sm text-text-secondary/60">
-                Try adjusting your filters to see more results.
+                {t("tryAdjustingFilters")}
               </p>
               <button
                 onClick={clearFilters}
                 className="mt-4 text-sm text-gold hover:text-gold-light transition-colors"
               >
-                Clear all filters
+                {t("clearAllFilters")}
               </button>
             </div>
           ) : (
@@ -498,7 +471,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
           <div className="mt-8 text-center sm:hidden">
             <Button asChild variant="secondary" className="rounded-xl px-8 border-white/10 bg-white/5 hover:bg-white/10">
               <Link href="/properties">
-                View All Properties <ArrowRight className="size-4 ml-2" />
+                {t("viewAll")} <ArrowRight className="size-4 ml-2" />
               </Link>
             </Button>
           </div>
@@ -510,12 +483,12 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/[0.015] to-transparent" />
         <div className="relative mx-auto max-w-7xl">
           <div className="mx-auto mb-16 max-w-2xl text-center">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-gold">Simple Process</p>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-gold">{t("simpleProcess")}</p>
             <h2 className="font-serif text-3xl text-white sm:text-4xl lg:text-5xl">
-              Book a Property in 4 Easy Steps
+              {t("bookProperty4Steps")}
             </h2>
             <p className="mt-4 text-sm text-text-secondary/70">
-              We&apos;ve streamlined the process so you can find and secure your next home with zero hassle.
+              {t("streamlinedProcess")}
             </p>
           </div>
 
@@ -533,8 +506,8 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
                   <div className="mb-5 inline-flex rounded-2xl bg-gold/10 p-3 ring-1 ring-gold/20">
                     <Icon className="size-6 text-gold" />
                   </div>
-                  <h3 className="mb-2 font-bold text-white">{step.title}</h3>
-                  <p className="text-sm leading-relaxed text-text-secondary/60">{step.description}</p>
+                  <h3 className="mb-2 font-bold text-white">{t(step.titleKey)}</h3>
+                  <p className="text-sm leading-relaxed text-text-secondary/60">{t(step.descKey)}</p>
                 </div>
               );
             })}
@@ -547,33 +520,27 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
         <div className="mx-auto max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-gold">Trust Built In</p>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-gold">{t("trustBuiltIn")}</p>
               <h2 className="font-serif text-3xl text-white sm:text-4xl lg:text-5xl mb-6 leading-tight">
-                Every Listing is
-                <br />
-                <span className="bg-gradient-to-r from-gold-light via-gold to-amber-300 bg-clip-text text-transparent">
-                  Physically Verified
-                </span>
+                {t("trustBuiltIn")}
               </h2>
               <p className="text-sm text-text-secondary/70 leading-relaxed mb-12 max-w-lg">
-                We don&apos;t just list properties&mdash;we verify them. Our sector agents
-                visit every home to ensure it exists, matches its photos, and meets
-                our quality standards.
+                {t("heroSubtitle")}
               </p>
 
               <div className="space-y-6">
                 {[
                   {
-                    title: "Physical Verification",
-                    desc: "An agent visits every home to ensure it exists and matches its photos before it goes live.",
+                    titleKey: "physicalVerification" as keyof Translations,
+                    descKey: "physicalVerificationDesc" as keyof Translations,
                   },
                   {
-                    title: "Owner KYC",
-                    desc: "We verify the identity of the landlord or seller before they can list a property on our platform.",
+                    titleKey: "ownerKyc" as keyof Translations,
+                    descKey: "ownerKycDesc" as keyof Translations,
                   },
                   {
-                    title: "Secure Bookings",
-                    desc: "Your viewing fee is held securely and refunded in full if the property isn&apos;t what was advertised.",
+                    titleKey: "secureBookings" as keyof Translations,
+                    descKey: "secureBookingsDesc" as keyof Translations,
                   },
                 ].map((item, idx) => (
                   <div key={idx} className="flex gap-4">
@@ -581,8 +548,8 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
                       <div className="size-2 rounded-full bg-gold" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-white mb-1">{item.title}</h4>
-                      <p className="text-sm text-text-secondary/60">{item.desc}</p>
+                      <h4 className="font-bold text-white mb-1">{t(item.titleKey)}</h4>
+                      <p className="text-sm text-text-secondary/60">{t(item.descKey)}</p>
                     </div>
                   </div>
                 ))}
@@ -599,18 +566,16 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
                         <CheckCircle2 className="size-6 text-emerald-400" />
                       </div>
                       <div>
-                        <p className="text-xs font-bold uppercase text-emerald-400 tracking-widest">Certified Trust</p>
-                        <p className="text-lg font-serif text-white">Kalohouse Shield</p>
+                        <p className="text-xs font-bold uppercase text-emerald-400 tracking-widest">{t("certifiedTrust")}</p>
+                        <p className="text-lg font-serif text-white">{t("kalohouseShield")}</p>
                       </div>
                     </div>
                     <p className="text-sm text-text-secondary/60 leading-relaxed">
-                      Every property on our platform comes with the Kalohouse
-                      Guarantee. If what you see isn&apos;t what you get, we make
-                      it right.
+                      {t("shieldDesc")}
                     </p>
                     <div className="mt-6 flex items-center gap-2 text-xs text-gold">
                       <ShieldCheck className="size-4" />
-                      <span className="font-semibold">100% Verified Listings</span>
+                      <span className="font-semibold">{t("verifiedListings")}</span>
                     </div>
                   </div>
                 </div>
@@ -621,66 +586,16 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
       </section>
 
 
-      {/* Testimonials */}
-      <section className="relative px-4 py-28 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto mb-16 max-w-2xl text-center">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-gold">Testimonials</p>
-            <h2 className="font-serif text-3xl text-white sm:text-4xl lg:text-5xl">
-              What Our Community Says
-            </h2>
-          </div>
-
-          <div className="mx-auto max-w-3xl">
-            <div className="glass-card rounded-2xl p-8 sm:p-12">
-              <div className="flex gap-1 mb-8">
-                {Array.from({ length: testimonials[activeTestimonial].rating }).map((_, i) => (
-                  <Star key={i} className="size-5 fill-gold text-gold" />
-                ))}
-              </div>
-              <blockquote className="text-lg leading-relaxed text-text-primary sm:text-xl">
-                &ldquo;{testimonials[activeTestimonial].quote}&rdquo;
-              </blockquote>
-              <div className="mt-8 flex items-center gap-4">
-                <div className="flex size-11 items-center justify-center rounded-xl bg-gold/10 text-sm font-bold text-gold">
-                  {testimonials[activeTestimonial].author[0]}
-                </div>
-                <div>
-                  <p className="font-semibold text-white">{testimonials[activeTestimonial].author}</p>
-                  <p className="text-sm text-text-secondary/50">{testimonials[activeTestimonial].location}</p>
-                </div>
-              </div>
-              <div className="mt-8 flex justify-center gap-2">
-                {testimonials.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveTestimonial(i)}
-                    className={cn(
-                      "h-1.5 rounded-full transition-all duration-300",
-                      i === activeTestimonial ? "w-10 bg-gold" : "w-1.5 bg-white/20 hover:bg-white/40",
-                    )}
-                    aria-label={`Testimonial ${i + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="relative overflow-hidden px-4 py-28 sm:px-6 lg:px-8">
         <div className="absolute inset-0 bg-gradient-to-r from-gold/5 via-gold/[0.08] to-gold/5" />
         <div className="absolute inset-0 premium-grid opacity-20" />
         <div className="relative mx-auto max-w-4xl text-center">
           <h2 className="font-serif text-3xl text-white sm:text-4xl lg:text-5xl">
-            Ready to Find Your{" "}
-            <span className="bg-gradient-to-r from-gold-light to-amber-300 bg-clip-text text-transparent">
-              Perfect Home?
-            </span>
+            {t("readyFindHome")}
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-sm text-text-secondary/70">
-            Join thousands of happy homeowners and tenants who found their ideal property through Kalohouse.
+            {t("joinHappyHomeowners")}
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button
@@ -689,7 +604,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
               className="h-14 rounded-xl px-10 text-base bg-gold hover:bg-gold-light text-navy-dark font-bold shadow-2xl shadow-gold/25 transition-all hover:scale-105"
             >
               <Link href="/auth">
-                Create Free Account
+                {t("createFreeAccount")}
                 <ArrowRight className="size-5 ml-2" />
               </Link>
             </Button>
@@ -699,7 +614,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
               size="lg"
               className="h-14 rounded-xl px-10 text-base border-white/10 bg-white/5 hover:bg-white/10"
             >
-              <Link href="/properties">Browse Without Signing Up</Link>
+              <Link href="/properties">{t("browseWithoutSigningUp")}</Link>
             </Button>
           </div>
         </div>
@@ -716,10 +631,10 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
               <span className="font-serif text-base text-white">Kalohouse</span>
             </div>
             <div className="flex gap-8 text-sm text-text-secondary/50">
-              <Link href="/" className="hover:text-gold transition-colors">Home</Link>
-              <Link href="/properties" className="hover:text-gold transition-colors">Properties</Link>
-              <Link href="/map" className="hover:text-gold transition-colors">Map</Link>
-              <Link href="/about" className="hover:text-gold transition-colors">About</Link>
+              <Link href="/" className="hover:text-gold transition-colors">{t("home")}</Link>
+              <Link href="/properties" className="hover:text-gold transition-colors">{t("properties")}</Link>
+              <Link href="/map" className="hover:text-gold transition-colors">{t("map")}</Link>
+              <Link href="/about" className="hover:text-gold transition-colors">{t("about")}</Link>
             </div>
           </div>
           <div className="mt-10 border-t border-white/[0.04] pt-8 text-center text-xs text-text-secondary/30">

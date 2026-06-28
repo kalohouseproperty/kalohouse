@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { resetPassword } from "@/app/actions/auth";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -43,6 +44,10 @@ function ResetPasswordContent() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 bg-[#0b1120]">
+      <div className="fixed right-4 top-4 z-20">
+        <LanguageSwitcher />
+      </div>
+
       <section className="w-full max-w-md rounded-xl border border-white/10 bg-white/5 p-6">
         <h1 className="text-2xl font-bold text-white">Reset password</h1>
         <p className="mt-2 text-sm text-text-secondary">Choose a new password for your account.</p>
@@ -75,6 +80,10 @@ function ResetPasswordContent() {
 function ResetShell({ message }: { message: string }) {
   return (
     <main className="min-h-screen flex items-center justify-center p-4 bg-[#0b1120]">
+      <div className="fixed right-4 top-4 z-20">
+        <LanguageSwitcher />
+      </div>
+
       <section className="w-full max-w-md rounded-xl border border-white/10 bg-white/5 p-6">
         <h1 className="text-2xl font-bold text-white">Reset password</h1>
         <p className="mt-2 text-sm text-text-secondary">{message}</p>

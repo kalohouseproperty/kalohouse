@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { createId } from "@/lib/format";
 import { type Language, translations } from "@/lib/translations";
 import { parseLanguage } from "@/lib/i18n-server";
-import { translateTexts } from "@/lib/groq-translate";
 import type { User, UserRole, KalohouseState } from "@/types/models";
 import type { Property } from "@/types/models";
 import { seedState } from "@/data/seed";
@@ -18,7 +17,7 @@ function getInitialLanguage(): Language {
   if (typeof window === "undefined") return "en";
   try {
     const stored = localStorage.getItem(LANGUAGE_KEY);
-    if (stored === "en" || stored === "fr") return stored;
+    if (stored === "en") return stored;
   } catch {}
   return "en";
 }
@@ -99,9 +98,9 @@ function getStoredLanguage(): Language {
   if (typeof window === "undefined") return "en";
 
   const urlLang = new URL(window.location.href).searchParams.get("lang");
-  if (urlLang) return parseLanguage(urlLang);
+  if (urlLang === "en") return "en";
 
-  return parseLanguage(localStorage.getItem(LANGUAGE_KEY));
+  return getInitialLanguage();
 }
 
 export function KalohouseProvider({ children, initialLanguage }: { children: React.ReactNode; initialLanguage?: Language }) {
@@ -110,7 +109,7 @@ export function KalohouseProvider({ children, initialLanguage }: { children: Rea
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const [language, setLanguageState] = useState<Language>(initialLanguage ?? getStoredLanguage);
+  const [language, setLanguageState] = useState<Language>(initialLanguage === "fr" ? "en" : initialLanguage ?? getStoredLanguage);
 const [saved_property_ids, setSavedPropertyIdsState] = useState<string[]>([]);
 const [savedPropertiesData, setSavedPropertiesDataState] = useState<Record<string, Property>>({});
 const [showSavedPanel, setShowSavedPanel] = useState(false);
@@ -199,10 +198,14 @@ const closeSavedPanel = useCallback(() => setShowSavedPanel(false), []);
     [language, getCachedGroq]
   );
 
-  const fetchingRef = useRef(false);
-
   const setLanguage = useCallback(async (lang: Language) => {
-    console.log("setLanguage called with:", lang); // DEBUG
+    if (lang === "fr") {
+      setLanguageState("en");
+      persistLanguage("en");
+      localStorage.removeItem(GROQ_CACHE_KEY);
+      return;
+    }
+
     setLanguageState(lang);
     persistLanguage(lang);
 
@@ -210,22 +213,7 @@ const closeSavedPanel = useCallback(() => setShowSavedPanel(false), []);
       localStorage.removeItem(GROQ_CACHE_KEY);
       return;
     }
-
-    const langData = translations[lang] as Record<string, string>;
-    const enData = translations.en as Record<string, string>;
-    const missingKeys = Object.keys(enData).filter((k) => !langData[k]);
-
-    if (missingKeys.length === 0 || fetchingRef.current) return;
-
-    fetchingRef.current = true;
-    const results = await translateTexts(missingKeys, lang);
-    const newCache: Record<string, string> = {};
-    missingKeys.forEach((key, i) => {
-      newCache[key] = results[i] || key;
-    });
-    localStorage.setItem(GROQ_CACHE_KEY, JSON.stringify(newCache));
-    fetchingRef.current = false;
-  }, [getCachedGroq]);
+  }, []);
 
 const toggleSaveProperty = useCallback(async (propertyId: string, propertyData?: Property) => {
   setSavedPropertyIdsState((prev) => {

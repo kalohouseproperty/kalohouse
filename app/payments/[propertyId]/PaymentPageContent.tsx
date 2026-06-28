@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { startMobileMoneyPayment, payCommissionToUnlockContact, createStripeCheckoutSession } from "@/app/actions/visits";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -69,6 +70,10 @@ export function PaymentPageContent({ property, paymentType = "purchase" }: { pro
 
   return (
     <main className="min-h-screen bg-main-bg px-4 py-8 text-text-primary sm:px-6 lg:px-8">
+      <div className="fixed right-4 top-4 z-20">
+        <LanguageSwitcher />
+      </div>
+
       <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.95fr_1.05fr]">
         <section className="overflow-hidden rounded-3xl border border-white/10 bg-card-bg shadow-2xl">
           <div className="relative w-full h-[24rem]">

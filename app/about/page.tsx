@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LandingNavbar } from "@/components/layout/LandingNavbar";
 import Image from "next/image";
+import { ContactForm } from "./ContactForm";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -83,7 +84,7 @@ export default function AboutPage() {
           <div className="relative aspect-square rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
             <div className="absolute inset-0 bg-gradient-to-tr from-navy-dark/80 to-transparent z-10" />
 <Image
-                src="https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&q=80&w=1000"
+                src="https://images.unsplash.com/photo-1689013398932-b576a11e07a1?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8a2lnYWxpJTIwaG91c2VzfGVufDB8fDB8fHww"
                 alt="Kigali Real Estate"
                 width={600}
                 height={400}
@@ -111,13 +112,13 @@ export default function AboutPage() {
                   <div className="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-gold/10 group-hover:border-gold/30 transition-all">
                     <Mail className="size-4 text-gold" />
                   </div>
-                  <span className="text-text-secondary group-hover:text-white transition-colors">support@kalohouse.rw</span>
+                  <span className="text-text-secondary group-hover:text-white transition-colors">dushimimanaelie@kalohouse.com</span>
                 </div>
                 <div className="flex items-center gap-4 group cursor-pointer">
                   <div className="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-gold/10 group-hover:border-gold/30 transition-all">
                     <Phone className="size-4 text-gold" />
                   </div>
-                  <span className="text-text-secondary group-hover:text-white transition-colors">+250 788 000 000</span>
+                  <span className="text-text-secondary group-hover:text-white transition-colors">+250 780 827 005</span>
                 </div>
                 <div className="flex items-center gap-4 group cursor-pointer">
                   <div className="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-gold/10 group-hover:border-gold/30 transition-all">
@@ -129,27 +130,7 @@ export default function AboutPage() {
             </div>
 
             <div className="lg:col-span-2 glass-card rounded-[2.5rem] p-8 sm:p-12 border border-white/10 bg-main-bg/50 backdrop-blur-xl">
-              <div className="grid sm:grid-cols-2 gap-6 mb-6">
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-widest font-bold text-text-secondary">First Name</label>
-                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-gold/50 transition-colors" placeholder="John" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-widest font-bold text-text-secondary">Last Name</label>
-                  <input type="text" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-gold/50 transition-colors" placeholder="Doe" />
-                </div>
-              </div>
-              <div className="space-y-2 mb-6">
-                <label className="text-xs uppercase tracking-widest font-bold text-text-secondary">Email Address</label>
-                <input type="email" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-gold/50 transition-colors" placeholder="john@example.com" />
-              </div>
-              <div className="space-y-2 mb-8">
-                <label className="text-xs uppercase tracking-widest font-bold text-text-secondary">Message</label>
-                <textarea rows={4} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-gold/50 transition-colors resize-none" placeholder="How can we help you?" />
-              </div>
-              <Button className="w-full h-16 rounded-[1.8rem] bg-gold hover:bg-gold-light text-navy-dark font-bold text-lg shadow-xl shadow-gold/20 transition-all hover:scale-[1.01] active:scale-95">
-                Send Message
-              </Button>
+              <ContactForm />
             </div>
           </div>
         </div>

@@ -1,0 +1,164 @@
+/* Leaflet Map Premium Customization for Kalohouse */
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  background: #0b1220; /* main-bg */
+  font-family: var(--font-poppins), sans-serif;
+}
+
+/* Dark mode map tiles filter - optimized for dark theme */
+.leaflet-tile-pane {
+  filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%);
+}
+
+.leaflet-tile {
+  background-color: #0b1220;
+}
+
+/* Custom Zoom Controls */
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6) !important;
+  margin-top: 32px !important;
+  margin-right: 32px !important;
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  background-color: #111827 !important; /* solid card-bg */
+  color: #c9a646 !important; /* gold for maximum visibility */
+  border: 1px solid rgba(201, 166, 70, 0.2) !important;
+  width: 48px !important;
+  height: 48px !important;
+  line-height: 48px !important;
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(16px);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.leaflet-control-zoom-in {
+  border-radius: 16px 16px 0 0 !important;
+}
+
+.leaflet-control-zoom-out {
+  border-radius: 0 0 16px 16px !important;
+}
+
+.leaflet-control-zoom-in:hover,
+.leaflet-control-zoom-out:hover {
+  background-color: #c9a646 !important; /* gold */
+  color: #0a1f44 !important; /* navy-dark */
+  border-color: #e6c76e !important;
+}
+
+/* Premium Popup Styling */
+.leaflet-popup-content-wrapper {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 24px;
+  background: rgba(17, 24, 39, 0.95); /* card-bg with opacity */
+  border: 1px solid rgba(201, 166, 70, 0.2); /* gold border */
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  width: 300px !important;
+  color: #f9fafb;
+}
+
+.leaflet-popup-tip {
+  background: rgba(17, 24, 39, 0.95);
+  border: 1px solid rgba(201, 166, 70, 0.2);
+}
+
+.leaflet-popup-close-button {
+  color: #f9fafb !important;
+  padding: 12px !important;
+}
+
+/* Custom Marker (Price Pill) */
+.price-marker {
+  background: none;
+  border: none;
+}
+
+.price-pill {
+  background: rgba(10, 31, 68, 0.9); /* navy-primary */
+  padding: 8px 16px;
+  border-radius: 40px;
+  border: 1px solid rgba(201, 166, 70, 0.3); /* gold */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  font-weight: 800;
+  font-size: 14px;
+  color: #f9fafb;
+  white-space: nowrap;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+
+.price-pill:hover {
+  transform: scale(1.15) translateY(-4px);
+  background: #c9a646; /* gold */
+  color: #0a1f44; /* navy-dark */
+  border-color: #e6c76e;
+  box-shadow: 0 12px 30px rgba(201, 166, 70, 0.4);
+  z-index: 1000;
+}
+
+.price-pill.active {
+  background: #e6c76e;
+  color: #0a1f44;
+  border-color: white;
+  box-shadow: 0 0 25px rgba(230, 199, 110, 0.6);
+  transform: scale(1.1);
+}
+
+.price-pill.rent {
+  border-left: 5px solid #3b82f6; /* info color for rent */
+}
+
+.price-pill.sale {
+  border-left: 5px solid #c9a646; /* gold for sale */
+}
+
+/* Cluster Styling */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background-color: rgba(201, 166, 70, 0.15) !important;
+  backdrop-filter: blur(4px);
+}
+
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background-color: #c9a646 !important; /* gold */
+  color: #0a1f44 !important; /* navy-dark */
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: 0 4px 15px rgba(201, 166, 70, 0.3);
+}
+
+.marker-cluster {
+  border-radius: 50%;
+}
+
+.marker-cluster div {
+  width: 36px;
+  height: 36px;
+  margin-left: 4px;
+  margin-top: 4px;
+  text-align: center;
+  border-radius: 50%;
+  line-height: 36px;
+}

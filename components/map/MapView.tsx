@@ -4,15 +4,13 @@ import { useState, useTransition } from "react";
 import dynamic from "next/dynamic";
 import { getDashboardPath } from "@/lib/access";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Search, Filter, Globe, LockKeyhole, Map as MapIcon } from "lucide-react";
+import { ArrowLeft, Search, Filter, Globe, LockKeyhole, Map as MapIcon, X, Menu } from "lucide-react";
 import Link from "next/link";
-import { LandingNavbar } from "@/components/layout/LandingNavbar";
 import type { Property, User } from "@/types/models";
 import { Input } from "@/components/ui/input";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { purchaseMapAccess } from "@/app/actions/visits";
 
-// Lazy load the map to avoid SSR issues with Leaflet
 const LeafletMap = dynamic(() => import("./LeafletMap"), { 
   ssr: false,
   loading: () => <div className="h-full w-full bg-gray-100 animate-pulse flex items-center justify-center font-serif text-gray-400">Loading Map...</div>
@@ -28,6 +26,7 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
   const [searchQuery, setSearchQuery] = useState("");
   const [pending, startTransition] = useTransition();
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   const filteredProperties = properties.filter(p => 
     p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -37,12 +36,33 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
 
   return (
     <div className="relative h-screen w-full bg-[#0b1220]">
-      {/* Sidebar/Overlay Controls */}
-      <div className="absolute left-8 top-8 z-[1001] flex flex-col gap-6">
+      {/* Mobile Top Bar */}
+      <div className="absolute top-0 left-0 right-0 z-[1001] flex items-center justify-between p-3 sm:p-4 lg:hidden">
         <Button 
           variant="secondary" 
           asChild 
-          className="w-fit rounded-2xl bg-[#111827]/90 px-8 py-7 text-[#f9fafb] shadow-2xl backdrop-blur-xl border border-white/5 hover:bg-[#111827] hover:border-[#c9a646]/30 transition-all group"
+          className="rounded-xl bg-[#111827]/90 px-4 py-5 text-[#f9fafb] shadow-2xl backdrop-blur-xl border border-white/5 hover:bg-[#111827] hover:border-[#c9a646]/30 transition-all group"
+        >
+          <Link href={currentUser ? getDashboardPath(currentUser.role) : "/"}>
+            <ArrowLeft className="mr-2 size-4 text-[#c9a646] group-hover:-translate-x-1 transition-transform" />
+            <span className="text-[10px] font-black uppercase tracking-[0.15em]">Back</span>
+          </Link>
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="rounded-xl bg-[#111827]/90 px-4 py-5 text-[#f9fafb] shadow-2xl backdrop-blur-xl border border-white/5 hover:bg-[#111827] hover:border-[#c9a646]/30 transition-all"
+        >
+          {sidebarOpen ? <X className="size-4 text-[#c9a646]" /> : <Menu className="size-4 text-[#c9a646]" />}
+        </Button>
+      </div>
+
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:flex absolute left-6 top-6 z-[1001] flex-col gap-5">
+        <Button 
+          variant="secondary" 
+          asChild 
+          className="w-fit rounded-2xl bg-[#111827]/90 px-6 py-6 text-[#f9fafb] shadow-2xl backdrop-blur-xl border border-white/5 hover:bg-[#111827] hover:border-[#c9a646]/30 transition-all group"
         >
           <Link href={currentUser ? getDashboardPath(currentUser.role) : "/"}>
             <ArrowLeft className="mr-3 size-5 text-[#c9a646] group-hover:-translate-x-1 transition-transform" />
@@ -50,32 +70,69 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
           </Link>
         </Button>
 
-        <div className="flex w-[380px] flex-col gap-5 rounded-[2.5rem] bg-[#111827]/90 p-7 shadow-[0_32px_80px_rgba(0,0,0,0.5)] backdrop-blur-xl border border-white/5">
-          <div className="flex items-center justify-between mb-2">
+        <div className="flex w-[340px] flex-col gap-4 rounded-[2rem] bg-[#111827]/90 p-6 shadow-[0_32px_80px_rgba(0,0,0,0.5)] backdrop-blur-xl border border-white/5">
+          <div className="flex items-center justify-between mb-1">
             <div className="flex items-center gap-2">
-              <div className="size-8 rounded-xl bg-[#c9a646]/10 flex items-center justify-center text-[#c9a646]">
-                <Globe className="size-4" />
+              <div className="size-7 rounded-lg bg-[#c9a646]/10 flex items-center justify-center text-[#c9a646]">
+                <Globe className="size-3.5" />
               </div>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#64748b]">System Language</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#64748b]">Language</span>
             </div>
             <LanguageSwitcher />
           </div>
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-[#64748b]" />
+            <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#64748b]" />
             <Input 
               placeholder="Search by neighborhood..." 
-              className="h-14 rounded-2xl border-white/5 bg-white/5 pl-12 text-sm font-medium text-[#f9fafb] placeholder:text-[#64748b] focus:ring-[#c9a646]/20 focus:border-[#c9a646]/40 transition-all"
+              className="h-12 rounded-xl border-white/5 bg-white/5 pl-10 text-sm font-medium text-[#f9fafb] placeholder:text-[#64748b] focus:ring-[#c9a646]/20 focus:border-[#c9a646]/40 transition-all"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="flex items-center justify-between px-2">
+          <div className="flex items-center justify-between px-1">
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#64748b]">Found</p>
-              <p className="text-lg font-serif font-bold text-[#f9fafb]">{filteredProperties.length} listings</p>
+              <p className="text-base font-serif font-bold text-[#f9fafb]">{filteredProperties.length} listings</p>
             </div>
-            <Button variant="ghost" size="sm" className="h-10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-[#c9a646] hover:bg-[#c9a646]/10">
-              <Filter className="mr-2 size-4" />
+            <Button variant="ghost" size="sm" className="h-9 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] text-[#c9a646] hover:bg-[#c9a646]/10">
+              <Filter className="mr-1.5 size-3.5" />
+              Advanced
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div className="absolute inset-0 z-[1000] bg-black/50 lg:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+      <div className={`absolute top-16 left-3 right-3 z-[1001] lg:hidden transition-all duration-300 ${sidebarOpen ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0 pointer-events-none"}`}>
+        <div className="flex flex-col gap-4 rounded-2xl bg-[#111827]/95 p-5 shadow-[0_32px_80px_rgba(0,0,0,0.5)] backdrop-blur-xl border border-white/5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="size-7 rounded-lg bg-[#c9a646]/10 flex items-center justify-center text-[#c9a646]">
+                <Globe className="size-3.5" />
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#64748b]">Language</span>
+            </div>
+            <LanguageSwitcher />
+          </div>
+          <div className="relative">
+            <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#64748b]" />
+            <Input 
+              placeholder="Search by neighborhood..." 
+              className="h-12 rounded-xl border-white/5 bg-white/5 pl-10 text-sm font-medium text-[#f9fafb] placeholder:text-[#64748b] focus:ring-[#c9a646]/20 focus:border-[#c9a646]/40 transition-all"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <div className="flex items-center justify-between px-1">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#64748b]">Found</p>
+              <p className="text-base font-serif font-bold text-[#f9fafb]">{filteredProperties.length} listings</p>
+            </div>
+            <Button variant="ghost" size="sm" className="h-9 rounded-lg text-[10px] font-black uppercase tracking-[0.2em] text-[#c9a646] hover:bg-[#c9a646]/10">
+              <Filter className="mr-1.5 size-3.5" />
               Advanced
             </Button>
           </div>
@@ -88,19 +145,19 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
           <LeafletMap properties={filteredProperties} />
         ) : (
           <div className="h-full w-full bg-[#0b1220] flex items-center justify-center">
-            <div className="max-w-md mx-auto text-center px-8">
-              <div className="size-20 rounded-3xl bg-[#c9a646]/10 flex items-center justify-center mx-auto mb-8 border border-[#c9a646]/20">
-                <LockKeyhole className="size-10 text-[#c9a646]" />
+            <div className="max-w-sm sm:max-w-md mx-auto text-center px-6">
+              <div className="size-16 sm:size-20 rounded-2xl sm:rounded-3xl bg-[#c9a646]/10 flex items-center justify-center mx-auto mb-6 sm:mb-8 border border-[#c9a646]/20">
+                <LockKeyhole className="size-8 sm:size-10 text-[#c9a646]" />
               </div>
-              <h2 className="font-serif text-4xl font-bold text-[#f9fafb] mb-3">Map Access Required</h2>
-              <p className="text-[#64748b] text-sm leading-relaxed mb-8">
+              <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#f9fafb] mb-3">Map Access Required</h2>
+              <p className="text-[#64748b] text-sm leading-relaxed mb-6 sm:mb-8">
                 Unlock the full interactive map to explore all available properties across Kigali. 
                 One-time payment gives you permanent access.
               </p>
               {currentUser ? (
                 <div className="space-y-4">
                   <Button
-                    className="h-16 rounded-2xl bg-[#c9a646] hover:bg-[#c9a646]/90 text-navy-dark font-black text-lg shadow-xl shadow-[#c9a646]/20 transition-all active:scale-95 w-full"
+                    className="h-14 sm:h-16 rounded-xl sm:rounded-2xl bg-[#c9a646] hover:bg-[#c9a646]/90 text-navy-dark font-black text-base sm:text-lg shadow-xl shadow-[#c9a646]/20 transition-all active:scale-95 w-full"
                     disabled={pending}
                     onClick={() => {
                       startTransition(async () => {
@@ -125,7 +182,7 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
                   </p>
                 </div>
               ) : (
-                <Button asChild className="h-16 rounded-2xl bg-[#c9a646] hover:bg-[#c9a646]/90 text-navy-dark font-black text-lg shadow-xl shadow-[#c9a646]/20 transition-all active:scale-95 w-full">
+                <Button asChild className="h-14 sm:h-16 rounded-xl sm:rounded-2xl bg-[#c9a646] hover:bg-[#c9a646]/90 text-navy-dark font-black text-base sm:text-lg shadow-xl shadow-[#c9a646]/20 transition-all active:scale-95 w-full">
                   <Link href="/auth?mode=signup&next=/map">
                     <MapIcon className="size-5" />
                     Create Account to Unlock Map
@@ -139,25 +196,25 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
 
       {/* Stats Overlay */}
       {hasMapAccess && (
-        <div className="absolute bottom-10 left-10 z-[1001]">
-          <div className="flex items-center gap-10 rounded-[2rem] bg-[#0b1220]/95 px-10 py-7 text-white shadow-[0_32px_80px_rgba(0,0,0,0.6)] backdrop-blur-2xl border border-[#c9a646]/20">
-            <div className="flex items-center gap-4">
-              <div className="size-12 rounded-2xl bg-[#c9a646]/10 flex items-center justify-center text-[#c9a646]">
-                <Search className="size-6" />
+        <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-auto z-[1001]">
+          <div className="flex items-center gap-4 sm:gap-8 rounded-xl sm:rounded-2xl bg-[#0b1220]/95 px-4 sm:px-8 py-4 sm:py-5 text-white shadow-[0_32px_80px_rgba(0,0,0,0.6)] backdrop-blur-2xl border border-[#c9a646]/20">
+            <div className="flex items-center gap-3">
+              <div className="size-9 sm:size-10 rounded-xl bg-[#c9a646]/10 flex items-center justify-center text-[#c9a646]">
+                <Search className="size-4 sm:size-5" />
               </div>
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#64748b]">Total in View</p>
-                <p className="font-serif text-3xl font-bold tracking-tighter text-[#f9fafb]">{properties.length}</p>
+                <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-[#64748b]">Total</p>
+                <p className="text-lg sm:text-xl font-serif font-bold tracking-tighter text-[#f9fafb]">{properties.length}</p>
               </div>
             </div>
-            <div className="h-14 w-px bg-white/5" />
-            <div className="flex items-center gap-4">
-              <div className="size-12 rounded-2xl bg-green-500/10 flex items-center justify-center text-green-500">
-                <Filter className="size-6" />
+            <div className="h-8 sm:h-10 w-px bg-white/5" />
+            <div className="flex items-center gap-3">
+              <div className="size-9 sm:size-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-500">
+                <Filter className="size-4 sm:size-5" />
               </div>
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#64748b]">Avg. Market Price</p>
-                <p className="font-serif text-3xl font-bold tracking-tighter text-[#e6c76e]">RWF 45.2M</p>
+                <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-[#64748b]">Avg Price</p>
+                <p className="text-lg sm:text-xl font-serif font-bold tracking-tighter text-[#e6c76e]">RWF 45.2M</p>
               </div>
             </div>
           </div>

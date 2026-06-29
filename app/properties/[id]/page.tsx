@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 
 export const revalidate = 3600;
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://kalohouse.com";
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.kalohouse.com";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;

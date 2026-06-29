@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description:
     "Find verified properties for sale and rent in Kigali, Rwanda. Secure escrow payments, agent-verified listings, and buyer protection.",
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_APP_URL || "https://kalohouse.rw",
+    canonical: process.env.NEXT_PUBLIC_APP_URL || "https://kalohouse.com",
   },
 };
 

@@ -15,7 +15,7 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://kalohouse.rw";
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://kalohouse.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),

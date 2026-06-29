@@ -1,29 +1,69 @@
-.auth-wrapper {
-  overflow: hidden;
-  max-width: 480px;
-  width: 100%;
-  background: rgba(17, 24, 39, 0.96);
-  border: 1px solid rgba(201, 166, 70, 0.25);
-  padding: 40px;
-  border-radius: 32px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(40px);
-  position: relative;
+.auth-brand-panel {
+  background: linear-gradient(160deg, #07111f 0%, #0a1628 50%, #0d1b2e 100%);
+  border-right: 1px solid rgba(201, 166, 70, 0.08);
 }
 
-.auth-wrapper a {
-  color: var(--color-gold);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.auth-wrapper a:hover {
+.auth-input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
   color: white;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
-/* Custom transitions for smoother feel */
-.auth-wrapper button {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.auth-input:focus {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(201, 166, 70, 0.4);
+  box-shadow: 0 0 0 3px rgba(201, 166, 70, 0.08);
+}
+
+.auth-input::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.auth-submit {
+  background: linear-gradient(135deg, #c9a646 0%, #d4b35a 100%);
+  color: #0a1628;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(201, 166, 70, 0.25);
+}
+
+.auth-submit:hover {
+  background: linear-gradient(135deg, #d4b35a 0%, #dfc06e 100%);
+  box-shadow: 0 6px 25px rgba(201, 166, 70, 0.35);
+  transform: translateY(-1px);
+}
+
+.auth-submit:active {
+  transform: translateY(0);
+}
+
+.auth-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auth-google {
+  background: rgba(255, 255, 255, 0.95);
+  color: #3c4043;
+  border: 1px solid rgba(218, 220, 224, 0.5);
+}
+
+.auth-google:hover {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.auth-google:active {
+  transform: scale(0.98);
+}
+
+.auth-google:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .auth-wrapper select {

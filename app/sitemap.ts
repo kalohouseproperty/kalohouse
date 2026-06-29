@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import prisma from "@/lib/prisma";
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://kalohouse.rw";
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://kalohouse.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
@@ -23,12 +23,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     if (!process.env.DATABASE_URL) return staticPages;
 
-    const properties = await prisma.property.findMany({
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("DB timeout")), 5000)
+    );
+
+    const dbPromise = prisma.property.findMany({
       where: { status: "published" },
       select: { id: true, updated_at: true },
       orderBy: { updated_at: "desc" },
       take: 5000,
     });
+
+    const properties = await Promise.race([dbPromise, timeoutPromise]);
 
     propertyPages = properties.map((p) => ({
       url: `${baseUrl}/properties/${p.id}`,

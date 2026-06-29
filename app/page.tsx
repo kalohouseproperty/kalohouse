@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { unstable_noStore as noStore } from "next/cache";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
@@ -32,7 +33,11 @@ export default async function LandingPage({ searchParams }: LandingPageProps) {
 
   const properties = await getPublishedProperties();
   const params = await searchParams;
-  const tData = getTranslations(parseLanguage(params?.lang));
+  const cookieStore = await cookies();
+  const langFromUrl = params?.lang ? parseLanguage(params.lang) : undefined;
+  const langFromCookie = cookieStore.get("language")?.value;
+  const language = langFromUrl ?? parseLanguage(langFromCookie);
+  const tData = getTranslations(language);
 
   return (
     <LandingV2Content

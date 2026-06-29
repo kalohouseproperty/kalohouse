@@ -1,10 +1,10 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ShieldCheck, Mail, Lock, User as UserIcon, Eye, EyeOff, ArrowRight, Sparkles, Home, Building2 } from "lucide-react";
+import { ShieldCheck, Mail, Lock, User as UserIcon, Eye, EyeOff, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 
 import "./auth.css";
 import { useKalohouse } from "@/components/providers/KalohouseProvider";
@@ -25,6 +25,7 @@ function AuthPageContent() {
   const { toast, t } = useKalohouse();
   const redirectTo = searchParams.get("next") || "";
   const requestedMode = searchParams.get("mode");
+  const tabRef = useRef<HTMLDivElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "signup" | "forgot">(
@@ -133,46 +134,55 @@ function AuthPageContent() {
   };
 
   return (
-    <div className="h-screen flex">
+    <div className="min-h-screen flex flex-col lg:flex-row overflow-hidden">
       <div className="fixed right-4 top-4 z-50">
         <LanguageSwitcher />
       </div>
 
-      {/* Left Panel - Brand (desktop only) */}
+      {/* Left Panel - Brand (visible on desktop, hidden on mobile) */}
       <div className="hidden lg:flex lg:w-[45%] auth-brand-panel relative items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 premium-grid opacity-[0.08]" />
-        <div className="absolute top-20 left-20 w-72 h-72 rounded-full bg-gold/8 blur-[120px]" />
-        <div className="absolute bottom-20 right-20 w-56 h-56 rounded-full bg-blue-500/5 blur-[100px]" />
+        {/* Background Effects */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 premium-grid opacity-[0.06]" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-gold/[0.07] blur-[150px]" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-blue-500/[0.04] blur-[120px]" />
+        </div>
         
-        <div className="relative z-10 max-w-lg px-12">
-          <div className="flex items-center gap-3 mb-10">
-            <div className="relative size-12 overflow-hidden rounded-2xl border border-gold/30 shadow-[0_0_25px_rgba(201,166,70,0.2)]">
+        <div className="relative z-10 max-w-lg px-16">
+          {/* Logo */}
+          <div className="flex items-center gap-3 mb-16">
+            <div className="relative size-14 overflow-hidden rounded-2xl border border-gold/20 shadow-[0_0_30px_rgba(201,166,70,0.15)]">
               <Image src="/kalohouse.png" alt="Kalohouse" fill className="object-cover" />
             </div>
-            <span className="font-serif text-2xl text-white tracking-tight">Kalohouse</span>
+            <span className="font-serif text-3xl text-white tracking-tight">Kalohouse</span>
           </div>
 
-          <h1 className="font-serif text-5xl text-white leading-[1.1] mb-6">
-            Find your next<br />
-            <span className="text-gold">home</span> with<br />
-            confidence.
+          {/* Hero Text */}
+          <h1 className="font-serif text-[3.5rem] text-white leading-[1.05] mb-6 tracking-tight">
+            Find your next{" "}
+            <span className="relative inline-block">
+              <span className="relative z-10 text-gold">home</span>
+              <span className="absolute bottom-1 left-0 right-0 h-3 bg-gold/20 -skew-x-3" />
+            </span>{" "}
+            with confidence.
           </h1>
           
-          <p className="text-text-secondary/70 text-base leading-relaxed mb-12 max-w-md">
+          <p className="text-text-secondary/60 text-base leading-relaxed mb-14 max-w-md">
             {t("heroSubtitle")}
           </p>
 
-          <div className="grid grid-cols-3 gap-6">
+          {/* Trust Indicators */}
+          <div className="space-y-5">
             {[
-              { icon: ShieldCheck, label: "Verified Listings" },
-              { icon: Home, label: "Secure Payments" },
-              { icon: Building2, label: "Agent Inspected" },
+              { icon: ShieldCheck, text: "Agent-verified listings" },
+              { icon: CheckCircle2, text: "Secure escrow payments" },
+              { icon: Sparkles, text: "Buyer protection guarantee" },
             ].map((item) => (
-              <div key={item.label} className="flex flex-col items-center text-center gap-2.5">
-                <div className="size-11 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center">
-                  <item.icon className="size-5 text-gold/70" />
+              <div key={item.text} className="flex items-center gap-4">
+                <div className="size-10 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center">
+                  <item.icon className="size-5 text-gold/60" />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-text-secondary/50">{item.label}</span>
+                <span className="text-sm text-text-secondary/50 font-medium">{item.text}</span>
               </div>
             ))}
           </div>
@@ -180,26 +190,27 @@ function AuthPageContent() {
       </div>
 
       {/* Right Panel - Form */}
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-8 bg-main-bg relative">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-gold/[0.03] blur-[100px]" />
-          <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] rounded-full bg-blue-500/[0.02] blur-[80px]" />
+      <div className="flex-1 flex items-start lg:items-center justify-center p-5 sm:p-8 bg-main-bg relative overflow-y-auto">
+        {/* Background Glow */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-32 -right-32 w-[400px] h-[400px] rounded-full bg-gold/[0.02] blur-[100px]" />
+          <div className="absolute -bottom-32 -left-32 w-[350px] h-[350px] rounded-full bg-blue-500/[0.015] blur-[80px]" />
         </div>
 
-        <div className="w-full max-w-[420px] relative z-10">
+        <div className="w-full max-w-[420px] relative z-10 py-4 sm:py-0 my-auto">
           {/* Mobile Logo */}
-          <div className="flex justify-center mb-8 lg:hidden">
-            <div className="relative size-16 overflow-hidden rounded-2xl border border-gold/30 shadow-[0_0_20px_rgba(201,166,70,0.25)]">
+          <div className="flex justify-center mb-6 lg:hidden">
+            <div className="relative size-16 overflow-hidden rounded-2xl border border-gold/20 shadow-[0_0_25px_rgba(201,166,70,0.2)]">
               <Image src="/kalohouse.png" alt="Kalohouse" fill className="object-cover" />
             </div>
           </div>
 
           {/* Header */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-1.5 tracking-tight">
+          <div className="mb-7 auth-fade-in-up">
+            <h2 className="text-[1.6rem] font-bold text-white mb-1.5 tracking-tight">
               {authMode === "login" ? "Welcome back" : authMode === "signup" ? "Create your account" : "Reset password"}
             </h2>
-            <p className="text-text-secondary/60 text-sm">
+            <p className="text-text-secondary/45 text-[13px]">
               {authMode === "login" 
                 ? "Sign in to access your dashboard" 
                 : authMode === "signup" 
@@ -210,23 +221,29 @@ function AuthPageContent() {
 
           {/* Mode Tabs */}
           {authMode !== "forgot" && (
-            <div className="flex bg-white/[0.03] p-1 rounded-xl mb-6 border border-white/[0.04]">
+            <div className="relative flex bg-white/[0.025] p-1 rounded-2xl mb-7 border border-white/[0.04] auth-fade-in-up auth-fade-in-up-delay-1">
+              <div
+                ref={tabRef}
+                className="auth-tab-indicator"
+                style={{
+                  left: authMode === "login" ? "4px" : "calc(50% + 2px)",
+                  width: "calc(50% - 6px)",
+                }}
+              />
               <button
+                type="button"
                 onClick={() => setAuthMode("login")}
-                className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all duration-200 ${
-                  authMode === "login" 
-                    ? "bg-gold text-navy-dark shadow-lg shadow-gold/20" 
-                    : "text-text-secondary/60 hover:text-white"
+                className={`relative z-10 flex-1 py-2.5 text-xs font-bold rounded-xl transition-colors duration-300 ${
+                  authMode === "login" ? "text-navy-dark" : "text-text-secondary/40 hover:text-white/60"
                 }`}
               >
                 {t("login")}
               </button>
               <button
+                type="button"
                 onClick={() => setAuthMode("signup")}
-                className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all duration-200 ${
-                  authMode === "signup" 
-                    ? "bg-gold text-navy-dark shadow-lg shadow-gold/20" 
-                    : "text-text-secondary/60 hover:text-white"
+                className={`relative z-10 flex-1 py-2.5 text-xs font-bold rounded-xl transition-colors duration-300 ${
+                  authMode === "signup" ? "text-navy-dark" : "text-text-secondary/40 hover:text-white/60"
                 }`}
               >
                 {t("signup")}
@@ -238,14 +255,14 @@ function AuthPageContent() {
           <form onSubmit={handleCredentialsAuth} className="space-y-4">
             {/* Signup Fields */}
             {authMode === "signup" && (
-              <div className="space-y-4 animate-in slide-in-from-top-2 duration-300">
+              <div className="space-y-3.5 auth-form-animate">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-[0.15em] font-bold text-text-secondary/60 ml-1">{t("name")}</label>
+                  <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-text-secondary/35 ml-1">{t("name")}</label>
                   <div className="relative">
-                    <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-text-secondary/30" />
+                    <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-text-secondary/20" />
                     <Input 
                       placeholder="John Doe" 
-                      className="auth-input pl-11 h-12" 
+                      className="auth-input pl-12 h-[48px]" 
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       required
@@ -254,7 +271,7 @@ function AuthPageContent() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-[0.15em] font-bold text-text-secondary/60 ml-1">I am a</label>
+                  <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-text-secondary/35 ml-1">I am a</label>
                   <Select 
                     value={signupRole} 
                     onChange={(e) => {
@@ -263,7 +280,7 @@ function AuthPageContent() {
                         setSignupRole(newRole);
                       }
                     }} 
-                    className="auth-input h-12"
+                    className="auth-input h-[48px]"
                   >
                     <option value="client">Client (Looking to buy/rent)</option>
                     <option value="owner">Owner (Selling property)</option>
@@ -271,22 +288,22 @@ function AuthPageContent() {
                 </div>
 
                 {signupRole === "owner" && (
-                  <div className="space-y-4 animate-in slide-in-from-top-1 duration-200">
+                  <div className="space-y-3.5 auth-form-animate">
                     <div className="space-y-1.5">
-                      <label className="text-[10px] uppercase tracking-[0.15em] font-bold text-text-secondary/60 ml-1">Nationality</label>
+                      <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-text-secondary/35 ml-1">Nationality</label>
                       <Input 
                         placeholder="e.g., Rwandan" 
-                        className="auth-input h-12" 
+                        className="auth-input h-[48px]" 
                         value={nationality}
                         onChange={(e) => setNationality(e.target.value)}
                         required
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] uppercase tracking-[0.15em] font-bold text-text-secondary/60 ml-1">National ID</label>
+                      <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-text-secondary/35 ml-1">National ID</label>
                       <Input 
                         placeholder="Enter your national ID" 
-                        className="auth-input h-12" 
+                        className="auth-input h-[48px]" 
                         value={nationalId}
                         onChange={(e) => setNationalId(e.target.value)}
                         required
@@ -299,13 +316,13 @@ function AuthPageContent() {
 
             {/* Email */}
             <div className="space-y-1.5">
-              <label className="text-[10px] uppercase tracking-[0.15em] font-bold text-text-secondary/60 ml-1">{t("email")}</label>
+              <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-text-secondary/35 ml-1">{t("email")}</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-text-secondary/30" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-text-secondary/20" />
                 <Input 
                   type="email" 
                   placeholder="name@example.com" 
-                  className="auth-input pl-11 h-12" 
+                  className="auth-input pl-12 h-[48px]" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -317,23 +334,23 @@ function AuthPageContent() {
             {authMode !== "forgot" && (
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between ml-1">
-                  <label className="text-[10px] uppercase tracking-[0.15em] font-bold text-text-secondary/60">{t("password")}</label>
+                  <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-text-secondary/35">{t("password")}</label>
                   {authMode === "login" && (
                     <button
                       type="button"
                       onClick={() => setAuthMode("forgot")}
-                      className="text-[10px] font-bold text-gold/70 hover:text-gold transition-colors uppercase tracking-wider"
+                      className="text-[10px] font-bold text-gold/50 hover:text-gold transition-colors uppercase tracking-wider"
                     >
                       {t("forgotPassword")}
                     </button>
                   )}
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-text-secondary/30" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-text-secondary/20" />
                   <Input 
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••" 
-                    className="auth-input pl-11 pr-11 h-12" 
+                    className="auth-input pl-12 pr-12 h-[48px]" 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -341,7 +358,7 @@ function AuthPageContent() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary/30 hover:text-text-secondary/60 transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary/20 hover:text-text-secondary/50 transition-colors"
                   >
                     {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
@@ -353,10 +370,10 @@ function AuthPageContent() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="auth-submit w-full h-12 rounded-xl font-bold text-sm transition-all duration-200"
+              className="auth-submit w-full h-[48px] rounded-xl font-bold text-sm mt-1"
             >
               {isLoading ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   <div className="size-4 border-2 border-navy-dark/30 border-t-navy-dark rounded-full animate-spin" />
                   Processing...
                 </div>
@@ -378,7 +395,7 @@ function AuthPageContent() {
                 type="button"
                 variant="ghost"
                 onClick={() => setAuthMode("login")}
-                className="w-full h-12 text-text-secondary/60 hover:text-white"
+                className="w-full h-[48px] text-text-secondary/45 hover:text-white"
               >
                 {t("backToLogin")}
               </Button>
@@ -390,10 +407,10 @@ function AuthPageContent() {
             <>
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/[0.06]" />
+                  <div className="w-full border-t border-white/[0.04]" />
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="bg-main-bg px-4 text-[10px] uppercase tracking-[0.2em] font-bold text-text-secondary/30">or</span>
+                  <span className="bg-main-bg px-4 text-[10px] uppercase tracking-[0.25em] font-bold text-text-secondary/20">or</span>
                 </div>
               </div>
 
@@ -401,7 +418,7 @@ function AuthPageContent() {
               <Button
                 onClick={handleGoogleAuth}
                 disabled={isLoading}
-                className="auth-google w-full h-12 rounded-xl font-semibold text-sm gap-3 transition-all duration-200"
+                className="auth-google w-full h-[48px] rounded-xl font-semibold text-sm gap-3"
               >
                 <svg className="size-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -415,16 +432,16 @@ function AuthPageContent() {
           )}
 
           {/* Terms */}
-          <p className="text-[10px] text-center text-text-secondary/30 leading-relaxed mt-6 px-4">
+          <p className="text-[10px] text-center text-text-secondary/20 leading-relaxed mt-6 px-4">
             By continuing, you agree to Kalohouse&apos;s{" "}
-            <a href="/terms-of-service" className="text-gold/60 hover:text-gold transition-colors underline underline-offset-2">{t("termsOfService")}</a>
+            <a href="/terms-of-service" className="text-gold/45 hover:text-gold transition-colors underline underline-offset-2 decoration-gold/15">{t("termsOfService")}</a>
             {" "}&{" "}
-            <a href="/privacy-policy" className="text-gold/60 hover:text-gold transition-colors underline underline-offset-2">{t("privacyPolicy")}</a>
+            <a href="/privacy-policy" className="text-gold/45 hover:text-gold transition-colors underline underline-offset-2 decoration-gold/15">{t("privacyPolicy")}</a>
           </p>
 
-          {/* Footer Badge */}
-          <div className="mt-8 flex items-center justify-center gap-1.5 text-[9px] uppercase tracking-[0.2em] text-text-secondary/20 font-bold">
-            <Sparkles className="size-3" />
+          {/* Footer */}
+          <div className="mt-8 pt-5 border-t border-white/[0.03] flex items-center justify-center gap-1.5 text-[9px] uppercase tracking-[0.2em] text-text-secondary/12 font-bold">
+            <ShieldCheck className="size-3" />
             Secured by Kalohouse
           </div>
         </div>

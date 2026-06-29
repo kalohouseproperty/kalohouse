@@ -17,7 +17,7 @@ function getInitialLanguage(): Language {
   if (typeof window === "undefined") return "en";
   try {
     const stored = localStorage.getItem(LANGUAGE_KEY);
-    if (stored === "en") return stored;
+    if (stored === "en" || stored === "fr") return stored;
   } catch {}
   return "en";
 }
@@ -98,7 +98,7 @@ function getStoredLanguage(): Language {
   if (typeof window === "undefined") return "en";
 
   const urlLang = new URL(window.location.href).searchParams.get("lang");
-  if (urlLang === "en") return "en";
+  if (urlLang === "en" || urlLang === "fr") return parseLanguage(urlLang);
 
   return getInitialLanguage();
 }
@@ -109,7 +109,7 @@ export function KalohouseProvider({ children, initialLanguage }: { children: Rea
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const [language, setLanguageState] = useState<Language>(initialLanguage === "fr" ? "en" : initialLanguage ?? getStoredLanguage);
+  const [language, setLanguageState] = useState<Language>(initialLanguage ?? getStoredLanguage);
 const [saved_property_ids, setSavedPropertyIdsState] = useState<string[]>([]);
 const [savedPropertiesData, setSavedPropertiesDataState] = useState<Record<string, Property>>({});
 const [showSavedPanel, setShowSavedPanel] = useState(false);
@@ -122,6 +122,10 @@ const closeSavedPanel = useCallback(() => setShowSavedPanel(false), []);
     setSavedPropertyIdsState(ids);
     setSavedPropertiesDataState(data);
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
 
   useEffect(() => {
   if (status !== "loading") {
@@ -199,19 +203,11 @@ const closeSavedPanel = useCallback(() => setShowSavedPanel(false), []);
   );
 
   const setLanguage = useCallback(async (lang: Language) => {
-    if (lang === "fr") {
-      setLanguageState("en");
-      persistLanguage("en");
-      localStorage.removeItem(GROQ_CACHE_KEY);
-      return;
-    }
-
     setLanguageState(lang);
     persistLanguage(lang);
 
     if (lang === "en") {
       localStorage.removeItem(GROQ_CACHE_KEY);
-      return;
     }
   }, []);
 

@@ -4,8 +4,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { sendContactMessage } from "@/app/actions/contact";
+import { useKalohouse } from "@/components/providers/KalohouseProvider";
 
 export function ContactForm() {
+  const { t } = useKalohouse();
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [formData, setFormData] = useState({
@@ -36,7 +38,7 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid sm:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="text-xs uppercase tracking-widest font-bold text-text-secondary">First Name</label>
+          <label className="text-xs uppercase tracking-widest font-bold text-text-secondary">{t("firstName")}</label>
           <Input
             type="text"
             className="bg-white/5 border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-gold/50 transition-colors"
@@ -47,7 +49,7 @@ export function ContactForm() {
           />
         </div>
         <div className="space-y-2">
-          <label className="text-xs uppercase tracking-widest font-bold text-text-secondary">Last Name</label>
+          <label className="text-xs uppercase tracking-widest font-bold text-text-secondary">{t("lastName")}</label>
           <Input
             type="text"
             className="bg-white/5 border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-gold/50 transition-colors"
@@ -59,7 +61,7 @@ export function ContactForm() {
         </div>
       </div>
       <div className="space-y-2">
-        <label className="text-xs uppercase tracking-widest font-bold text-text-secondary">Email Address</label>
+        <label className="text-xs uppercase tracking-widest font-bold text-text-secondary">{t("emailAddress")}</label>
         <Input
           type="email"
           className="bg-white/5 border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-gold/50 transition-colors"
@@ -70,11 +72,11 @@ export function ContactForm() {
         />
       </div>
       <div className="space-y-2">
-        <label className="text-xs uppercase tracking-widest font-bold text-text-secondary">Message</label>
+        <label className="text-xs uppercase tracking-widest font-bold text-text-secondary">{t("message")}</label>
         <textarea
           rows={4}
           className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-gold/50 transition-colors resize-none"
-          placeholder="How can we help you?"
+          placeholder={t("messagePlaceholder")}
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
           required
@@ -98,7 +100,7 @@ export function ContactForm() {
         disabled={isLoading}
         className="w-full h-16 rounded-[1.8rem] bg-gold hover:bg-gold-light text-navy-dark font-bold text-lg shadow-xl shadow-gold/20 transition-all hover:scale-[1.01] active:scale-95"
       >
-        {isLoading ? "Sending..." : "Send Message"}
+        {isLoading ? t("sending") : t("sendMessage")}
       </Button>
     </form>
   );

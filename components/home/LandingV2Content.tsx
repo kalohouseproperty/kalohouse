@@ -620,28 +620,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-white/[0.04] bg-main-bg px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col items-center justify-between gap-8 sm:flex-row">
-            <div className="flex items-center gap-3">
-              <div className="relative size-9 overflow-hidden rounded-xl border border-gold/30">
-                <Image src="/kalohouse.png" alt="" fill className="object-cover" />
-              </div>
-              <span className="font-serif text-base text-white">Kalohouse</span>
-            </div>
-            <div className="flex gap-8 text-sm text-text-secondary/50">
-              <Link href="/" className="hover:text-gold transition-colors">{t("home")}</Link>
-              <Link href="/properties" className="hover:text-gold transition-colors">{t("properties")}</Link>
-              <Link href="/map" className="hover:text-gold transition-colors">{t("map")}</Link>
-              <Link href="/about" className="hover:text-gold transition-colors">{t("about")}</Link>
-            </div>
-          </div>
-          <div className="mt-10 border-t border-white/[0.04] pt-8 text-center text-xs text-text-secondary/30">
-            &copy; 2026 Nyumbani Marketplace. All rights reserved.
-          </div>
-        </div>
-      </footer>
+
     </main>
   );
 }

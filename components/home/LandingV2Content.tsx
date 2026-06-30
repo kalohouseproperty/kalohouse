@@ -148,7 +148,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
       <section className="relative min-h-[90vh] hidden sm:flex items-center pt-16">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-gold/5 blur-[120px]" />
-          <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-blue-500/5 blur-[100px]" />
+          <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-gold/5 blur-[100px]" />
           <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full bg-amber-500/5 blur-[100px]" />
           <div className="absolute inset-0 premium-grid opacity-[0.15]" />
         </div>
@@ -212,7 +212,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
                 </div>
                 <Button
                   asChild
-                  className="h-12 rounded-xl px-6 bg-gold hover:bg-gold-light text-navy-dark font-bold shadow-xl shadow-gold/20 shrink-0"
+                  className="h-12 rounded-xl px-6 bg-gold hover:bg-gold-light text-main-bg font-bold shadow-xl shadow-gold/20 shrink-0"
                 >
                   <Link href={hasFilters ? `/properties?${new URLSearchParams(
                     Object.entries(filters).filter(([, v]) => v).map(([k, v]) => [k, v])
@@ -328,7 +328,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
                 </div>
                 {property.media.video && (
                   <div className="absolute bottom-0 right-0 rounded-full bg-gold p-1 shadow">
-                    <Play className="size-2.5 text-navy-dark" fill="currentColor" />
+                    <Play className="size-2.5 text-main-bg" fill="currentColor" />
                   </div>
                 )}
               </div>
@@ -412,7 +412,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
             <Link
               href={`/properties/${filteredProperties[storyIndex].id}`}
               onClick={() => setStoryIndex(null)}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gold py-4 text-sm font-black text-navy-dark shadow-lg shadow-gold/20 active:scale-95 transition-transform"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gold py-4 text-sm font-black text-main-bg shadow-lg shadow-gold/20 active:scale-95 transition-transform"
             >
               {t("viewDetails")} <ArrowRight className="size-4" />
             </Link>
@@ -601,7 +601,7 @@ export function LandingV2Content({ properties, currentUser, tData }: LandingV2Co
             <Button
               asChild
               size="lg"
-              className="h-14 rounded-xl px-10 text-base bg-gold hover:bg-gold-light text-navy-dark font-bold shadow-2xl shadow-gold/25 transition-all hover:scale-105"
+              className="h-14 rounded-xl px-10 text-base bg-gold hover:bg-gold-light text-main-bg font-bold shadow-2xl shadow-gold/25 transition-all hover:scale-105"
             >
               <Link href="/auth">
                 {t("createFreeAccount")}

@@ -52,7 +52,7 @@ export const metadata: Metadata = {
       "Find verified properties for sale and rent in Kigali, Rwanda. Secure escrow payments, agent-verified listings, and buyer protection.",
     images: [
       {
-        url: "/kalohouse.png",
+        url: "/kalohouse-v2.png",
         width: 1200,
         height: 630,
         alt: "Kalohouse — Rwanda's Property Marketplace",
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     title: "Kalohouse — Rwanda's Trust-First Property Marketplace",
     description:
       "Find verified properties for sale and rent in Kigali, Rwanda. Secure escrow payments and buyer protection.",
-    images: ["/kalohouse.png"],
+    images: ["/kalohouse-v2.png"],
   },
   robots: {
     index: true,
@@ -81,9 +81,9 @@ export const metadata: Metadata = {
     canonical: baseUrl,
   },
   icons: {
-    icon: "/kalohouse.png",
-    shortcut: "/kalohouse.png",
-    apple: "/kalohouse.png",
+    icon: "/kalohouse-v2.png",
+    shortcut: "/kalohouse-v2.png",
+    apple: "/kalohouse-v2.png",
   },
 };
 

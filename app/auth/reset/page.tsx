@@ -43,7 +43,7 @@ function ResetPasswordContent() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 bg-[#0b1120]">
+    <main className="min-h-screen flex items-center justify-center p-4 bg-main-bg">
       <div className="fixed right-4 top-4 z-20">
         <LanguageSwitcher />
       </div>
@@ -79,7 +79,7 @@ function ResetPasswordContent() {
 
 function ResetShell({ message }: { message: string }) {
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 bg-[#0b1120]">
+    <main className="min-h-screen flex items-center justify-center p-4 bg-main-bg">
       <div className="fixed right-4 top-4 z-20">
         <LanguageSwitcher />
       </div>

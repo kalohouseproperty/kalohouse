@@ -145,14 +145,14 @@ function AuthPageContent() {
         <div className="absolute inset-0">
           <div className="absolute inset-0 premium-grid opacity-[0.06]" />
           <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-gold/[0.07] blur-[150px]" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-blue-500/[0.04] blur-[120px]" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-gold/[0.04] blur-[120px]" />
         </div>
         
         <div className="relative z-10 max-w-lg px-16">
           {/* Logo */}
           <div className="flex items-center gap-3 mb-16">
             <div className="relative size-14 overflow-hidden rounded-2xl border border-gold/20 shadow-[0_0_30px_rgba(201,166,70,0.15)]">
-              <Image src="/kalohouse.png" alt="Kalohouse" fill className="object-cover" />
+              <Image src="/kalohouse-v2.png" alt="Kalohouse" fill className="object-cover" />
             </div>
             <span className="font-serif text-3xl text-white tracking-tight">Kalohouse</span>
           </div>
@@ -194,14 +194,14 @@ function AuthPageContent() {
         {/* Background Glow */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-32 -right-32 w-[400px] h-[400px] rounded-full bg-gold/[0.02] blur-[100px]" />
-          <div className="absolute -bottom-32 -left-32 w-[350px] h-[350px] rounded-full bg-blue-500/[0.015] blur-[80px]" />
+          <div className="absolute -bottom-32 -left-32 w-[350px] h-[350px] rounded-full bg-gold/[0.015] blur-[80px]" />
         </div>
 
         <div className="w-full max-w-[420px] relative z-10 py-4 sm:py-0 my-auto">
           {/* Mobile Logo */}
           <div className="flex justify-center mb-6 lg:hidden">
             <div className="relative size-16 overflow-hidden rounded-2xl border border-gold/20 shadow-[0_0_25px_rgba(201,166,70,0.2)]">
-              <Image src="/kalohouse.png" alt="Kalohouse" fill className="object-cover" />
+              <Image src="/kalohouse-v2.png" alt="Kalohouse" fill className="object-cover" />
             </div>
           </div>
 
@@ -234,7 +234,7 @@ function AuthPageContent() {
                 type="button"
                 onClick={() => setAuthMode("login")}
                 className={`relative z-10 flex-1 py-2.5 text-xs font-bold rounded-xl transition-colors duration-300 ${
-                  authMode === "login" ? "text-navy-dark" : "text-text-secondary/40 hover:text-white/60"
+                  authMode === "login" ? "text-main-bg" : "text-text-secondary/40 hover:text-white/60"
                 }`}
               >
                 {t("login")}
@@ -243,7 +243,7 @@ function AuthPageContent() {
                 type="button"
                 onClick={() => setAuthMode("signup")}
                 className={`relative z-10 flex-1 py-2.5 text-xs font-bold rounded-xl transition-colors duration-300 ${
-                  authMode === "signup" ? "text-navy-dark" : "text-text-secondary/40 hover:text-white/60"
+                  authMode === "signup" ? "text-main-bg" : "text-text-secondary/40 hover:text-white/60"
                 }`}
               >
                 {t("signup")}
@@ -374,7 +374,7 @@ function AuthPageContent() {
             >
               {isLoading ? (
                 <div className="flex items-center gap-2.5">
-                  <div className="size-4 border-2 border-navy-dark/30 border-t-navy-dark rounded-full animate-spin" />
+                  <div className="size-4 border-2 border-main-bg/30 border-t-main-bg rounded-full animate-spin" />
                   Processing...
                 </div>
               ) : authMode === "login" ? (

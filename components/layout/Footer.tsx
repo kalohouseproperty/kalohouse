@@ -8,12 +8,12 @@ import { useKalohouse } from "@/components/providers/KalohouseProvider";
 export function Footer() {
   const { t } = useKalohouse();
   return (
-    <footer className="border-t border-white/8 bg-[#07111F] px-4 py-20 sm:px-6 lg:px-8">
+    <footer className="border-t border-white/8 bg-main-bg px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-1">
           <div className="flex items-center gap-3 mb-6">
             <div className="relative size-12 overflow-hidden rounded-full border-2 border-gold/30 shadow-[0_0_15px_rgba(201,166,70,0.15)]">
-              <Image src="/kalohouse.png" alt="Kalohouse Logo" fill className="object-cover" />
+              <Image src="/kalohouse-v2.png" alt="Kalohouse Logo" fill className="object-cover" />
             </div>
             <span className="font-serif text-2xl text-white tracking-tight">Kalohouse</span>
           </div>

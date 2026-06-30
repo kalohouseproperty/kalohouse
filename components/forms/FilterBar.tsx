@@ -91,7 +91,7 @@ export function FilterBar({
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
               <Button 
                 onClick={handleSearch}
-                className="h-12 px-6 rounded-2xl bg-gold text-navy-dark font-black text-sm transition-all hover:scale-105 active:scale-95"
+                className="h-12 px-6 rounded-2xl bg-gold text-main-bg font-black text-sm transition-all hover:scale-105 active:scale-95"
               >
                 Search
               </Button>
@@ -162,7 +162,7 @@ export function FilterBar({
             </div>
 
             <Button 
-              className="h-14 lg:w-auto w-full px-10 bg-gold hover:bg-gold-light text-navy-dark font-bold rounded-[1.8rem] transition-all hover:scale-[1.03] active:scale-95 shadow-xl shadow-gold/20 flex items-center justify-center gap-2"
+              className="h-14 lg:w-auto w-full px-10 bg-gold hover:bg-gold-light text-main-bg font-bold rounded-[1.8rem] transition-all hover:scale-[1.03] active:scale-95 shadow-xl shadow-gold/20 flex items-center justify-center gap-2"
               onClick={handleSearch} 
             >
               <Search className="size-5" />

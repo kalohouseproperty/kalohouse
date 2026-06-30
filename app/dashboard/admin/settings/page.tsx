@@ -20,7 +20,7 @@ export default function AdminSettingsPage() {
             <Input type="password" placeholder="Enter new password" className="bg-white/5 border-white/10" />
             <label className="block text-sm text-muted-text">Confirm New Password</label>
             <Input type="password" placeholder="Confirm new password" className="bg-white/5 border-white/10" />
-            <Button className="mt-4 bg-gold text-navy-primary font-bold hover:bg-gold-light">Update Password</Button>
+            <Button className="mt-4 bg-gold text-main-bg font-bold hover:bg-gold-light">Update Password</Button>
           </div>
         </Card>
       </div>

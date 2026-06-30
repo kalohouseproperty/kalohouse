@@ -53,7 +53,7 @@ export function LocationPicker({ latitude, longitude, onLocationSelect, disabled
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#1a1a1a]/40 backdrop-blur-md p-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-main-bg/40 backdrop-blur-md p-4">
       <div className="relative w-full max-w-4xl h-[70vh] rounded-[32px] overflow-hidden border border-white/20 shadow-2xl bg-white">
         {/* Header */}
         <div className="absolute top-6 left-6 right-6 z-[1001] flex items-center justify-between">
@@ -78,7 +78,7 @@ export function LocationPicker({ latitude, longitude, onLocationSelect, disabled
 
         {/* Footer Overlay */}
         <div className="absolute bottom-6 left-6 right-6 z-[1001] flex items-center justify-between">
-          <div className="bg-[#1a1a1a]/90 backdrop-blur-md px-6 py-4 rounded-2xl shadow-xl border border-white/10 text-white min-w-[240px]">
+          <div className="bg-card-bg/90 backdrop-blur-md px-6 py-4 rounded-2xl shadow-xl border border-white/10 text-white min-w-[240px]">
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Selected Coordinates</p>
             <p className="font-serif text-lg font-bold mt-1">
               {latitude && longitude ? `${latitude}, ${longitude}` : "No location selected"}

@@ -35,13 +35,13 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
   );
 
   return (
-    <div className="relative h-screen w-full bg-[#0b1220]">
+    <div className="relative h-screen w-full bg-main-bg">
       {/* Mobile Top Bar */}
       <div className="absolute top-0 left-0 right-0 z-[1001] flex items-center justify-between p-3 sm:p-4 lg:hidden">
         <Button 
           variant="secondary" 
           asChild 
-          className="rounded-xl bg-[#111827]/90 px-4 py-5 text-[#f9fafb] shadow-2xl backdrop-blur-xl border border-white/5 hover:bg-[#111827] hover:border-[#c9a646]/30 transition-all group"
+          className="rounded-xl bg-card-bg/90 px-4 py-5 text-[#f9fafb] shadow-2xl backdrop-blur-xl border border-white/5 hover:bg-card-bg hover:border-[#c9a646]/30 transition-all group"
         >
           <Link href={currentUser ? getDashboardPath(currentUser.role) : "/"}>
             <ArrowLeft className="mr-2 size-4 text-[#c9a646] group-hover:-translate-x-1 transition-transform" />
@@ -51,7 +51,7 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
         <Button
           variant="secondary"
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="rounded-xl bg-[#111827]/90 px-4 py-5 text-[#f9fafb] shadow-2xl backdrop-blur-xl border border-white/5 hover:bg-[#111827] hover:border-[#c9a646]/30 transition-all"
+          className="rounded-xl bg-card-bg/90 px-4 py-5 text-[#f9fafb] shadow-2xl backdrop-blur-xl border border-white/5 hover:bg-card-bg hover:border-[#c9a646]/30 transition-all"
         >
           {sidebarOpen ? <X className="size-4 text-[#c9a646]" /> : <Menu className="size-4 text-[#c9a646]" />}
         </Button>
@@ -62,7 +62,7 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
         <Button 
           variant="secondary" 
           asChild 
-          className="w-fit rounded-2xl bg-[#111827]/90 px-6 py-6 text-[#f9fafb] shadow-2xl backdrop-blur-xl border border-white/5 hover:bg-[#111827] hover:border-[#c9a646]/30 transition-all group"
+          className="w-fit rounded-2xl bg-card-bg/90 px-6 py-6 text-[#f9fafb] shadow-2xl backdrop-blur-xl border border-white/5 hover:bg-card-bg hover:border-[#c9a646]/30 transition-all group"
         >
           <Link href={currentUser ? getDashboardPath(currentUser.role) : "/"}>
             <ArrowLeft className="mr-3 size-5 text-[#c9a646] group-hover:-translate-x-1 transition-transform" />
@@ -70,7 +70,7 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
           </Link>
         </Button>
 
-        <div className="flex w-[340px] flex-col gap-4 rounded-[2rem] bg-[#111827]/90 p-6 shadow-[0_32px_80px_rgba(0,0,0,0.5)] backdrop-blur-xl border border-white/5">
+        <div className="flex w-[340px] flex-col gap-4 rounded-[2rem] bg-card-bg/90 p-6 shadow-[0_32px_80px_rgba(0,0,0,0.5)] backdrop-blur-xl border border-white/5">
           <div className="flex items-center justify-between mb-1">
             <div className="flex items-center gap-2">
               <div className="size-7 rounded-lg bg-[#c9a646]/10 flex items-center justify-center text-[#c9a646]">
@@ -107,7 +107,7 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
         <div className="absolute inset-0 z-[1000] bg-black/50 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
       <div className={`absolute top-16 left-3 right-3 z-[1001] lg:hidden transition-all duration-300 ${sidebarOpen ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0 pointer-events-none"}`}>
-        <div className="flex flex-col gap-4 rounded-2xl bg-[#111827]/95 p-5 shadow-[0_32px_80px_rgba(0,0,0,0.5)] backdrop-blur-xl border border-white/5">
+        <div className="flex flex-col gap-4 rounded-2xl bg-card-bg/95 p-5 shadow-[0_32px_80px_rgba(0,0,0,0.5)] backdrop-blur-xl border border-white/5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="size-7 rounded-lg bg-[#c9a646]/10 flex items-center justify-center text-[#c9a646]">
@@ -144,7 +144,7 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
         {hasMapAccess ? (
           <LeafletMap properties={filteredProperties} />
         ) : (
-          <div className="h-full w-full bg-[#0b1220] flex items-center justify-center">
+          <div className="h-full w-full bg-main-bg flex items-center justify-center">
             <div className="max-w-sm sm:max-w-md mx-auto text-center px-6">
               <div className="size-16 sm:size-20 rounded-2xl sm:rounded-3xl bg-[#c9a646]/10 flex items-center justify-center mx-auto mb-6 sm:mb-8 border border-[#c9a646]/20">
                 <LockKeyhole className="size-8 sm:size-10 text-[#c9a646]" />
@@ -157,7 +157,7 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
               {currentUser ? (
                 <div className="space-y-4">
                   <Button
-                    className="h-14 sm:h-16 rounded-xl sm:rounded-2xl bg-[#c9a646] hover:bg-[#c9a646]/90 text-navy-dark font-black text-base sm:text-lg shadow-xl shadow-[#c9a646]/20 transition-all active:scale-95 w-full"
+                    className="h-14 sm:h-16 rounded-xl sm:rounded-2xl bg-[#c9a646] hover:bg-[#c9a646]/90 text-main-bg font-black text-base sm:text-lg shadow-xl shadow-[#c9a646]/20 transition-all active:scale-95 w-full"
                     disabled={pending}
                     onClick={() => {
                       startTransition(async () => {
@@ -182,7 +182,7 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
                   </p>
                 </div>
               ) : (
-                <Button asChild className="h-14 sm:h-16 rounded-xl sm:rounded-2xl bg-[#c9a646] hover:bg-[#c9a646]/90 text-navy-dark font-black text-base sm:text-lg shadow-xl shadow-[#c9a646]/20 transition-all active:scale-95 w-full">
+                <Button asChild className="h-14 sm:h-16 rounded-xl sm:rounded-2xl bg-[#c9a646] hover:bg-[#c9a646]/90 text-main-bg font-black text-base sm:text-lg shadow-xl shadow-[#c9a646]/20 transition-all active:scale-95 w-full">
                   <Link href="/auth?mode=signup&next=/map">
                     <MapIcon className="size-5" />
                     Create Account to Unlock Map
@@ -197,7 +197,7 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
       {/* Stats Overlay */}
       {hasMapAccess && (
         <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-auto z-[1001]">
-          <div className="flex items-center gap-4 sm:gap-8 rounded-xl sm:rounded-2xl bg-[#0b1220]/95 px-4 sm:px-8 py-4 sm:py-5 text-white shadow-[0_32px_80px_rgba(0,0,0,0.6)] backdrop-blur-2xl border border-[#c9a646]/20">
+          <div className="flex items-center gap-4 sm:gap-8 rounded-xl sm:rounded-2xl bg-main-bg/95 px-4 sm:px-8 py-4 sm:py-5 text-white shadow-[0_32px_80px_rgba(0,0,0,0.6)] backdrop-blur-2xl border border-[#c9a646]/20">
             <div className="flex items-center gap-3">
               <div className="size-9 sm:size-10 rounded-xl bg-[#c9a646]/10 flex items-center justify-center text-[#c9a646]">
                 <Search className="size-4 sm:size-5" />

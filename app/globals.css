@@ -3,12 +3,12 @@
 @theme {
   --font-sans: var(--font-poppins);
   --font-serif: var(--font-poppins);
-  --color-main-bg: #0b1220;
-  --color-soft-bg: #0f172a;
-  --color-card-bg: #111827;
-  --color-hover-bg: #1f2937;
-  --color-navy-primary: #0a1f44;
-  --color-navy-light: #1c2e4a;
+  --color-main-bg: #12100e;
+  --color-soft-bg: #1a1714;
+  --color-card-bg: #201d1a;
+  --color-hover-bg: #2a2622;
+  --color-navy-primary: #1e1b17;
+  --color-navy-light: #2c2824;
   --color-gold: #c9a646;
   --color-gold-light: #e6c76e;
   --color-text-primary: #f9fafb;
@@ -22,7 +22,7 @@
 
 :root {
   color-scheme: dark;
-  background: #0b1220;
+  background: #12100e;
 }
 
 * {
@@ -37,9 +37,9 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(circle at 22% 18%, rgba(201, 166, 70, 0.12), transparent 28rem),
-    radial-gradient(circle at 82% 2%, rgba(59, 130, 246, 0.12), transparent 30rem),
-    linear-gradient(135deg, #0b1220 0%, #0f172a 48%, #09111f 100%);
+    radial-gradient(circle at 22% 18%, rgba(201, 166, 70, 0.10), transparent 28rem),
+    radial-gradient(circle at 82% 2%, rgba(201, 166, 70, 0.05), transparent 30rem),
+    linear-gradient(135deg, #12100e 0%, #1a1714 48%, #0e0c0a 100%);
   color: #f9fafb;
   font-family: var(--font-poppins), sans-serif;
 }
@@ -57,7 +57,7 @@ textarea {
 }
 
 select option {
-  background: #111827;
+  background: #201d1a;
   color: #f9fafb;
 }
 
@@ -68,7 +68,7 @@ select option {
 
 .glass-card {
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(145deg, rgba(17, 24, 39, 0.86), rgba(15, 23, 42, 0.68));
+  background: linear-gradient(145deg, rgba(32, 29, 26, 0.86), rgba(26, 23, 20, 0.68));
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(22px);
 }

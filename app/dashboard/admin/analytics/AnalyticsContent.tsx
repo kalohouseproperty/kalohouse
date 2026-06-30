@@ -66,7 +66,7 @@ export function AnalyticsContent({ stats, analytics }: AnalyticsContentProps) {
                 </defs>
                 <XAxis dataKey="name" stroke="#64748b" />
                 <YAxis stroke="#64748b" />
-                <Tooltip contentStyle={{ backgroundColor: '#07111F', border: '1px solid #334155' }} />
+                <Tooltip contentStyle={{ backgroundColor: '#201d1a', border: '1px solid #334155' }} />
                 <Area type="monotone" dataKey="total" stroke="#D6A84F" fillOpacity={1} fill="url(#colorValue)" />
               </AreaChart>
             </ResponsiveContainer>

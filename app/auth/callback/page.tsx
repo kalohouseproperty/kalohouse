@@ -13,7 +13,7 @@ export default function AuthCallback() {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0b1220]">
+    <div className="min-h-screen flex items-center justify-center bg-main-bg">
       <div className="fixed right-4 top-4 z-20">
         <LanguageSwitcher />
       </div>

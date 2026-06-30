@@ -79,7 +79,7 @@ export function AboutContent() {
           </div>
           
           <div className="relative aspect-square rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-            <div className="absolute inset-0 bg-gradient-to-tr from-navy-dark/80 to-transparent z-10" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-main-bg/80 to-transparent z-10" />
             <Image
               src="https://images.unsplash.com/photo-1689013398932-b576a11e07a1?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8a2lnYWxpJTIwaG91c2VzfGVufDB8fDB8fHww"
               alt="Kigali Real Estate"

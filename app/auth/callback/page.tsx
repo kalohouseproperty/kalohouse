@@ -1,54 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { useKalohouse } from "@/components/providers/KalohouseProvider";
-
-type SessionUserWithCreatedAt = {
-  createdAt?: string;
-};
 
 export default function AuthCallback() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const { toast } = useKalohouse();
-  const [redirecting, setRedirecting] = useState(false);
+  const toastShown = useRef(false);
 
   useEffect(() => {
-    if (status === "loading") return;
+    if (status !== "authenticated" || !session?.user) return;
 
-    if (status === "authenticated" && session?.user) {
-      const userWithCreatedAt = session.user as SessionUserWithCreatedAt;
-      const createdAt = userWithCreatedAt.createdAt;
-      const isNewUser =
-        createdAt &&
-        new Date().getTime() - new Date(createdAt).getTime() < 2 * 60 * 1000;
+    const createdAt = (session.user as any).createdAt as string | undefined;
 
-      if (isNewUser && !redirecting) {
+    if (createdAt && !toastShown.current) {
+      const diff = Date.now() - new Date(createdAt).getTime();
+      if (diff < 2 * 60_000) {
+        toastShown.current = true;
         toast(
           "Account created! We sent a verification email to your address. Please check your inbox.",
           "success"
         );
-        setRedirecting(true);
       }
+    }
 
-      const role = (session.user as { role?: string }).role || "owner";
-      router.replace(`/dashboard/${role}`);
-    } else if (status === "unauthenticated") {
+    const role = ((session.user as any).role as string) || "owner";
+    router.replace(`/dashboard/${role}`);
+  }, [status, session, router, toast]);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
       router.replace("/auth");
     }
-  }, [status, session, router, toast, redirecting]);
+  }, [status, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-main-bg">
-      <div className="fixed right-4 top-4 z-20">
-        <LanguageSwitcher />
-      </div>
-
       <div className="flex flex-col items-center gap-4 text-center">
-        <div className="size-12 border-4 border-gold border-t-transparent rounded-full animate-spin"></div>
+        <div className="size-12 border-4 border-gold border-t-transparent rounded-full animate-spin" />
         <p className="text-text-secondary animate-pulse">
           Completing secure authentication...
         </p>

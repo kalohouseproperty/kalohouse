@@ -66,32 +66,18 @@ export function Footer() {
       
       <div className="mx-auto max-w-7xl mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-widest font-bold text-text-secondary/40">
         <p>{t("copyright")}</p>
-        <div className="flex gap-6 items-center flex-wrap justify-center">
-            <span>{t("kigaliRwanda")}</span>
-            <span>{t("protectedBy")}</span>
-            <span className="w-px h-3 bg-white/10" />
-            <a
-              href="https://2moretechs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group/dev inline-flex items-center gap-1.5 hover:text-gold transition-colors duration-300"
-            >
-              <span>{t("craftedBy")}</span>
-              <div className="relative h-4 w-auto rounded overflow-hidden">
-                <Image src="/2moretechs.png" alt="2MoreTechs" width={40} height={16} className="object-contain h-4 w-auto" />
-              </div>
-              <span className="text-gold">2MoreTechs</span>
-            </a>
-            <a
-              href="mailto:admin@2moretechs.com"
-              className="group/email inline-flex items-center gap-1 hover:text-gold transition-colors duration-300"
-            >
-              <svg className="size-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <span>admin@2moretechs.com</span>
-            </a>
-        </div>
+        <a
+          href="https://2moretechs.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group/dev inline-flex items-center gap-1.5 hover:text-gold transition-colors duration-300"
+        >
+          <span>{t("craftedBy")}</span>
+          <div className="relative h-4 w-auto rounded overflow-hidden">
+            <Image src="/2moretechs.png" alt="2MoreTechs" width={40} height={16} className="object-contain h-4 w-auto" />
+          </div>
+          <span className="text-gold">2MoreTechs</span>
+        </a>
       </div>
     </footer>
   );

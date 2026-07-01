@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { rwandaLocation } from "@devrw/rwanda-location";
+import { rwandaLocation, type District, type Sector } from "@devrw/rwanda-location";
 export function NavbarSearch() {
   const router = useRouter();
   const searchRef = useRef<HTMLDivElement>(null);
@@ -26,9 +26,9 @@ export function NavbarSearch() {
   const allDistricts = rwandaLocation.getDistricts();
   const sectors = (() => {
     if (!district) return [];
-    const found = allDistricts.find((d: any) => d.name === district);
+    const found = allDistricts.find((d: District) => d.name === district);
     if (!found) return [];
-    return rwandaLocation.getSectors(found.code).map((s: any) => s.name);
+    return rwandaLocation.getSectors(found.code).map((s: Sector) => s.name);
   })();
 
   const handleSearch = (e?: React.FormEvent) => {
@@ -87,7 +87,7 @@ export function NavbarSearch() {
 
       <div className={cn(
         "flex items-center transition-all duration-300 z-50",
-        isFocused ? "w-full flex-1 px-0 sm:px-6" : "w-full md:max-w-[240px]"
+        isFocused ? "w-full flex-1 px-0 sm:px-6" : "w-full md:max-w-60"
       )} ref={searchRef}>
         <div className="relative w-full">
           <div className="relative flex items-center group">
@@ -159,7 +159,7 @@ export function NavbarSearch() {
                             className="h-11 bg-white/5 border-white/10"
                         >
                             <option value="">All Districts</option>
-                            {allDistricts.map((d: any) => (
+                            {allDistricts.map((d: District) => (
                                 <option key={d.code} value={d.name}>{d.name}</option>
                             ))}
                         </Select>
@@ -245,7 +245,7 @@ export function NavbarSearch() {
                     </Button>
                     <Button 
                         onClick={handleSearch}
-                        className="flex-[2] h-12 bg-gold hover:bg-gold-light text-white font-black rounded-xl transition-all shadow-xl shadow-gold/10 active:scale-95"
+                        className="flex-2 h-12 bg-gold hover:bg-gold-light text-white font-black rounded-xl transition-all shadow-xl shadow-gold/10 active:scale-95"
                     >
                         Apply Filters & Search
                     </Button>

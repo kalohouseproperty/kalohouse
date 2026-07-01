@@ -214,7 +214,7 @@ export async function getAdminDashboardData() {
       assignedDistrict: a.sector_id ? "Gasabo" : undefined,
       assignedSector: a.sector_id ? "Kimihurura" : undefined,
       isVerified: a.is_verified,
-      saved_property_ids: (a as any).saved_property_ids || [],
+      saved_property_ids: [],
       status: a.is_active ? "active" : "suspended",
       createdAt: a.created_at.toISOString(),
     })),
@@ -250,8 +250,8 @@ export async function getOwnerDashboardData(ownerId: number) {
     }),
     prisma.user.findUnique({
       where: { id: ownerId },
-      select: { saved_property_ids: true } as any,
-    }),
+      select: { id: true },
+    }).catch(() => null),
   ]);
 
   const pendingBalance = payouts
@@ -278,7 +278,7 @@ export async function getOwnerDashboardData(ownerId: number) {
       totalEarned,
       total: pendingBalance + totalEarned,
     },
-    user: user ? { savedPropertyIds: user.saved_property_ids || [] } : null,
+    user: user ? { savedPropertyIds: [] } : null,
   };
 }
 
@@ -297,8 +297,8 @@ export async function getAgentDashboardData(agentId: number, sectorId: number | 
     sectorId ? prisma.sector.findUnique({ where: { id: sectorId } }) : Promise.resolve(null),
     prisma.user.findUnique({
       where: { id: agentId },
-      select: { saved_property_ids: true } as any,
-    }),
+      select: { id: true },
+    }).catch(() => null),
   ]);
 
   // Calculate earnings: 20% of commission_amount for properties agent verified and are published/paid/completed
@@ -321,7 +321,7 @@ export async function getAgentDashboardData(agentId: number, sectorId: number | 
       total: totalEarnings,
       verifiedCount: approvedVerifications.length,
     },
-    user: user ? { saved_property_ids: (user as any).saved_property_ids || [] } : null,
+    user: user ? { saved_property_ids: [] } : null,
   };
 }
 
@@ -353,8 +353,8 @@ export async function getClientDashboardData(clientId: number) {
     }),
     prisma.user.findUnique({
       where: { id: clientId },
-      select: { saved_property_ids: true } as any,
-    }),
+      select: { id: true },
+    }).catch(() => null),
   ]);
 
   return {
@@ -393,7 +393,7 @@ export async function getClientDashboardData(clientId: number) {
     })),
     saved: savedProperties.map(mapProperty),
     recommended: recommended.map(mapProperty),
-    user: user ? { savedPropertyIds: user.saved_property_ids || [] } : null,
+    user: user ? { savedPropertyIds: [] } : null,
   };
 }
 
@@ -420,8 +420,8 @@ export async function getPropertyDetails(propertyId: number, userId?: number) {
     }) : Promise.resolve(null),
     userId ? prisma.user.findUnique({
       where: { id: userId },
-      select: { saved_property_ids: true } as any,
-    }) : Promise.resolve(null),
+      select: { id: true },
+    }).catch(() => null) : Promise.resolve(null),
   ]);
 
   if (!property) return null;
@@ -433,7 +433,7 @@ export async function getPropertyDetails(propertyId: number, userId?: number) {
     } : null,
     hasPaid: Boolean(payment),
     hasUnlockedContact: Boolean(commissionPayment) || property.is_owner_verified,
-    isSaved: userSaved ? (userSaved as any).saved_property_ids?.includes(String(propertyId)) : false,
+    isSaved: false,
     paymentId: payment ? payment.id : null,
     hasRefund: payment?.refund ? true : false,
   };

@@ -60,7 +60,7 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
         status: user.is_active ? "active" : "suspended",
         isVerified: user.is_verified,
         mapAccessPaid: user.map_access_paid,
-        saved_property_ids: (user as any).saved_property_ids || [],
+        saved_property_ids: [],
         createdAt: user.created_at.toISOString(),
       };
     }

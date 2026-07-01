@@ -243,7 +243,7 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
                     </div>
                     {property.media.video && (
                       <div className="absolute bottom-0 right-0 rounded-full bg-gold p-1 shadow">
-                        <Play className="size-3 text-navy-dark" fill="currentColor" />
+                        <Play className="size-3 text-black" fill="currentColor" />
                       </div>
                     )}
                   </div>
@@ -323,7 +323,7 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
               <Link
                 href={`/properties/${filteredProperties[storyIndex].id}`}
                 onClick={() => setStoryIndex(null)}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gold py-4 text-sm font-black text-navy-dark shadow-lg shadow-gold/20 active:scale-95 transition-transform"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gold py-4 text-sm font-black text-black shadow-lg shadow-gold/20 active:scale-95 transition-transform"
               >
                 {t("viewDetails")} <ArrowRight className="size-4" />
               </Link>

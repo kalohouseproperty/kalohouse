@@ -63,7 +63,7 @@ export function LandingPageContentV2({ properties, currentUser, tData }: Landing
             <LanguageSwitcher />
           </div>
 
-          <Button asChild size="sm" className="bg-gold text-navy-dark font-black rounded-xl">
+          <Button asChild size="sm" className="bg-gold text-black font-black rounded-xl">
             <Link href="/properties">{t("browseHomes")}</Link>
           </Button>
         </div>
@@ -92,7 +92,7 @@ export function LandingPageContentV2({ properties, currentUser, tData }: Landing
                   className="w-full bg-transparent border-none text-white focus:ring-0 placeholder:text-muted-text/50"
                 />
               </div>
-              <Button size="lg" className="rounded-full px-8 bg-gold text-navy-dark font-black h-14">
+              <Button size="lg" className="rounded-full px-8 bg-gold text-black font-black h-14">
                 Explore
               </Button>
             </div>
@@ -143,7 +143,7 @@ export function LandingPageContentV2({ properties, currentUser, tData }: Landing
                   onClick={() => setActiveTab(tab)}
                   className={cn(
                     "px-6 py-2 rounded-xl text-sm font-bold transition-all",
-                    activeTab === tab ? "bg-gold text-navy-dark" : "text-muted-text hover:text-white"
+                    activeTab === tab ? "bg-gold text-black" : "text-muted-text hover:text-white"
                   )}
                 >
                   {tab === "all" ? t("viewAll") : t(tab === "Rent" ? "rent" : "sale")}
@@ -200,7 +200,7 @@ export function LandingPageContentV2({ properties, currentUser, tData }: Landing
             </div>
 
             <div className="relative">
-              <div className="aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/10 relative bg-navy-dark">
+              <div className="aspect-[4/5] rounded-[3rem] overflow-hidden border border-white/10 relative bg-black">
                 {/* Fallback color if image fails */}
                 <Image 
                   src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1000" 
@@ -208,7 +208,7 @@ export function LandingPageContentV2({ properties, currentUser, tData }: Landing
                   fill 
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
                 
                 <div className="absolute bottom-10 left-10 right-10 p-8 glass-card rounded-3xl border border-white/10">
                   <div className="flex items-center gap-4 mb-4">
@@ -236,7 +236,7 @@ export function LandingPageContentV2({ properties, currentUser, tData }: Landing
            <h2 className="text-5xl font-serif text-white mb-8">{t("saferWayToVisit")}</h2>
            <p className="text-lg text-muted-text mb-12">{t("heroSubtitle")}</p>
            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" className="h-16 px-10 rounded-2xl bg-gold text-navy-dark font-black text-lg w-full sm:w-auto">
+              <Button size="lg" className="h-16 px-10 rounded-2xl bg-gold text-black font-black text-lg w-full sm:w-auto">
                 Start Exploring
               </Button>
               <Button variant="secondary" size="lg" className="h-16 px-10 rounded-2xl border-white/10 text-white text-lg w-full sm:w-auto">

@@ -7,6 +7,7 @@ import { authorizeRole, getAuthorizedUser } from "../../lib/auth-utils";
 import { PaymentStatus, PropertyStatus, UserRole, VisitStatus } from "@/prisma/generated/client";
 import crypto from "node:crypto";
 import { sendRefundRequestEmail } from "../../lib/email";
+import { MAP_ACCESS_PRICE_RWF } from "@/lib/pricing";
 
 function getStripe() {
   if (!process.env.STRIPE_SECRET_KEY) return null;
@@ -180,7 +181,7 @@ async function requestMobileMoneyCollection({
 }
 
 export async function payBeforeVisit(propertyId: number) {
-  const client = await authorizeRole([UserRole.client, UserRole.admin]);
+  const client = await authorizeRole([UserRole.owner, UserRole.client, UserRole.admin]);
   if (!client) throw new Error("Unauthorized");
 
   const property = await prisma.property.findUnique({
@@ -334,7 +335,7 @@ export async function startMobileMoneyPayment(input: MobileMoneyInput) {
 }
 
 export async function decideVisit(visitId: number, decision: "accepted" | "cancelled") {
-  const client = await authorizeRole([UserRole.client, UserRole.admin]);
+  const client = await authorizeRole([UserRole.owner, UserRole.client, UserRole.admin]);
   if (!client) throw new Error("Unauthorized");
 
   const visit = await prisma.visitRequest.findUnique({
@@ -445,30 +446,20 @@ export async function purchaseMapAccess() {
     return { success: true, message: "Map access already purchased." };
   }
 
-  const existingPaidPayment = await prisma.payment.findFirst({
-    where: { client_id: user.id, status: PaymentStatus.paid },
-  });
-
-  if (existingPaidPayment) {
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { map_access_paid: true },
-    });
-    revalidatePath("/map");
-    return { success: true, message: "Map access granted based on your purchase history." };
-  }
-
   await prisma.user.update({
     where: { id: user.id },
     data: { map_access_paid: true },
   });
 
   revalidatePath("/map");
-  return { success: true, message: "Map access purchased successfully for RWF 5,000!" };
+  return {
+    success: true,
+    message: `Map access purchased successfully for RWF ${MAP_ACCESS_PRICE_RWF.toLocaleString("en-US")}!`,
+  };
 }
 
 export async function requestRefund(paymentId: number, reason?: string) {
-  const client = await authorizeRole([UserRole.client, UserRole.admin]);
+  const client = await authorizeRole([UserRole.owner, UserRole.client, UserRole.admin]);
   if (!client) throw new Error("Unauthorized");
 
   const payment = await prisma.payment.findUnique({

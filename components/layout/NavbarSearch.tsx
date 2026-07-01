@@ -141,7 +141,7 @@ export function NavbarSearch() {
                     </div>
                     <Button 
                         onClick={handleQuickSearch}
-                        className="h-12 px-6 bg-gold hover:bg-gold-light text-navy-dark font-black rounded-xl whitespace-nowrap"
+                        className="h-12 px-6 bg-gold hover:bg-gold-light text-black font-black rounded-xl whitespace-nowrap"
                     >
                         Search
                     </Button>

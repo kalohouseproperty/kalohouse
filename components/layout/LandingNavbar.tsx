@@ -20,6 +20,7 @@ interface LandingNavbarProps {
 const navLinks = [
   { href: "/", labelKey: "home" },
   { href: "/properties", labelKey: "properties" },
+  { href: "/videos", labelKey: "videos" },
   { href: "/map", labelKey: "map" },
   { href: "/about", labelKey: "about" },
 ];
@@ -82,7 +83,7 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
           >
             <ShoppingBag className="size-4" />
             {saved_property_ids.length > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-gold text-[9px] font-bold text-navy-dark">
+              <span className="absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-gold text-[9px] font-bold text-black">
                 {saved_property_ids.length > 9 ? "9+" : saved_property_ids.length}
               </span>
             )}
@@ -112,7 +113,7 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
               <Button
                 asChild
                 size="sm"
-                className="h-9 rounded-lg px-5 bg-gold hover:bg-gold-light text-navy-dark font-semibold text-xs shadow-lg shadow-gold/20 transition-all hover:scale-105 active:scale-95"
+                className="h-9 rounded-lg px-5 bg-gold hover:bg-gold-light text-black font-semibold text-xs shadow-lg shadow-gold/20 transition-all hover:scale-105 active:scale-95"
               >
                 <Link href="/auth">{t("createAccount")}</Link>
               </Button>
@@ -163,7 +164,7 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
                 <>
                   <Link
                     href="/auth"
-                    className="flex items-center justify-center rounded-xl bg-gold px-3 py-2.5 text-sm font-semibold text-navy-dark"
+                    className="flex items-center justify-center rounded-xl bg-gold px-3 py-2.5 text-sm font-semibold text-black"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {t("createAccount")}

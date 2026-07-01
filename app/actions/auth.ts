@@ -27,7 +27,6 @@ type PasswordResetTokenUser = {
 };
 
 const allowedSignupRoles = new Set<UserRole>([
-  UserRole.client,
   UserRole.owner,
 ]);
 
@@ -35,20 +34,26 @@ function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
 }
 
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Something went wrong";
+}
+
+function getPrismaErrorCode(error: unknown) {
+  return typeof error === "object" && error !== null && "code" in error
+    ? String((error as { code?: unknown }).code)
+    : undefined;
+}
+
 export async function registerUser(data: RegisterUserInput) {
   const email = normalizeEmail(data.email || "");
   const password = data.password || "";
   const fullName = data.fullName?.trim() || "";
-  const role = data.role && allowedSignupRoles.has(data.role) ? data.role : UserRole.client;
+  const role = data.role && allowedSignupRoles.has(data.role) ? data.role : UserRole.owner;
   const nationality = data.nationality?.trim() || "";
   const nationalId = data.nationalId?.trim() || "";
 
   if (!email || !password || !fullName) {
     return { error: "Missing required fields" };
-  }
-
-  if (role === UserRole.owner && (!nationality || !nationalId)) {
-    return { error: "Nationality and National ID are required for owners" };
   }
 
   if (password.length < 8) {
@@ -74,22 +79,16 @@ export async function registerUser(data: RegisterUserInput) {
         password: hashedPassword,
         full_name: fullName,
         role,
-        ...(role === UserRole.owner && {
+        ...(nationality && {
           nationality,
+        }),
+        ...(nationalId && {
           national_id: nationalId,
         }),
         email_verification_token_hash: tokenHash,
         email_verification_expires: expires,
       },
     });
-
-    await sendVerificationEmail(user.email, token);
-    await prisma.$executeRaw`
-      UPDATE users
-      SET email_verification_token_hash = ${tokenHash},
-          email_verification_expires = ${expires}
-      WHERE id = ${user.id}
-    `;
 
     let emailDelivered = true;
     try {
@@ -106,19 +105,19 @@ export async function registerUser(data: RegisterUserInput) {
     return {
       success: true,
       message: isDev 
-        ? `Account created! Verification link: ${verificationUrl}` 
+        ? `Account created. We sent a verification email to ${user.email}. Verification link: ${verificationUrl}` 
         : emailDelivered
-          ? "Account created. Check your email to verify your account."
+          ? `Account created. We sent a verification email to ${user.email}. Check your inbox to verify your account.`
           : "Account created, but the verification email could not be sent. Contact support to verify your account.",
       user: { id: user.id, email: user.email },
       ...(isDev && { verificationToken: token, verificationUrl }),
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Registration error:", error);
-    if (error.code === 'P2002') {
+    if (getPrismaErrorCode(error) === 'P2002') {
       return { error: "User already exists with this email" };
     }
-    return { error: `Registration failed: ${error.message || "Something went wrong"}` };
+    return { error: `Registration failed: ${getErrorMessage(error)}` };
   }
 }
 
@@ -179,9 +178,9 @@ export async function registerAgentWithInvite(data: { token: string; fullName: s
     });
 
     return { success: true, user: { id: user.id, email: user.email } };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Agent registration error:", error);
-    if (error.code === 'P2002') return { error: "An account with this email already exists" };
+    if (getPrismaErrorCode(error) === 'P2002') return { error: "An account with this email already exists" };
     return { error: "Something went wrong during registration" };
   }
 }

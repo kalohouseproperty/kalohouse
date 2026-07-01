@@ -94,7 +94,7 @@ export function OwnerDashboardContent({ properties, payouts, revenue }: OwnerDas
         {properties.map((property) => (
           <Card key={property.id} className="hover-lift p-5">
             <div className="flex gap-4">
-              <span className="relative size-24 shrink-0 overflow-hidden rounded-2xl bg-navy-primary">
+              <span className="relative size-24 shrink-0 overflow-hidden rounded-2xl bg-black">
                 {property.media.images[0] ? (
                   <PropertyImage src={getMediaUrl(property.media.images[0].url)} alt={property.title} fill sizes="96px" className="object-cover" />
                 ) : null}

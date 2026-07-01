@@ -8,7 +8,7 @@ export default function AuthCallback() {
   const router = useRouter();
 
   useEffect(() => {
-    const role = localStorage.getItem("kalohouse_pending_role") || "client";
+    const role = localStorage.getItem("kalohouse_pending_role") || "owner";
     router.push(`/dashboard/${role}`);
   }, [router]);
 

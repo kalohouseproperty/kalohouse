@@ -10,6 +10,7 @@ import type { Property, User } from "@/types/models";
 import { Input } from "@/components/ui/input";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { purchaseMapAccess } from "@/app/actions/visits";
+import { MAP_ACCESS_PRICE_RWF } from "@/lib/pricing";
 
 const LeafletMap = dynamic(() => import("./LeafletMap"), { 
   ssr: false,
@@ -152,7 +153,7 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
               <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#f9fafb] mb-3">Map Access Required</h2>
               <p className="text-[#64748b] text-sm leading-relaxed mb-6 sm:mb-8">
                 Unlock the full interactive map to explore all available properties across Kigali. 
-                One-time payment gives you permanent access.
+                Pay RWF {MAP_ACCESS_PRICE_RWF.toLocaleString("en-US")} once to view property locations.
               </p>
               {currentUser ? (
                 <div className="space-y-4">
@@ -172,7 +173,7 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
                     }}
                   >
                     <MapIcon className="size-5" />
-                    {pending ? "Processing..." : "Unlock Map – RWF 5,000"}
+                    {pending ? "Processing..." : `Unlock Map - RWF ${MAP_ACCESS_PRICE_RWF.toLocaleString("en-US")}`}
                   </Button>
                   {purchaseMessage && (
                     <p className="text-sm text-[#c9a646] font-medium">{purchaseMessage}</p>

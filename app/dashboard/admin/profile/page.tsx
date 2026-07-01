@@ -40,7 +40,7 @@ export default function AdminProfilePage() {
                 ) : (
                     <User className="size-16 text-gold/50" />
                 )}
-                <label className="absolute -bottom-2 -right-2 p-3 bg-gold rounded-full text-main-bg cursor-pointer hover:bg-gold-light transition shadow-lg border-4 border-main-bg">
+                <label className="absolute -bottom-2 -right-2 p-3 bg-gold rounded-full text-navy-primary cursor-pointer hover:bg-gold-light transition shadow-lg border-4 border-[#07111F]">
                     <Camera className="size-5" />
                     <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
                 </label>
@@ -56,7 +56,7 @@ export default function AdminProfilePage() {
             <Input defaultValue={currentUser?.name || "Admin"} className="bg-white/5 border-white/10" />
             <label className="block text-sm text-muted-text">Email</label>
             <Input defaultValue={currentUser?.email || "admin@kalohouse.rw"} className="bg-white/5 border-white/10" disabled />
-            <Button className="mt-4 bg-gold text-main-bg font-bold hover:bg-gold-light">Save Changes</Button>
+            <Button className="mt-4 bg-gold text-navy-primary font-bold hover:bg-gold-light">Save Changes</Button>
           </div>
         </Card>
       </div>

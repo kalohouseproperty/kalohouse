@@ -39,7 +39,7 @@ export function ProfileDropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-64 bg-main-bg border border-white/10 rounded-xl shadow-2xl p-2 z-[101]">
+        <div className="absolute right-0 top-full mt-2 w-64 bg-[#0B1220] border border-white/10 rounded-xl shadow-2xl p-2 z-[101]">
           <div className="px-3 py-2 border-b border-white/5 mb-1">
             <p className="text-white font-semibold text-sm">{currentUser?.name || "User"}</p>
             <p className="text-muted-text text-xs">{currentUser?.email || "No email"}</p>

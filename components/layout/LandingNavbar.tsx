@@ -39,7 +39,7 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group shrink-0">
           <div className="relative size-9 overflow-hidden rounded-xl border border-gold/40 shadow-lg shadow-gold/10 transition-all duration-300 group-hover:shadow-gold/25 group-hover:border-gold/60 group-hover:scale-105">
-            <Image src="/kalohouse-v2.png" alt="Kalohouse Logo" fill className="object-cover" />
+            <Image src="/kalohouse.png" alt="Kalohouse Logo" fill className="object-cover" />
           </div>
           <span className="hidden sm:block font-serif text-lg tracking-tight text-white/90 group-hover:text-white transition-colors">
             Kalohouse
@@ -82,7 +82,7 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
           >
             <ShoppingBag className="size-4" />
             {saved_property_ids.length > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-gold text-[9px] font-bold text-main-bg">
+              <span className="absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-gold text-[9px] font-bold text-navy-dark">
                 {saved_property_ids.length > 9 ? "9+" : saved_property_ids.length}
               </span>
             )}
@@ -112,7 +112,7 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
               <Button
                 asChild
                 size="sm"
-                className="h-9 rounded-lg px-5 bg-gold hover:bg-gold-light text-main-bg font-semibold text-xs shadow-lg shadow-gold/20 transition-all hover:scale-105 active:scale-95"
+                className="h-9 rounded-lg px-5 bg-gold hover:bg-gold-light text-navy-dark font-semibold text-xs shadow-lg shadow-gold/20 transition-all hover:scale-105 active:scale-95"
               >
                 <Link href="/auth">{t("createAccount")}</Link>
               </Button>
@@ -163,7 +163,7 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
                 <>
                   <Link
                     href="/auth"
-                    className="flex items-center justify-center rounded-xl bg-gold px-3 py-2.5 text-sm font-semibold text-main-bg"
+                    className="flex items-center justify-center rounded-xl bg-gold px-3 py-2.5 text-sm font-semibold text-navy-dark"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {t("createAccount")}

@@ -61,7 +61,7 @@ export default function ProfilePage() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute -bottom-2 -right-2 p-3 bg-gold rounded-full text-main-bg cursor-pointer hover:bg-gold-light transition shadow-lg border-4 border-main-bg"
+                className="absolute -bottom-2 -right-2 p-3 bg-gold rounded-full text-navy-primary cursor-pointer hover:bg-gold-light transition shadow-lg border-4 border-[#07111F]"
               >
                 <Camera className="size-5" />
               </button>
@@ -119,7 +119,7 @@ export default function ProfilePage() {
               disabled={saving || !fullName.trim()}
               className={cn(
                 "mt-4 font-bold",
-                saved ? "bg-success text-white" : "bg-gold text-main-bg hover:bg-gold-light"
+                saved ? "bg-success text-white" : "bg-gold text-navy-primary hover:bg-gold-light"
               )}
             >
               <Save className="size-4 mr-2" />

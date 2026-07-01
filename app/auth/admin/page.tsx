@@ -39,7 +39,7 @@ export default function AdminAuthPage() {
         <p className="text-sm text-text-secondary text-center">
           Admin access requires administrative privileges.
         </p>
-        <Button type="button" className="mt-5 w-full h-10 bg-gold text-main-bg font-bold hover:bg-gold-light" onClick={() => router.push("/auth")}>
+        <Button type="button" className="mt-5 w-full h-10 bg-gold text-navy-primary font-bold hover:bg-gold-light" onClick={() => router.push("/auth")}>
           Go To Sign In
         </Button>
       </div>

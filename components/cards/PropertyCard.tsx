@@ -123,7 +123,7 @@ export function PropertyCard({
               className={cn(
                 "rounded-xl px-3 py-1.5 text-xs font-bold uppercase tracking-wider shadow-lg backdrop-blur-sm",
                 property.purpose === "Rent"
-                  ? "bg-gold/90 text-main-bg"
+                  ? "bg-gold/90 text-black"
                   : "bg-blue-600/90 text-white"
               )}
             >

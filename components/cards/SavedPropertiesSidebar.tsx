@@ -71,7 +71,7 @@ export function SavedPropertiesSidebar() {
                 <Link
                   href="/properties"
                   onClick={closeSavedPanel}
-                  className="mt-2 rounded-xl bg-gold px-5 py-2.5 text-sm font-bold text-main-bg transition-colors hover:bg-gold-light"
+                  className="mt-2 rounded-xl bg-gold px-5 py-2.5 text-sm font-bold text-black transition-colors hover:bg-gold-light"
                 >
                   Browse Properties
                 </Link>
@@ -103,7 +103,7 @@ export function SavedPropertiesSidebar() {
                             className={cn(
                               "absolute bottom-1.5 left-1.5 rounded-md px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider",
                               property.purpose === "Rent"
-                                ? "bg-gold/90 text-main-bg"
+                                ? "bg-gold/90 text-black"
                                 : "bg-blue-600/90 text-white"
                             )}
                           >

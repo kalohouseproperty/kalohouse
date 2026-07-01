@@ -31,7 +31,7 @@ function RegistrationForm() {
 
   if (!token) {
     return (
-      <div className="min-h-screen bg-main-bg flex items-center justify-center p-4">
+      <div className="min-h-screen bg-black flex items-center justify-center p-4">
         <Card className="glass-card p-8 text-center max-w-md border-white/5">
           <ShieldCheck className="size-16 text-danger mx-auto mb-6 opacity-50" />
           <h1 className="text-2xl font-serif text-white mb-2">Invalid Access</h1>
@@ -65,17 +65,17 @@ function RegistrationForm() {
   };
 
   return (
-    <div className="min-h-screen bg-main-bg flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
       <div className="fixed right-4 top-4 z-20">
         <LanguageSwitcher />
       </div>
 
       <div className="mb-8 text-center">
-        <Image src="/kalohouse-v2.png" alt="Kalohouse" width={180} height={60} className="mx-auto" />
+        <Image src="/kalohouse.png" alt="Kalohouse" width={180} height={60} className="mx-auto" />
         <p className="text-gold font-serif mt-4 text-xl tracking-tight">Agent Onboarding</p>
       </div>
 
-      <Card className="glass-card w-full max-w-md p-8 border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent relative overflow-hidden">
+      <Card className="glass-card w-full max-w-md p-8 border-white/5 bg-black relative overflow-hidden">
         <div className="absolute top-0 right-0 p-8 opacity-5">
            <Building2 className="size-32" />
         </div>
@@ -139,7 +139,7 @@ function RegistrationForm() {
           <Button 
             type="submit" 
             disabled={loading}
-            className="w-full h-14 rounded-2xl bg-gold text-main-bg hover:bg-gold-light transition-all font-black"
+            className="w-full h-14 rounded-2xl bg-gold text-black hover:bg-gold-light transition-all font-black"
           >
             {loading ? "Activating Account..." : "Activate Agent Account"}
           </Button>
@@ -160,7 +160,7 @@ function RegistrationForm() {
 export default function AgentRegistrationPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-main-bg flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-gold animate-pulse font-serif text-xl">Loading onboarding...</div>
       </div>
     }>

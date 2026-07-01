@@ -34,13 +34,13 @@ export default function AdminProfilePage() {
         <Card className="glass-card p-8 border border-white/10">
           <h2 className="text-xl font-serif text-white mb-6">Profile Details</h2>
           <div className="flex items-center gap-8 mb-8">
-            <div className="relative size-28 rounded-full bg-navy-primary border-4 border-gold/20 flex items-center justify-center overflow-visible shadow-xl">
+            <div className="relative size-28 rounded-full bg-black border-4 border-gold/20 flex items-center justify-center overflow-visible shadow-xl">
                 {preview ? (
                     <Image src={preview} alt="Profile" fill className="object-cover rounded-full" />
                 ) : (
                     <User className="size-16 text-gold/50" />
                 )}
-                <label className="absolute -bottom-2 -right-2 p-3 bg-gold rounded-full text-main-bg cursor-pointer hover:bg-gold-light transition shadow-lg border-4 border-main-bg">
+                <label className="absolute -bottom-2 -right-2 p-3 bg-gold rounded-full text-black cursor-pointer hover:bg-gold-light transition shadow-lg border-4 border-black">
                     <Camera className="size-5" />
                     <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
                 </label>
@@ -56,7 +56,7 @@ export default function AdminProfilePage() {
             <Input defaultValue={currentUser?.name || "Admin"} className="bg-white/5 border-white/10" />
             <label className="block text-sm text-muted-text">Email</label>
             <Input defaultValue={currentUser?.email || "admin@kalohouse.rw"} className="bg-white/5 border-white/10" disabled />
-            <Button className="mt-4 bg-gold text-main-bg font-bold hover:bg-gold-light">Save Changes</Button>
+            <Button className="mt-4 bg-gold text-black font-bold hover:bg-gold-light">Save Changes</Button>
           </div>
         </Card>
       </div>

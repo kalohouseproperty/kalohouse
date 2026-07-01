@@ -201,7 +201,7 @@ export function PropertyDetailsContent({
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
             <div className="absolute top-4 left-4 flex items-center gap-2">
-              <span className="rounded-full bg-main-bg/70 backdrop-blur-md px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-gold border border-gold/30">
+              <span className="rounded-full bg-black/70 backdrop-blur-md px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-gold border border-gold/30">
                 {property.propertyType}
               </span>
               {isOwnerVerified && <VerifiedBadge />}
@@ -217,7 +217,7 @@ export function PropertyDetailsContent({
             {heroMedia === "image" && property.media.video && (
               <button
                 onClick={() => setHeroMedia("video")}
-                className="absolute bottom-4 right-4 z-10 flex items-center gap-2 rounded-full bg-gold/90 hover:bg-gold px-4 py-2 text-xs font-bold text-main-bg shadow-lg transition-all"
+                className="absolute bottom-4 right-4 z-10 flex items-center gap-2 rounded-full bg-gold/90 hover:bg-gold px-4 py-2 text-xs font-bold text-black shadow-lg transition-all"
               >
                 <Play className="size-3.5" />
                 Watch Tour
@@ -474,7 +474,7 @@ export function PropertyDetailsContent({
           <aside className="lg:sticky lg:top-24 space-y-6">
             {/* Pricing Card */}
             <Card className="p-8 glass-card border-gold/30 bg-gold/5 overflow-hidden relative">
-              <div className="absolute top-0 right-0 bg-gold px-4 py-1 rounded-bl-2xl text-[10px] font-black uppercase tracking-widest text-main-bg">
+              <div className="absolute top-0 right-0 bg-gold px-4 py-1 rounded-bl-2xl text-[10px] font-black uppercase tracking-widest text-black">
                 {isOwnerVerified ? "Guaranteed Price" : "Listed Price"}
               </div>
               <div className="mb-6">
@@ -499,7 +499,7 @@ export function PropertyDetailsContent({
               <div className="space-y-3">
                 {!isOwnerVerified && !canViewContact && (
                   <Button
-                    className="w-full h-16 rounded-2xl bg-gold hover:bg-gold-light text-main-bg font-black text-lg shadow-xl shadow-gold/20 transition-all active:scale-95"
+                    className="w-full h-16 rounded-2xl bg-gold hover:bg-gold-light text-black font-black text-lg shadow-xl shadow-gold/20 transition-all active:scale-95"
                     asChild={!isVisitor}
                   >
                     {isVisitor ? (
@@ -526,7 +526,7 @@ export function PropertyDetailsContent({
                 {isOwnerVerified && (
                   <>
                     <Button 
-                      className="w-full h-16 rounded-2xl bg-gold hover:bg-gold-light text-main-bg font-black text-lg shadow-xl shadow-gold/20 transition-all active:scale-95"
+                      className="w-full h-16 rounded-2xl bg-gold hover:bg-gold-light text-black font-black text-lg shadow-xl shadow-gold/20 transition-all active:scale-95"
                       asChild={!hasPaid}
                       disabled={hasPaid}
                     >

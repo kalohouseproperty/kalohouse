@@ -4,6 +4,7 @@ import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
+import { UserRole } from "@/prisma/generated/client";
 
 const authSecret = process.env.AUTH_SECRET || (process.env.NODE_ENV === "development" ? "dev-auth-secret-change-me" : undefined);
 
@@ -55,6 +56,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             where: { email: user.email, emailVerified: null },
             data: { emailVerified: new Date(), is_verified: true },
           });
+          await prisma.user.updateMany({
+            where: { email: user.email, role: UserRole.client },
+            data: { role: UserRole.owner },
+          });
         }
         return true;
       }
@@ -66,7 +71,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = user.id;
         token.email = user.email;
         token.name = user.name || dbUser.full_name;
-        token.role = dbUser.role || "client";
+        token.role = dbUser.role || "owner";
       }
       return token;
     },

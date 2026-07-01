@@ -3,7 +3,6 @@ import prisma from "@/lib/prisma";
 import { getPublishedProperties } from "@/lib/dal";
 import MapView from "@/components/map/MapView";
 import type { User, UserRole } from "@/types/models";
-import { PaymentStatus } from "@/prisma/generated/client";
 
 export const dynamic = "force-dynamic";
 
@@ -18,11 +17,7 @@ export default async function MapPage() {
     });
 
     if (user) {
-      const paidPayment = await prisma.payment.findFirst({
-        where: { client_id: user.id, status: PaymentStatus.paid },
-      });
-
-      hasMapAccess = user.map_access_paid || Boolean(paidPayment);
+      hasMapAccess = user.map_access_paid;
 
       dbUser = {
         id: String(user.id),

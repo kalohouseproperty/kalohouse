@@ -1,7 +1,6 @@
 "use client";
 
-import { createContext, startTransition, useContext, useEffect, useState, useCallback, useRef } from "react";
-import { SavedPropertiesSidebar } from "@/components/cards/SavedPropertiesSidebar";
+import { createContext, startTransition, useContext, useEffect, useState, useCallback } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { createId } from "@/lib/format";
@@ -110,18 +109,11 @@ export function KalohouseProvider({ children, initialLanguage }: { children: Rea
   const [loading, setLoading] = useState(true);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [language, setLanguageState] = useState<Language>(initialLanguage ?? getStoredLanguage);
-const [saved_property_ids, setSavedPropertyIdsState] = useState<string[]>([]);
-const [savedPropertiesData, setSavedPropertiesDataState] = useState<Record<string, Property>>({});
+const [saved_property_ids, setSavedPropertyIdsState] = useState<string[]>(getSavedPropertyIds);
+const [savedPropertiesData, setSavedPropertiesDataState] = useState<Record<string, Property>>(getSavedPropertiesData);
 const [showSavedPanel, setShowSavedPanel] = useState(false);
 const openSavedPanel = useCallback(() => setShowSavedPanel(true), []);
 const closeSavedPanel = useCallback(() => setShowSavedPanel(false), []);
-
-  useEffect(() => {
-    const ids = getSavedPropertyIds();
-    const data = getSavedPropertiesData();
-    setSavedPropertyIdsState(ids);
-    setSavedPropertiesDataState(data);
-  }, []);
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -139,7 +131,7 @@ const closeSavedPanel = useCallback(() => setShowSavedPanel(false), []);
           id: sessionUser.id || createId("user"),
           name: sessionUser.name || "User",
           email: sessionUser.email || "",
-          role: sessionUser.role || "client",
+          role: sessionUser.role || "owner",
           status: "active",
           isVerified: sessionUser.isVerified || false,
           mapAccessPaid: false,
@@ -225,7 +217,8 @@ const toggleSaveProperty = useCallback(async (propertyId: string, propertyData?:
       });
     } else if (!isAdding) {
       setSavedPropertiesDataState((prevData) => {
-        const { [propertyId]: _, ...rest } = prevData;
+        const rest = { ...prevData };
+        delete rest[propertyId];
         setSavedPropertiesData(rest);
         return rest;
       });
@@ -337,7 +330,8 @@ export function useRequireRole(role: UserRole) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && (!currentUser || (currentUser.role !== role && currentUser.role !== "admin"))) {
+    const isOwnerUsingBuyerView = role === "client" && currentUser?.role === "owner";
+    if (!loading && (!currentUser || (currentUser.role !== role && currentUser.role !== "admin" && !isOwnerUsingBuyerView))) {
       router.replace("/auth");
     }
   }, [currentUser, loading, role, router]);

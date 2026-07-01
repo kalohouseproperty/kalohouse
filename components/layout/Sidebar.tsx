@@ -4,8 +4,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { 
-  LayoutDashboard, Building2, ShieldCheck, Users, 
+import {
+  LayoutDashboard, Building2, ShieldCheck, Users,
   Banknote, Map, Settings, LogOut, ChevronLeft, ChevronRight, Home, FileText, FolderKanban, CreditCard, ClipboardCheck, X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -39,6 +39,10 @@ const navItemsByRole = {
   ],
   owner: [
     { href: "/dashboard/owner", label: "My Properties", icon: FolderKanban },
+    { href: "/dashboard/client", label: "My Purchases", icon: LayoutDashboard },
+    { href: "/properties", label: "Browse Homes", icon: Building2 },
+    { href: "/map", label: "Marketplace Map", icon: Map },
+    { href: "/dashboard/client#payments", label: "Payments", icon: CreditCard },
     { href: "/dashboard/profile", label: "My Profile", icon: FileText },
     { href: "/", label: "Marketplace", icon: Home },
   ],
@@ -97,9 +101,9 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
                 {isActive && <div className="absolute left-0 top-2 bottom-2 w-1 bg-gold rounded-r-full" />}
                 <item.icon className={cn("size-5 shrink-0 transition-colors", isActive ? "text-gold" : "text-muted-text group-hover:text-white")} />
                 {isExpanded && (
-                  <motion.span 
-                    initial={{ opacity: 0 }} 
-                    animate={{ opacity: 1 }} 
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     className={cn("text-sm font-medium", isActive ? "text-white" : "text-muted-text")}
                   >
                     {item.label}
@@ -120,7 +124,6 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
         </TooltipProvider>
       </nav>
 
-      {/* Mobile-only bottom links */}
       <div className="lg:hidden space-y-2 mb-4">
         <div className="px-3 py-2">
           <LanguageSwitcher />
@@ -129,17 +132,17 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
 
       <div className="mt-auto space-y-4">
         {isExpanded && (
-            <div className="p-4 rounded-xl bg-gradient-to-br from-gold/20 to-transparent border border-gold/20">
-                <p className="text-[10px] text-gold font-bold uppercase">Trust Ops</p>
-                <p className="text-[10px] text-white">System Verified</p>
-            </div>
+          <div className="p-4 rounded-xl bg-gradient-to-br from-gold/20 to-transparent border border-gold/20">
+            <p className="text-[10px] text-gold font-bold uppercase">Trust Ops</p>
+            <p className="text-[10px] text-white">System Verified</p>
+          </div>
         )}
-        <button 
-            onClick={logout}
-            className="flex items-center gap-4 p-3 w-full rounded-xl hover:bg-danger/10 text-danger transition"
+        <button
+          onClick={logout}
+          className="flex items-center gap-4 p-3 w-full rounded-xl hover:bg-danger/10 text-danger transition"
         >
-            <LogOut className="size-5 shrink-0" />
-            {isExpanded && <span className="text-sm font-medium">Logout</span>}
+          <LogOut className="size-5 shrink-0" />
+          {isExpanded && <span className="text-sm font-medium">Logout</span>}
         </button>
       </div>
     </div>
@@ -147,7 +150,6 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
 
   return (
     <>
-      {/* Mobile overlay backdrop */}
       <AnimatePresence>
         {isMobileOpen && (
           <motion.div
@@ -160,7 +162,6 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
         )}
       </AnimatePresence>
 
-      {/* Mobile sidebar (overlay) */}
       <AnimatePresence>
         {isMobileOpen && (
           <motion.aside
@@ -175,7 +176,6 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
         )}
       </AnimatePresence>
 
-      {/* Desktop sidebar (always visible) */}
       <motion.aside
         animate={{ width: isExpanded ? 240 : 80 }}
         className="hidden lg:flex fixed inset-y-0 left-0 z-40 bg-main-bg border-r border-white/10 flex-col transition-all duration-300"

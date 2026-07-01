@@ -11,7 +11,6 @@ import { useKalohouse } from "@/components/providers/KalohouseProvider";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
 import { registerUser, requestPasswordReset } from "@/app/actions/auth";
 
 type SessionRoleUser = {
@@ -31,7 +30,6 @@ function AuthPageContent() {
   const [authMode, setAuthMode] = useState<"login" | "signup" | "forgot">(
     requestedMode === "signup" ? "signup" : "login"
   );
-  const [signupRole, setSignupRole] = useState<"client" | "owner">("client");
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
@@ -52,12 +50,10 @@ function AuthPageContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
-  const [nationality, setNationality] = useState("");
-  const [nationalId, setNationalId] = useState("");
 
   const handleGoogleAuth = async () => {
     setIsLoading(true);
-    localStorage.setItem("kalohouse_pending_role", signupRole);
+    localStorage.setItem("kalohouse_pending_role", "owner");
     try {
       await signIn("google", {
         callbackUrl: redirectTo.startsWith("/") ? redirectTo : "/properties",
@@ -80,9 +76,7 @@ function AuthPageContent() {
           email,
           password,
           fullName,
-          role: signupRole,
-          nationality,
-          nationalId,
+          role: "owner",
         });
 
         if (result.error) {
@@ -91,9 +85,9 @@ function AuthPageContent() {
           return;
         }
 
-        const successMessage = "message" in result 
-          ? result.message || "Account created. Check your email to verify your account."
-          : "Account created. Check your email to verify your account.";
+        const successMessage = "message" in result
+          ? result.message || "Account created. We sent a verification email. Check your inbox to verify your account."
+          : "Account created. We sent a verification email. Check your inbox to verify your account.";
         toast(successMessage, "success");
         setAuthMode("login");
         setIsLoading(false);
@@ -270,47 +264,6 @@ function AuthPageContent() {
                   </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-text-secondary/35 ml-1">I am a</label>
-                  <Select 
-                    value={signupRole} 
-                    onChange={(e) => {
-                      const newRole = e.target.value;
-                      if (newRole === "client" || newRole === "owner") {
-                        setSignupRole(newRole);
-                      }
-                    }} 
-                    className="auth-input h-[48px]"
-                  >
-                    <option value="client">Client (Looking to buy/rent)</option>
-                    <option value="owner">Owner (Selling property)</option>
-                  </Select>
-                </div>
-
-                {signupRole === "owner" && (
-                  <div className="space-y-3.5 auth-form-animate">
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-text-secondary/35 ml-1">Nationality</label>
-                      <Input 
-                        placeholder="e.g., Rwandan" 
-                        className="auth-input h-[48px]" 
-                        value={nationality}
-                        onChange={(e) => setNationality(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-text-secondary/35 ml-1">National ID</label>
-                      <Input 
-                        placeholder="Enter your national ID" 
-                        className="auth-input h-[48px]" 
-                        value={nationalId}
-                        onChange={(e) => setNationalId(e.target.value)}
-                        required
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
             )}
 

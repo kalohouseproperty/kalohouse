@@ -27,7 +27,8 @@ export default async function DashboardRedirect() {
     case "owner":
       return redirect("/dashboard/owner");
     case "client":
-    default:
       return redirect("/dashboard/client");
+    default:
+      return redirect("/dashboard/owner");
   }
 }

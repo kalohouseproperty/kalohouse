@@ -52,7 +52,7 @@ export default function ProfilePage() {
           <h2 className="text-xl font-serif text-white mb-6">Profile Details</h2>
 
           <div className="flex items-center gap-8 mb-8">
-            <div className="relative size-28 rounded-full bg-navy-primary border-4 border-gold/20 flex items-center justify-center overflow-hidden shadow-xl">
+            <div className="relative size-28 rounded-full bg-black border-4 border-gold/20 flex items-center justify-center overflow-hidden shadow-xl">
               {preview ? (
                 <Image src={preview} alt="Profile" fill className="object-cover rounded-full" />
               ) : (
@@ -61,7 +61,7 @@ export default function ProfilePage() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute -bottom-2 -right-2 p-3 bg-gold rounded-full text-main-bg cursor-pointer hover:bg-gold-light transition shadow-lg border-4 border-main-bg"
+                className="absolute -bottom-2 -right-2 p-3 bg-gold rounded-full text-black cursor-pointer hover:bg-gold-light transition shadow-lg border-4 border-black"
               >
                 <Camera className="size-5" />
               </button>
@@ -119,7 +119,7 @@ export default function ProfilePage() {
               disabled={saving || !fullName.trim()}
               className={cn(
                 "mt-4 font-bold",
-                saved ? "bg-success text-white" : "bg-gold text-main-bg hover:bg-gold-light"
+                saved ? "bg-success text-white" : "bg-gold text-black hover:bg-gold-light"
               )}
             >
               <Save className="size-4 mr-2" />

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
-import { useKalohouse, useRequireRole } from "@/components/providers/KalohouseProvider";
+import { useRequireRole } from "@/components/providers/KalohouseProvider";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { UserRole } from "@/types/models";
 
@@ -12,7 +12,8 @@ export function DashboardShell({ title, role, children }: { title: string; role:
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Presentation Bypass: Allow admins to see ANY dashboard
-  const isAuthorized = currentUser && (currentUser.role === role || currentUser.role === "admin");
+  const isOwnerUsingBuyerView = role === "client" && currentUser?.role === "owner";
+  const isAuthorized = currentUser && (currentUser.role === role || currentUser.role === "admin" || isOwnerUsingBuyerView);
 
   if (loading || !currentUser || !isAuthorized) {
     return (

@@ -89,7 +89,7 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
         <section className="relative overflow-hidden border-b border-white/[0.04]">
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-gold/5 blur-[120px]" />
-            <div className="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full bg-gold/5 blur-[80px]" />
+            <div className="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full bg-blue-500/5 blur-[80px]" />
             <div className="absolute -bottom-20 -left-20 w-[300px] h-[300px] rounded-full bg-amber-500/5 blur-[80px]" />
           </div>
 
@@ -243,7 +243,7 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
                     </div>
                     {property.media.video && (
                       <div className="absolute bottom-0 right-0 rounded-full bg-gold p-1 shadow">
-                        <Play className="size-3 text-main-bg" fill="currentColor" />
+                        <Play className="size-3 text-black" fill="currentColor" />
                       </div>
                     )}
                   </div>
@@ -323,7 +323,7 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
               <Link
                 href={`/properties/${filteredProperties[storyIndex].id}`}
                 onClick={() => setStoryIndex(null)}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gold py-4 text-sm font-black text-main-bg shadow-lg shadow-gold/20 active:scale-95 transition-transform"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gold py-4 text-sm font-black text-black shadow-lg shadow-gold/20 active:scale-95 transition-transform"
               >
                 {t("viewDetails")} <ArrowRight className="size-4" />
               </Link>

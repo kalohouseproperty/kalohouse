@@ -15,13 +15,37 @@ import { PropertyImage } from "@/components/ui/property-image";
 import { formatMoney } from "@/lib/format";
 import { getMediaUrl } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import type { Property, Payment, Refund } from "@/types/models";
+import type { Property } from "@/types/models";
 import { decideVisit, requestRefund } from "../../actions/visits";
+
+type ClientDashboardPayment = {
+  id: string;
+  propertyId: string;
+  amount: number;
+  finalDisplayPrice: number;
+  status: string;
+  provider: string;
+  providerReference: string | null;
+  createdAt: string;
+  propertyTitle: string;
+  hasRefund: boolean;
+  refundStatus: string | null;
+};
+
+type ClientDashboardRefund = {
+  id: string;
+  paymentId: string;
+  amount: number;
+  status: string;
+  reason: string;
+  createdAt: string;
+  commissionKept: number;
+};
 
 interface ClientDashboardContentProps {
   visits: any[];
-  payments: Payment[];
-  refunds: Refund[];
+  payments: ClientDashboardPayment[];
+  refunds: ClientDashboardRefund[];
   saved: Property[];
   recommended: Property[];
 }
@@ -46,14 +70,14 @@ export function ClientDashboardContent({
     }
   };
 
-  const paidPayments = payments.filter((p: any) => p.status === "Paid" && !p.hasRefund);
+  const paidPayments = payments.filter((p) => p.status === "Paid" && !p.hasRefund);
 
   return (
     <DashboardShell title="Client dashboard" role="client">
       <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Saved properties" value={String(saved.length)} icon={Heart} />
         <StatCard label="Visit requests" value={String(visits.length)} icon={Home} tone="info" />
-        <StatCard label="Payments" value={formatMoney(payments.reduce((sum, p: any) => sum + p.finalDisplayPrice, 0))} icon={CreditCard} tone="success" />
+        <StatCard label="Payments" value={formatMoney(payments.reduce((sum, p) => sum + p.finalDisplayPrice, 0))} icon={CreditCard} tone="success" />
         <StatCard label="Refund status" value={`${refunds.filter((r) => r.status === "Pending").length} pending`} icon={RotateCcw} tone="warning" />
       </section>
 
@@ -65,7 +89,7 @@ export function ClientDashboardContent({
         </div>
         {paidPayments.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2">
-            {paidPayments.map((payment: any) => (
+            {paidPayments.map((payment) => (
               <Card key={payment.id} className="p-5 border-success/20 bg-success/5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
@@ -135,7 +159,7 @@ export function ClientDashboardContent({
         <Card className="p-6">
           <h2 className="font-serif text-2xl text-text-primary">Payment transactions</h2>
           <div className="mt-5 space-y-3">
-            {payments.length ? payments.map((payment: any) => (
+            {payments.length ? payments.map((payment) => (
               <div key={payment.id} className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
@@ -181,7 +205,7 @@ export function ClientDashboardContent({
         <Card className="p-6">
           <h2 className="font-serif text-2xl text-text-primary">Refund status</h2>
           <div className="mt-5 space-y-3">
-            {refunds.length ? refunds.map((refund: any) => (
+            {refunds.length ? refunds.map((refund) => (
               <div key={refund.id} className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>

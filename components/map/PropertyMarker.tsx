@@ -37,7 +37,7 @@ export function PropertyMarker({ property, isActive }: PropertyMarkerProps) {
   return (
     <Marker position={[lat, lng]} icon={customIcon}>
       <Popup closeButton={false} minWidth={300}>
-        <div className="group overflow-hidden rounded-3xl bg-card-bg transition-all hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/5">
+        <div className="group overflow-hidden rounded-3xl bg-[#050505] transition-all hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/5">
           {/* Image Header */}
           <div className="relative h-44 w-full overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -46,7 +46,7 @@ export function PropertyMarker({ property, isActive }: PropertyMarkerProps) {
               alt={property.title}
               className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-card-bg via-transparent to-transparent opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent opacity-60" />
             <div className="absolute left-4 top-4">
               <span className={`rounded-xl px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-lg backdrop-blur-md border border-white/10 ${
                 property.purpose.toLowerCase() === 'rent' ? 'bg-blue-600/80' : 'bg-[#c9a646]/80'
@@ -54,7 +54,7 @@ export function PropertyMarker({ property, isActive }: PropertyMarkerProps) {
                 {property.purpose}
               </span>
             </div>
-            <div className="absolute bottom-4 right-4 rounded-xl bg-main-bg/80 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-[#e6c76e] backdrop-blur-md border border-[#c9a646]/20">
+            <div className="absolute bottom-4 right-4 rounded-xl bg-black/80 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-[#e6c76e] backdrop-blur-md border border-[#c9a646]/20">
               {property.propertyType}
             </div>
           </div>
@@ -87,7 +87,7 @@ export function PropertyMarker({ property, isActive }: PropertyMarkerProps) {
 
             <Link
               href={`/properties/${property.id}`}
-              className="mt-5 flex w-full items-center justify-center gap-3 rounded-2xl bg-[#c9a646] py-4 text-xs font-black uppercase tracking-[0.2em] text-main-bg transition-all hover:bg-[#e6c76e] hover:shadow-[0_0_20px_rgba(201,166,70,0.3)] active:scale-[0.98]"
+              className="mt-5 flex w-full items-center justify-center gap-3 rounded-2xl bg-[#c9a646] py-4 text-xs font-black uppercase tracking-[0.2em] text-black transition-all hover:bg-[#e6c76e] hover:shadow-[0_0_20px_rgba(201,166,70,0.3)] active:scale-[0.98]"
             >
               View Listing
               <ArrowRight className="size-4" />

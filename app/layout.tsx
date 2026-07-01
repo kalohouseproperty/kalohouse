@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     "property marketplace Kigali",
     "escrow payments Rwanda",
     "Kalohouse",
-    "Nyumbani marketplace",
+    "Kalohouse marketplace",
     "apartment Kigali",
     "villa Rwanda",
     "land for sale Rwanda",

@@ -117,7 +117,7 @@ export function NavbarSearch() {
                 <X className="size-3.5" />
               </button>
             )}
-          </div>
+          </div> 
 
           {/* Solid Full-Feature Dropdown */}
           <AnimatePresence>

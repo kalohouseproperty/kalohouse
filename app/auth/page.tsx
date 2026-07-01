@@ -59,8 +59,11 @@ function AuthPageContent() {
   const handleGoogleAuth = async () => {
     setIsLoading(true);
     try {
+      const callbackPath = redirectTo?.startsWith("/") ? redirectTo : "/properties";
+      const callbackUrl = `${window.location.origin}/auth/callback?next=${encodeURIComponent(callbackPath)}`;
+
       await signIn("google", {
-        callbackUrl: "/properties",
+        callbackUrl,
         redirect: true,
       });
     } catch (err: unknown) {

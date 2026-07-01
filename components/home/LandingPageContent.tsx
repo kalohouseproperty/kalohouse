@@ -46,7 +46,7 @@ export function LandingPageContentV2({ properties, currentUser, tData }: Landing
         <div className="mx-auto max-w-7xl h-full flex items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/v2" className="flex items-center gap-2 group">
              <div className="size-10 rounded-full border-2 border-gold/40 overflow-hidden relative">
-                <Image src="/kalohouse.png" alt="Kalohouse" fill className="object-cover" />
+                <Image src="/kalohouse-v2.png" alt="Kalohouse" fill className="object-cover" />
              </div>
              <span className="font-serif text-xl text-white tracking-tight">Kalohouse</span>
           </Link>
@@ -251,7 +251,7 @@ export function LandingPageContentV2({ properties, currentUser, tData }: Landing
         <div className="mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-2">
              <div className="size-8 rounded-full border border-gold/40 relative">
-                <Image src="/kalohouse.png" alt="Kalohouse" fill className="object-cover" />
+                <Image src="/kalohouse-v2.png" alt="Kalohouse" fill className="object-cover" />
              </div>
              <span className="font-serif text-lg text-white">Kalohouse</span>
           </div>

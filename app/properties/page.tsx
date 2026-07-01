@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     title: "Properties for Sale & Rent | Kalohouse",
     description:
       "Browse verified properties for sale and rent in Kigali and across Rwanda.",
+    images: [{ url: "/kalohouse-v2.png", width: 1200, height: 630, alt: "Kalohouse Logo" }],
   },
 };
 

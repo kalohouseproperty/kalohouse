@@ -71,7 +71,7 @@ function RegistrationForm() {
       </div>
 
       <div className="mb-8 text-center">
-        <Image src="/kalohouse.png" alt="Kalohouse" width={180} height={60} className="mx-auto" />
+        <Image src="/kalohouse-v2.png" alt="Kalohouse" width={180} height={60} className="mx-auto" />
         <p className="text-gold font-serif mt-4 text-xl tracking-tight">Agent Onboarding</p>
       </div>
 

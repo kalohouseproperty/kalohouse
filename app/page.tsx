@@ -13,6 +13,12 @@ export const metadata: Metadata = {
   title: "Kalohouse — Rwanda's Trust-First Property Marketplace",
   description:
     "Find verified properties for sale and rent in Kigali, Rwanda. Secure escrow payments, agent-verified listings, and buyer protection.",
+  openGraph: {
+    images: [{ url: "/kalohouse-v2.png", width: 1200, height: 630, alt: "Kalohouse Logo" }],
+  },
+  twitter: {
+    images: ["/kalohouse-v2.png"],
+  },
   alternates: {
     canonical: process.env.NEXT_PUBLIC_APP_URL || "https://www.kalohouse.com",
   },

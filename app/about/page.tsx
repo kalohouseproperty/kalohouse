@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     title: "About Kalohouse | Rwanda's Property Marketplace",
     description:
       "Learn about Kalohouse — Rwanda's most trusted real estate marketplace.",
+    images: [{ url: "/kalohouse-v2.png", width: 1200, height: 630, alt: "Kalohouse Logo" }],
   },
 };
 

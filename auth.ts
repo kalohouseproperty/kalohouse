@@ -14,10 +14,12 @@ const authSecret =
     ? "dev-auth-secret-change-me"
     : undefined);
 
-const hasGoogle = !!(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET);
+const googleClientId = process.env.GOOGLE_CLIENT_ID || process.env.AUTH_GOOGLE_ID;
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET || process.env.AUTH_GOOGLE_SECRET;
+const hasGoogle = !!(googleClientId && googleClientSecret);
 
 if (!hasGoogle && process.env.NODE_ENV !== "development") {
-  console.warn("[Auth] Google OAuth is not configured. Set AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET.");
+  console.warn("[Auth] Google OAuth is not configured. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.");
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -28,8 +30,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     ...(hasGoogle
       ? [
           Google({
-            clientId: process.env.AUTH_GOOGLE_ID!,
-            clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+            clientId: googleClientId!,
+            clientSecret: googleClientSecret!,
             allowDangerousEmailAccountLinking: true,
             profile(profile) {
               return {

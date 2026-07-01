@@ -150,7 +150,7 @@ export function AdminDashboardContent({
                   tickFormatter={(val) => `RWF ${val / 1000}k`}
                 />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: "#201d1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px" }}
+                  contentStyle={{ backgroundColor: "#111111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px" }}
                   itemStyle={{ color: "#C9A646" }}
                 />
                 <Area type="monotone" dataKey="total" stroke="#C9A646" strokeWidth={3} fillOpacity={1} fill="url(#colorTotal)" />

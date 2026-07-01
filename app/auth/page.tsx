@@ -53,15 +53,14 @@ function AuthPageContent() {
 
   const handleGoogleAuth = async () => {
     setIsLoading(true);
-    localStorage.setItem("kalohouse_pending_role", "owner");
     try {
       await signIn("google", {
         callbackUrl: "/auth/callback",
         redirect: true,
       });
     } catch (err: unknown) {
-      console.error("OAuth Error:", err);
-      toast("Auth Error: Could not start Google flow. Try refreshing.", "danger");
+      console.error("Google OAuth error:", err);
+      toast("Could not start Google sign-in. Please try again.", "danger");
       setIsLoading(false);
     }
   };

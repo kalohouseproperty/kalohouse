@@ -8,17 +8,27 @@ import { UserRole } from "@/prisma/generated/client";
 import { createAuthToken, addHours } from "@/lib/auth-tokens";
 import { sendVerificationEmail } from "@/lib/email";
 
-const authSecret = process.env.AUTH_SECRET || (process.env.NODE_ENV === "development" ? "dev-auth-secret-change-me" : undefined);
+const authSecret =
+  process.env.AUTH_SECRET ||
+  (process.env.NODE_ENV === "development"
+    ? "dev-auth-secret-change-me"
+    : undefined);
+
+const hasGoogle = !!(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET);
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma as Parameters<typeof PrismaAdapter>[0]),
   secret: authSecret,
   trustHost: true,
   providers: [
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET,
-    }),
+    ...(hasGoogle
+      ? [
+          Google({
+            clientId: process.env.AUTH_GOOGLE_ID!,
+            clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+          }),
+        ]
+      : []),
     Credentials({
       name: "Credentials",
       credentials: {
@@ -34,12 +44,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!user || !user.password || !user.emailVerified) return null;
 
-        const isValid = await bcrypt.compare(
+        const valid = await bcrypt.compare(
           credentials.password as string,
           user.password
         );
-
-        if (!isValid) return null;
+        if (!valid) return null;
 
         return {
           id: user.id.toString(),
@@ -52,77 +61,80 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider === "google") {
-        if (user.email) {
-          const dbUser = await prisma.user.findUnique({
-            where: { email: user.email },
-            select: { id: true, created_at: true, emailVerified: true },
-          });
+      if (account?.provider !== "google" || !user.email) return true;
 
-          const isNewUser =
-            dbUser &&
-            !dbUser.emailVerified &&
-            new Date().getTime() - new Date(dbUser.created_at).getTime() < 2 * 60 * 1000;
+      const existing = await prisma.user.findUnique({
+        where: { email: user.email },
+        select: { id: true, created_at: true, emailVerified: true },
+      });
 
-          await prisma.user.updateMany({
-            where: { email: user.email, emailVerified: null },
-            data: { emailVerified: new Date(), is_verified: true },
-          });
+      const isNew =
+        existing &&
+        !existing.emailVerified &&
+        Date.now() - new Date(existing.created_at).getTime() < 2 * 60_000;
 
-          if (isNewUser) {
-            const { token, tokenHash } = createAuthToken();
-            const expires = addHours(new Date(), 24);
-            await prisma.user.update({
-              where: { email: user.email },
-              data: {
-                email_verification_token_hash: tokenHash,
-                email_verification_expires: expires,
-              },
-            });
-            await sendVerificationEmail(user.email, token);
-          }
+      await prisma.user.updateMany({
+        where: { email: user.email, emailVerified: null },
+        data: { emailVerified: new Date(), is_verified: true },
+      });
 
-          await prisma.user.updateMany({
-            where: { email: user.email, role: UserRole.client },
-            data: { role: UserRole.owner },
-          });
-        }
-        return true;
+      if (isNew) {
+        const { token, tokenHash } = createAuthToken();
+        await prisma.user.update({
+          where: { email: user.email },
+          data: {
+            email_verification_token_hash: tokenHash,
+            email_verification_expires: addHours(new Date(), 24),
+          },
+        });
+        await sendVerificationEmail(user.email, token);
       }
+
+      await prisma.user.updateMany({
+        where: { email: user.email, role: UserRole.client },
+        data: { role: UserRole.owner },
+      });
+
       return true;
     },
+
     async jwt({ token, user }) {
-      if (user) {
-        const dbUser = user as typeof user & { full_name?: string | null; role?: string | null; created_at?: Date };
-        token.id = user.id;
-        token.email = user.email;
-        token.name = user.name || dbUser.full_name;
-        token.role = dbUser.role || "owner";
-        token.createdAt = dbUser.created_at?.toISOString();
-      }
-      return token;
+      if (!user) return token;
+      const u = user as typeof user & {
+        full_name?: string | null;
+        role?: string | null;
+        created_at?: Date;
+      };
+      return {
+        ...token,
+        id: user.id,
+        email: user.email,
+        name: user.name || u.full_name,
+        role: u.role || "owner",
+        createdAt: u.created_at?.toISOString(),
+      };
     },
+
     async session({ session, token }) {
       if (session.user) {
-        const sessionUser = session.user as typeof session.user & { id?: string; role?: unknown; createdAt?: string };
-        session.user.id = token.id as string;
-        sessionUser.role = token.role;
-        sessionUser.createdAt = token.createdAt as string;
+        (session.user as any).id = token.id;
+        (session.user as any).role = token.role;
+        (session.user as any).createdAt = token.createdAt;
       }
       return session;
     },
+
     async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs or URLs on the same origin
       if (url.startsWith("/")) return `${baseUrl}${url}`;
-      else if (new URL(url).origin === baseUrl) return url;
+      if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
   },
   pages: {
-    signIn: '/auth',
-    error: '/auth',
+    signIn: "/auth",
+    error: "/auth",
   },
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
 });

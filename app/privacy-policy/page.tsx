@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     title: "Privacy Policy | Kalohouse",
     description:
       "Learn how Kalohouse collects, uses, and protects your personal information. Your privacy is our priority.",
+    images: [{ url: "/kalohouse-v2.png", width: 1200, height: 630, alt: "Kalohouse Logo" }],
   },
 };
 

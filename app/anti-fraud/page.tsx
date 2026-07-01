@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     title: "Anti-Fraud Policy | Kalohouse",
     description:
       "Learn how Kalohouse detects, prevents, and responds to fraudulent activity to keep your property transactions safe.",
+    images: [{ url: "/kalohouse-v2.png", width: 1200, height: 630, alt: "Kalohouse Logo" }],
   },
 };
 

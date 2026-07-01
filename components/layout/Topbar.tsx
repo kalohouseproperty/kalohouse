@@ -41,7 +41,7 @@ export function Topbar({ title, onMenuToggle, fullWidth }: { title: string; onMe
             </button>
           )}
           <div className="relative size-9 shrink-0 overflow-hidden rounded-full border border-gold/40">
-            <Image src="/kalohouse.png" alt="Kalohouse Logo" fill className="object-cover" />
+            <Image src="/kalohouse-v2.png" alt="Kalohouse Logo" fill className="object-cover" />
           </div>
           <div className="hidden sm:block truncate">
             <p className="text-[10px] uppercase tracking-[0.22em] text-gold">Kalohouse</p>

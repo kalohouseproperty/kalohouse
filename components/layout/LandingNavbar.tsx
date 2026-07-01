@@ -40,7 +40,7 @@ export function LandingNavbar({ currentUser }: LandingNavbarProps) {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group shrink-0">
           <div className="relative size-9 overflow-hidden rounded-xl border border-gold/40 shadow-lg shadow-gold/10 transition-all duration-300 group-hover:shadow-gold/25 group-hover:border-gold/60 group-hover:scale-105">
-            <Image src="/kalohouse.png" alt="Kalohouse Logo" fill className="object-cover" />
+            <Image src="/kalohouse-v2.png" alt="Kalohouse Logo" fill className="object-cover" />
           </div>
           <span className="hidden sm:block font-serif text-lg tracking-tight text-white/90 group-hover:text-white transition-colors">
             Kalohouse

@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     title: "Terms of Service | Kalohouse",
     description:
       "Read the terms and conditions governing the use of Kalohouse, Rwanda's trusted real estate marketplace.",
+    images: [{ url: "/kalohouse-v2.png", width: 1200, height: 630, alt: "Kalohouse Logo" }],
   },
 };
 

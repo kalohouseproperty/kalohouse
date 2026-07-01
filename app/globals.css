@@ -4,11 +4,11 @@
   --font-sans: var(--font-poppins);
   --font-serif: var(--font-poppins);
   --color-main-bg: #000000;
-  --color-soft-bg: #0a0a0a;
-  --color-card-bg: #111111;
-  --color-hover-bg: #1a1a1a;
-  --color-navy-primary: #0d0d0d;
-  --color-navy-light: #1a1a1a;
+  --color-soft-bg: #000000;
+  --color-card-bg: #000000;
+  --color-hover-bg: #000000;
+  --color-navy-primary: #000000;
+  --color-navy-light: #000000;
   --color-gold: #c9a646;
   --color-gold-light: #e6c76e;
   --color-text-primary: #f9fafb;
@@ -36,10 +36,7 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(201, 166, 70, 0.08), transparent 28rem),
-    radial-gradient(circle at 82% 2%, rgba(201, 166, 70, 0.04), transparent 30rem),
-    linear-gradient(135deg, #000000 0%, #0a0a0a 48%, #000000 100%);
+  background: #000000;
   color: #f9fafb;
   font-family: var(--font-poppins), sans-serif;
 }
@@ -57,7 +54,7 @@ textarea {
 }
 
 select option {
-  background: #111111;
+  background: #000000;
   color: #f9fafb;
 }
 
@@ -68,7 +65,7 @@ select option {
 
 .glass-card {
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(145deg, rgba(17, 17, 17, 0.86), rgba(10, 10, 10, 0.68));
+  background: rgba(0, 0, 0, 0.86);
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(22px);
 }

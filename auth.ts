@@ -5,6 +5,8 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { UserRole } from "@/prisma/generated/client";
+import { createAuthToken, addHours } from "@/lib/auth-tokens";
+import { sendVerificationEmail } from "@/lib/email";
 
 const authSecret = process.env.AUTH_SECRET || (process.env.NODE_ENV === "development" ? "dev-auth-secret-change-me" : undefined);
 
@@ -52,10 +54,34 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ user, account }) {
       if (account?.provider === "google") {
         if (user.email) {
+          const dbUser = await prisma.user.findUnique({
+            where: { email: user.email },
+            select: { id: true, created_at: true, emailVerified: true },
+          });
+
+          const isNewUser =
+            dbUser &&
+            !dbUser.emailVerified &&
+            new Date().getTime() - new Date(dbUser.created_at).getTime() < 2 * 60 * 1000;
+
           await prisma.user.updateMany({
             where: { email: user.email, emailVerified: null },
             data: { emailVerified: new Date(), is_verified: true },
           });
+
+          if (isNewUser) {
+            const { token, tokenHash } = createAuthToken();
+            const expires = addHours(new Date(), 24);
+            await prisma.user.update({
+              where: { email: user.email },
+              data: {
+                email_verification_token_hash: tokenHash,
+                email_verification_expires: expires,
+              },
+            });
+            await sendVerificationEmail(user.email, token);
+          }
+
           await prisma.user.updateMany({
             where: { email: user.email, role: UserRole.client },
             data: { role: UserRole.owner },
@@ -67,19 +93,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     async jwt({ token, user }) {
       if (user) {
-        const dbUser = user as typeof user & { full_name?: string | null; role?: string | null };
+        const dbUser = user as typeof user & { full_name?: string | null; role?: string | null; created_at?: Date };
         token.id = user.id;
         token.email = user.email;
         token.name = user.name || dbUser.full_name;
         token.role = dbUser.role || "owner";
+        token.createdAt = dbUser.created_at?.toISOString();
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        const sessionUser = session.user as typeof session.user & { id?: string; role?: unknown };
+        const sessionUser = session.user as typeof session.user & { id?: string; role?: unknown; createdAt?: string };
         session.user.id = token.id as string;
         sessionUser.role = token.role;
+        sessionUser.createdAt = token.createdAt as string;
       }
       return session;
     },

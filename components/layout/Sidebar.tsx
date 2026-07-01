@@ -168,7 +168,7 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
             animate={{ x: 0 }}
             exit={{ x: -280 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 left-0 z-50 w-[260px] bg-[#07111F] border-r border-white/10 lg:hidden"
+            className="fixed inset-y-0 left-0 z-50 w-[260px] bg-main-bg border-r border-white/10 lg:hidden"
           >
             {sidebarContent}
           </motion.aside>
@@ -178,7 +178,7 @@ export function Sidebar({ isMobileOpen = false, onMobileClose }: SidebarProps) {
       {/* Desktop sidebar (always visible) */}
       <motion.aside
         animate={{ width: isExpanded ? 240 : 80 }}
-        className="hidden lg:flex fixed inset-y-0 left-0 z-40 bg-[#07111F] border-r border-white/10 flex-col transition-all duration-300"
+        className="hidden lg:flex fixed inset-y-0 left-0 z-40 bg-main-bg border-r border-white/10 flex-col transition-all duration-300"
       >
         {sidebarContent}
       </motion.aside>

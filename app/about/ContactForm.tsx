@@ -98,7 +98,7 @@ export function ContactForm() {
       <Button
         type="submit"
         disabled={isLoading}
-        className="w-full h-16 rounded-[1.8rem] bg-gold hover:bg-gold-light text-navy-dark font-bold text-lg shadow-xl shadow-gold/20 transition-all hover:scale-[1.01] active:scale-95"
+        className="w-full h-16 rounded-[1.8rem] bg-gold hover:bg-gold-light text-main-bg font-bold text-lg shadow-xl shadow-gold/20 transition-all hover:scale-[1.01] active:scale-95"
       >
         {isLoading ? t("sending") : t("sendMessage")}
       </Button>

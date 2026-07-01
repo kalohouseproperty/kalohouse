@@ -1,5 +1,5 @@
 .auth-brand-panel {
-  background: #000000;
+  background: linear-gradient(165deg, #000000 0%, #0a0a0a 40%, #111111 100%);
   border-right: 1px solid rgba(201, 166, 70, 0.06);
 }
 
@@ -25,7 +25,7 @@
 
 .auth-submit {
   background: linear-gradient(135deg, #c9a646 0%, #d4b35a 50%, #dfc06e 100%);
-  color: #12100e;
+  color: #000000;
   font-weight: 700;
   border-radius: 14px;
   box-shadow: 0 4px 24px rgba(201, 166, 70, 0.25);

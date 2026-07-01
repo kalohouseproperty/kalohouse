@@ -3,7 +3,7 @@
 .leaflet-container {
   width: 100%;
   height: 100%;
-  background: #000000; /* main-bg */
+  background: #000000; /* main-bg clay black */
   font-family: var(--font-poppins), sans-serif;
 }
 
@@ -26,7 +26,7 @@
 
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out {
-  background-color: #050505 !important; /* solid card-bg */
+  background-color: #111111 !important; /* card-bg clay */
   color: #c9a646 !important; /* gold for maximum visibility */
   border: 1px solid rgba(201, 166, 70, 0.2) !important;
   width: 48px !important;
@@ -52,7 +52,7 @@
 .leaflet-control-zoom-in:hover,
 .leaflet-control-zoom-out:hover {
   background-color: #c9a646 !important; /* gold */
-  color: #000000 !important;
+  color: #000000 !important; /* clay black */
   border-color: #e6c76e !important;
 }
 
@@ -61,7 +61,7 @@
   padding: 0;
   overflow: hidden;
   border-radius: 24px;
-  background: rgba(5, 5, 5, 0.95); /* card-bg with opacity */
+  background: rgba(17, 17, 17, 0.95); /* card-bg clay with opacity */
   border: 1px solid rgba(201, 166, 70, 0.2); /* gold border */
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(20px);
@@ -74,7 +74,7 @@
 }
 
 .leaflet-popup-tip {
-  background: rgba(5, 5, 5, 0.95);
+  background: rgba(17, 17, 17, 0.95);
   border: 1px solid rgba(201, 166, 70, 0.2);
 }
 
@@ -90,7 +90,7 @@
 }
 
 .price-pill {
-  background: rgba(10, 31, 68, 0.9); /* navy-primary */
+  background: rgba(13, 13, 13, 0.9); /* navy-primary clay */
   padding: 8px 16px;
   border-radius: 40px;
   border: 1px solid rgba(201, 166, 70, 0.3); /* gold */
@@ -109,7 +109,7 @@
 .price-pill:hover {
   transform: scale(1.15) translateY(-4px);
   background: #c9a646; /* gold */
-  color: #000000;
+  color: #000000; /* clay black */
   border-color: #e6c76e;
   box-shadow: 0 12px 30px rgba(201, 166, 70, 0.4);
   z-index: 1000;
@@ -143,7 +143,7 @@
 .marker-cluster-medium div,
 .marker-cluster-large div {
   background-color: #c9a646 !important; /* gold */
-  color: #000000 !important;
+  color: #000000 !important; /* clay black */
   font-weight: 800;
   font-size: 14px;
   box-shadow: 0 4px 15px rgba(201, 166, 70, 0.3);

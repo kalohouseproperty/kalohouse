@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
-import { Poppins } from "next/font/google";
 import { AuthSessionProvider } from "@/components/providers/AuthSessionProvider";
+import { Poppins } from "next/font/google";
 import { ClientLayout } from "@/components/layout/ClientLayout";
 import { parseLanguage } from "@/lib/i18n-server";
 import type { Metadata } from "next";
@@ -8,14 +8,14 @@ import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.kalohouse.com";
-
 const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"], 
   variable: "--font-poppins",
   display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
 });
+
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.kalohouse.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -97,8 +97,8 @@ export default async function RootLayout({
   const language = parseLanguage(langFromCookie);
   
   return (
-    <html lang={language}>
-      <body className={`${poppins.variable} antialiased`}>
+    <html lang={language} className={poppins.variable}>
+      <body className="antialiased">
         <AuthSessionProvider>
           <ClientLayout lang={language}>
             {children}

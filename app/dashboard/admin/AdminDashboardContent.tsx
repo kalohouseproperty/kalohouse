@@ -87,7 +87,7 @@ export function AdminDashboardContent({
           <p className="text-muted-text mt-2 text-lg">Marketplace health and operational oversight for Kigali.</p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Button variant="secondary" className="h-12 px-6 bg-gold text-black font-black rounded-xl shadow-lg shadow-gold/10 hover:bg-gold-light transition-all active:scale-95">
+          <Button variant="secondary" className="h-12 px-6 bg-gold text-main-bg font-black rounded-xl shadow-lg shadow-gold/10 hover:bg-gold-light transition-all active:scale-95">
             <Activity className="size-4 mr-2" /> System Health
           </Button>
           <Button asChild variant="secondary" className="h-12 px-6 rounded-xl border-white/10 hover:bg-white/5">
@@ -115,7 +115,7 @@ export function AdminDashboardContent({
       {/* 3. Advanced Analytics Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-10">
         {/* Revenue Trend Chart */}
-        <Card className="xl:col-span-2 glass-card p-8 border-white/5 bg-black">
+        <Card className="xl:col-span-2 glass-card p-8 border-white/5 bg-gradient-to-br from-white/[0.03] to-transparent">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-xl font-serif text-white">Revenue Growth</h2>
@@ -150,7 +150,7 @@ export function AdminDashboardContent({
                   tickFormatter={(val) => `RWF ${val / 1000}k`}
                 />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: "#050505", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px" }}
+                  contentStyle={{ backgroundColor: "#111111", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "12px" }}
                   itemStyle={{ color: "#C9A646" }}
                 />
                 <Area type="monotone" dataKey="total" stroke="#C9A646" strokeWidth={3} fillOpacity={1} fill="url(#colorTotal)" />
@@ -252,7 +252,7 @@ export function AdminDashboardContent({
                       onClick={handleUpdateCommission} 
                       className={cn(
                         "h-12 px-6 rounded-xl font-black transition-all",
-                        commissionSaved ? "bg-success text-white" : "bg-gold text-black"
+                        commissionSaved ? "bg-success text-white" : "bg-gold text-main-bg"
                       )}
                     >
                       {commissionSaved ? "Saved!" : "Apply"}
@@ -325,7 +325,7 @@ export function AdminDashboardContent({
                     setInviteSending(false);
                   }
                 }}
-                className="h-14 mt-2 rounded-2xl bg-gold text-black hover:bg-gold-light transition-all font-black flex items-center justify-center gap-2"
+                className="h-14 mt-2 rounded-2xl bg-gold text-main-bg hover:bg-gold-light transition-all font-black flex items-center justify-center gap-2"
               >
                 <Link2 className="size-5" />
                 {inviteSending ? "Sending Invite..." : "Invite Agent"}
@@ -338,7 +338,7 @@ export function AdminDashboardContent({
                     <Input 
                       readOnly 
                       value={generatedLink} 
-                      className="h-10 text-xs bg-black/50 border-white/5 text-muted-text truncate"
+                      className="h-10 text-xs bg-main-bg/50 border-white/5 text-muted-text truncate"
                     />
                     <Button 
                       onClick={handleCopy}

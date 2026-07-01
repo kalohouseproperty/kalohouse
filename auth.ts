@@ -16,6 +16,10 @@ const authSecret =
 
 const hasGoogle = !!(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET);
 
+if (!hasGoogle && process.env.NODE_ENV !== "development") {
+  console.warn("[Auth] Google OAuth is not configured. Set AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET.");
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma as Parameters<typeof PrismaAdapter>[0]),
   secret: authSecret,

@@ -27,8 +27,7 @@ export default function AuthCallback() {
       }
     }
 
-    const role = ((session.user as any).role as string) || "owner";
-    router.replace(`/dashboard/${role}`);
+    router.replace("/properties");
   }, [status, session, router, toast]);
 
   useEffect(() => {

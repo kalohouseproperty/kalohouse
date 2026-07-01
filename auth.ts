@@ -5,8 +5,6 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { UserRole } from "@/prisma/generated/client";
-import { createAuthToken, addHours } from "@/lib/auth-tokens";
-import { sendVerificationEmail } from "@/lib/email";
 
 const authSecret =
   process.env.AUTH_SECRET ||
@@ -76,42 +74,40 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user, account }) {
-      if (account?.provider !== "google" || !user.email) return true;
-
-      const existing = await prisma.user.findUnique({
-        where: { email: user.email },
-        select: { id: true, created_at: true, emailVerified: true },
-      });
-
-      const isNew =
-        existing &&
-        !existing.emailVerified &&
-        Date.now() - new Date(existing.created_at).getTime() < 2 * 60_000;
-
-      await prisma.user.updateMany({
-        where: { email: user.email, emailVerified: null },
-        data: { emailVerified: new Date(), is_verified: true },
-      });
-
-      if (isNew) {
-        const { token, tokenHash } = createAuthToken();
-        await prisma.user.update({
-          where: { email: user.email },
-          data: {
-            email_verification_token_hash: tokenHash,
-            email_verification_expires: addHours(new Date(), 24),
-          },
-        });
-        await sendVerificationEmail(user.email, token);
+    async signIn({ user, account, profile }) {
+      if (account?.provider !== "google" || !user.email) {
+        return true;
       }
 
-      await prisma.user.updateMany({
-        where: { email: user.email, role: UserRole.client },
-        data: { role: UserRole.owner },
-      });
+      try {
+        const existing = await prisma.user.findUnique({
+          where: { email: user.email },
+          select: { id: true, created_at: true, emailVerified: true },
+        });
 
-      return true;
+        await prisma.user.updateMany({
+          where: { email: user.email, emailVerified: null },
+          data: { emailVerified: new Date(), is_verified: true },
+        });
+
+        await prisma.user.updateMany({
+          where: { email: user.email, role: UserRole.client },
+          data: { role: UserRole.owner },
+        });
+
+        if (existing?.emailVerified === null) {
+          console.info("[Auth] Google sign-in completed for new/verified user", {
+            email: user.email,
+            provider: account.provider,
+            profileName: profile?.name || user.name,
+          });
+        }
+
+        return true;
+      } catch (error) {
+        console.error("[Auth] Google sign-in failed", error);
+        return false;
+      }
     },
 
     async jwt({ token, user }) {
@@ -133,9 +129,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.id;
-        (session.user as any).role = token.role;
-        (session.user as any).createdAt = token.createdAt;
+        const sessionUser = session.user as typeof session.user & {
+          id?: string;
+          role?: string;
+          createdAt?: string;
+        };
+        sessionUser.id = String(token.id);
+        sessionUser.role = (token.role as string | undefined) || "owner";
+        sessionUser.createdAt = (token.createdAt as string | undefined) || undefined;
       }
       return session;
     },

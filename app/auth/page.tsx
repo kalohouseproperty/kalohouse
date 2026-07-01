@@ -56,7 +56,7 @@ function AuthPageContent() {
     localStorage.setItem("kalohouse_pending_role", "owner");
     try {
       await signIn("google", {
-        callbackUrl: redirectTo.startsWith("/") ? redirectTo : "/properties",
+        callbackUrl: "/auth/callback",
         redirect: true,
       });
     } catch (err: unknown) {

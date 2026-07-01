@@ -30,7 +30,7 @@ model User {
   password                      String?
   full_name                     String
   image                         String?
-  role                          UserRole  @default(client)
+  role                          UserRole  @default(owner)
   is_active                     Boolean   @default(true)
   is_verified                   Boolean   @default(false)
   map_access_paid               Boolean   @default(false) @map("map_access_paid")

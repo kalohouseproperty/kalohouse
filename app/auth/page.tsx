@@ -34,16 +34,11 @@ function AuthPageContent() {
 
   useEffect(() => {
     if (status === "authenticated" && session?.user) {
-      const role = (session.user as SessionRoleUser).role || "client";
       if (redirectTo.startsWith("/")) {
         router.replace(redirectTo);
         return;
       }
-      if (role === "client") {
-        router.replace("/properties");
-      } else {
-        router.replace(`/dashboard/${role}`);
-      }
+      router.replace("/properties");
     }
   }, [status, session, router, redirectTo]);
   
@@ -55,7 +50,7 @@ function AuthPageContent() {
     setIsLoading(true);
     try {
       await signIn("google", {
-        callbackUrl: "/auth/callback",
+        callbackUrl: "/properties",
         redirect: true,
       });
     } catch (err: unknown) {

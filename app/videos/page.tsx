@@ -80,7 +80,7 @@ export default async function VideosPage() {
           {videoProperties.length > 0 ? (
             <>
               {/* Desktop grid */}
-              <div className="hidden sm:grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="hidden sm:grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
                 {videoProperties.map((property) => (
                   <VideoCard key={property.id} property={property as any} />
                 ))}

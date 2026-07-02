@@ -49,10 +49,10 @@ export default async function VideosPage() {
     <>
       <LandingNavbar currentUser={currentUser} />
       <main className="min-h-screen bg-black pt-16">
-        <section className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
-          <div className="mb-8 flex flex-col gap-4 sm:mb-10 lg:flex-row lg:items-end lg:justify-between">
+        <section className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+          <div className="mb-6 flex flex-col gap-4 rounded-[28px] border border-white/8 bg-white/3 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.25)] sm:mb-8 sm:p-6 lg:flex-row lg:items-end lg:justify-between lg:p-8">
             <div className="max-w-3xl">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-gold-light">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/4 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-gold-light">
                 <Video className="size-3.5" />
                 Property videos
               </div>
@@ -65,7 +65,7 @@ export default async function VideosPage() {
               </p>
             </div>
             {videoProperties.length > 0 && (
-              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-white/80">
+              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/4 px-4 py-2 text-sm font-semibold text-white/80">
                 <Play className="size-4 text-gold-light" />
                 {videoProperties.length} {videoProperties.length === 1 ? "tour" : "tours"}
               </div>
@@ -73,21 +73,24 @@ export default async function VideosPage() {
           </div>
 
           {videoProperties.length > 0 ? (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
               {videoProperties.map((property) => (
                 <article
                   key={property.id}
-                  className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-card-bg transition-all duration-300 hover:border-gold/25 hover:shadow-xl hover:shadow-gold/5"
+                  className="group flex min-w-0 flex-col overflow-hidden rounded-[28px] border border-white/8 bg-card-bg shadow-[0_16px_50px_rgba(0,0,0,0.28)] transition-all duration-300 hover:-translate-y-1 hover:border-gold/25 hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)]"
                 >
-                  <div className="relative aspect-video overflow-hidden bg-soft-bg">
+                  <div className="relative aspect-9/16 overflow-hidden bg-soft-bg sm:aspect-4/5 lg:aspect-9/16">
                     <video
                       src={property.media.video}
                       poster={property.media.images[0]?.url}
-                      controls
-                      preload="metadata"
+                      autoPlay
+                      muted
+                      loop
                       playsInline
+                      preload="metadata"
                       className="size-full object-cover"
                     />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
                     <div className="pointer-events-none absolute left-3 top-3 flex flex-wrap gap-2">
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-black/65 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-gold-light backdrop-blur-md">
                         <Play className="size-3 fill-current" />
@@ -100,36 +103,35 @@ export default async function VideosPage() {
                         </span>
                       )}
                     </div>
-                  </div>
 
-                  <div className="flex flex-1 flex-col p-4 sm:p-5">
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold uppercase tracking-[0.15em] text-gold/55">
+                    <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold/70">
                         {property.propertyType}
                       </p>
                       <h2 className="mt-1.5 line-clamp-2 text-lg font-bold leading-snug text-white transition-colors group-hover:text-gold-light">
                         {property.title}
                       </h2>
+                      <div className="mt-2 flex items-center gap-2 text-sm text-white/80">
+                        <MapPin className="size-4 shrink-0 text-gold/70" />
+                        <span className="min-w-0 truncate">
+                          {property.district}
+                          {property.sector ? `, ${property.sector}` : ""}
+                        </span>
+                      </div>
                     </div>
+                  </div>
 
-                    <div className="mt-3 flex items-center gap-2 text-sm text-text-secondary/65">
-                      <MapPin className="size-4 shrink-0 text-gold/70" />
-                      <span className="min-w-0 truncate">
-                        {property.district}
-                        {property.sector ? `, ${property.sector}` : ""}
-                      </span>
-                    </div>
-
-                    <div className="mt-4 grid grid-cols-3 gap-2 text-sm font-semibold text-white/85">
-                      <span className="flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-white/[0.04] px-2">
+                  <div className="flex flex-1 flex-col p-4 sm:p-5">
+                    <div className="mt-1 grid grid-cols-3 gap-2 text-sm font-semibold text-white/85">
+                      <span className="flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-white/4 px-2">
                         <Bed className="size-4 shrink-0 text-gold/65" />
                         <span className="truncate">{property.bedrooms} bed</span>
                       </span>
-                      <span className="flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-white/[0.04] px-2">
+                      <span className="flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-white/4 px-2">
                         <Bath className="size-4 shrink-0 text-gold/65" />
                         <span className="truncate">{property.bathrooms} bath</span>
                       </span>
-                      <span className="flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-white/[0.04] px-2">
+                      <span className="flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-white/4 px-2">
                         <Square className="size-4 shrink-0 text-gold/65" />
                         <span className="truncate">
                           {property.sizeSqM ? `${property.sizeSqM} m2` : property.propertyType}
@@ -163,8 +165,8 @@ export default async function VideosPage() {
               ))}
             </div>
           ) : (
-            <div className="flex min-h-[48vh] flex-col items-center justify-center rounded-2xl border border-white/[0.06] bg-white/[0.03] px-4 py-20 text-center">
-              <div className="mb-6 flex size-16 items-center justify-center rounded-2xl border border-white/[0.06] bg-white/[0.04]">
+            <div className="flex min-h-[48vh] flex-col items-center justify-center rounded-2xl border border-white/6 bg-white/3 px-4 py-20 text-center">
+              <div className="mb-6 flex size-16 items-center justify-center rounded-2xl border border-white/6 bg-white/4">
                 <Home className="size-8 text-text-secondary/40" />
               </div>
               <h2 className="font-serif text-2xl text-white">No property videos yet</h2>
@@ -173,7 +175,7 @@ export default async function VideosPage() {
               </p>
               <Link
                 href="/properties"
-                className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl border border-white/[0.06] bg-white/[0.04] px-4 text-sm font-semibold text-white transition-colors hover:bg-white/[0.08]"
+                className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl border border-white/6 bg-white/4 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/8"
               >
                 Browse properties
                 <ArrowRight className="size-4" />

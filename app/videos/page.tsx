@@ -76,12 +76,12 @@ export default async function VideosPage() {
           </section>
         </div>
 
-        {/* Mobile: TikTok-style full-screen vertical feed */}
+        {/* Mobile: TikTok-style centered vertical feed */}
         <div className="lg:hidden">
           {videoProperties.length > 0 ? (
             <MobileVideoFeed properties={videoProperties} />
           ) : (
-            <div className="flex h-[100dvh] flex-col items-center justify-center px-4 text-center">
+            <div className="flex h-[80dvh] flex-col items-center justify-center px-4 text-center">
               <div className="mb-6 flex size-16 items-center justify-center rounded-2xl border border-white/6 bg-white/4">
                 <Home className="size-8 text-text-secondary/40" />
               </div>
@@ -110,7 +110,8 @@ export default async function VideosPage() {
                     key={property.id}
                     className="group flex min-w-0 flex-col overflow-hidden rounded-[28px] border border-white/8 bg-[#0a0a0a] shadow-[0_16px_50px_rgba(0,0,0,0.28)] transition-all duration-300 hover:-translate-y-1 hover:border-gold/25 hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)]"
                   >
-                    <div className="relative aspect-9/16 overflow-hidden bg-[#111]">
+                    {/* Video - reduced aspect ratio */}
+                    <div className="relative aspect-video overflow-hidden bg-[#111]">
                       <video
                         src={property.media.video}
                         poster={property.media.images[0]?.url}
@@ -121,15 +122,16 @@ export default async function VideosPage() {
                         preload="metadata"
                         className="size-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/20 to-transparent" />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
 
-                      {/* Play indicator */}
+                      {/* Play indicator on hover */}
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="flex size-16 items-center justify-center rounded-full bg-black/50 backdrop-blur-sm">
-                          <Play className="size-8 text-white ml-1" fill="currentColor" />
+                        <div className="flex size-14 items-center justify-center rounded-full bg-black/50 backdrop-blur-sm">
+                          <Play className="size-7 text-white ml-0.5" fill="currentColor" />
                         </div>
                       </div>
 
+                      {/* Badges */}
                       <div className="pointer-events-none absolute left-3 top-3 flex flex-wrap gap-2">
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-black/65 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-gold-light backdrop-blur-md">
                           <Play className="size-3 fill-current" />
@@ -142,58 +144,65 @@ export default async function VideosPage() {
                           </span>
                         )}
                       </div>
-
-                      <div className="absolute inset-x-0 bottom-0 p-5">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold/70">
-                          {property.propertyType}
-                        </p>
-                        <h2 className="mt-1.5 line-clamp-2 text-lg font-bold leading-snug text-white transition-colors group-hover:text-gold-light">
-                          {property.title}
-                        </h2>
-                        <div className="mt-2 flex items-center gap-2 text-sm text-white/80">
-                          <MapPin className="size-4 shrink-0 text-gold/70" />
-                          <span className="min-w-0 truncate">
-                            {property.district}
-                            {property.sector ? `, ${property.sector}` : ""}
-                          </span>
-                        </div>
-                      </div>
                     </div>
 
+                    {/* Details below video */}
                     <div className="flex flex-1 flex-col p-5">
-                      <div className="mt-1 grid grid-cols-3 gap-2 text-sm font-semibold text-white/85">
-                        <span className="flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-white/4 px-2">
-                          <Bed className="size-4 shrink-0 text-gold/65" />
+                      {/* Property type */}
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gold/70">
+                        {property.propertyType}
+                      </p>
+
+                      {/* Title */}
+                      <h2 className="mt-1.5 line-clamp-2 text-lg font-bold leading-snug text-white transition-colors group-hover:text-gold-light">
+                        {property.title}
+                      </h2>
+
+                      {/* Location */}
+                      <div className="mt-2 flex items-center gap-2 text-sm text-white/80">
+                        <MapPin className="size-4 shrink-0 text-gold/70" />
+                        <span className="min-w-0 truncate">
+                          {property.district}
+                          {property.sector ? `, ${property.sector}` : ""}
+                        </span>
+                      </div>
+
+                      {/* Stats */}
+                      <div className="mt-3 grid grid-cols-3 gap-2 text-sm font-semibold text-white/85">
+                        <span className="flex h-9 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-white/4 px-2">
+                          <Bed className="size-3.5 shrink-0 text-gold/65" />
                           <span className="truncate">{property.bedrooms} bed</span>
                         </span>
-                        <span className="flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-white/4 px-2">
-                          <Bath className="size-4 shrink-0 text-gold/65" />
+                        <span className="flex h-9 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-white/4 px-2">
+                          <Bath className="size-3.5 shrink-0 text-gold/65" />
                           <span className="truncate">{property.bathrooms} bath</span>
                         </span>
-                        <span className="flex h-10 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-white/4 px-2">
-                          <Square className="size-4 shrink-0 text-gold/65" />
+                        <span className="flex h-9 min-w-0 items-center justify-center gap-1.5 rounded-xl bg-white/4 px-2">
+                          <Square className="size-3.5 shrink-0 text-gold/65" />
                           <span className="truncate">
                             {property.sizeSqM ? `${property.sizeSqM} m2` : property.propertyType}
                           </span>
                         </span>
                       </div>
 
-                      <p className="mt-4 line-clamp-2 text-sm leading-relaxed text-text-secondary/60">
+                      {/* Description */}
+                      <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-text-secondary/60">
                         {property.description}
                       </p>
 
-                      <div className="mt-auto flex flex-col gap-4 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                      {/* Price + Details */}
+                      <div className="mt-auto flex items-center justify-between pt-4 border-t border-white/5">
                         <div className="min-w-0">
                           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-text-secondary/45">
                             Price
                           </p>
-                          <p className="mt-1 truncate text-xl font-black tracking-tight text-gold-light">
+                          <p className="mt-0.5 truncate text-xl font-black tracking-tight text-gold-light">
                             {formatMoney(property.finalDisplayPrice, property.purpose)}
                           </p>
                         </div>
                         <Link
                           href={`/properties/${property.id}`}
-                          className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-gold px-4 text-sm font-black text-black transition-colors hover:bg-gold-light"
+                          className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-gold px-5 text-sm font-black text-black transition-colors hover:bg-gold-light"
                         >
                           Details
                           <ArrowRight className="size-4" />
@@ -230,7 +239,7 @@ export default async function VideosPage() {
 
 function MobileVideoFeed({ properties }: { properties: any[] }) {
   return (
-    <div className="relative h-[100dvh] w-full snap-y snap-mandatory snap-always">
+    <div className="flex flex-col items-center gap-4 px-4 pt-20 pb-8">
       {properties.map((property, index) => (
         <MobileVideoCard key={property.id} property={property} index={index} total={properties.length} />
       ))}
@@ -240,128 +249,99 @@ function MobileVideoFeed({ properties }: { properties: any[] }) {
 
 function MobileVideoCard({ property, index, total }: { property: any; index: number; total: number }) {
   return (
-    <article
-      id={`video-${index}`}
-      className="relative h-[100dvh] w-full snap-start snap-always"
-    >
-      {/* Full-screen video */}
-      <video
-        src={property.media.video}
-        poster={property.media.images[0]?.url}
-        autoPlay
-        loop
-        playsInline
-        muted
-        preload="metadata"
-        className="absolute inset-0 size-full object-cover"
-      />
+    <article className="w-full max-w-sm overflow-hidden rounded-3xl border border-white/8 bg-[#0a0a0a] shadow-[0_8px_40px_rgba(0,0,0,0.4)]">
+      {/* Video - TikTok-style 9:16 centered */}
+      <div className="relative aspect-[9/16] overflow-hidden bg-[#111]">
+        <video
+          src={property.media.video}
+          poster={property.media.images[0]?.url}
+          autoPlay
+          loop
+          playsInline
+          muted
+          preload="metadata"
+          className="size-full object-cover"
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-[#000]/95 via-[#000]/10 to-[#000]/30" />
 
-      {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-linear-to-t from-[#000]/95 via-[#000]/10 to-[#000]/50" />
-
-      {/* Top: Back + counter */}
-      <div className="absolute left-0 right-0 top-0 z-20 flex items-center justify-between px-4 pt-14">
-        <Link
-          href="/"
-          className="flex size-10 items-center justify-center rounded-full bg-[#000]/50 backdrop-blur-md"
-        >
-          <ArrowLeft className="size-5 text-white" />
-        </Link>
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-[#000]/50 px-3 py-1.5 text-[11px] font-bold text-white/80 backdrop-blur-md">
-          <Play className="size-3 fill-current text-gold-light" />
-          {index + 1} / {total}
-        </div>
-        <div className="size-10" />
-      </div>
-
-      {/* Right side: action buttons (TikTok-style) */}
-      <div className="absolute right-3 bottom-36 z-20 flex flex-col items-center gap-5">
-        <button className="flex flex-col items-center gap-1">
-          <div className="flex size-12 items-center justify-center rounded-full bg-[#000]/50 backdrop-blur-md">
-            <Play className="size-5 text-white" fill="currentColor" />
+        {/* Counter */}
+        <div className="absolute left-0 right-0 top-0 z-20 flex items-center justify-center px-4 pt-4">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-[#000]/60 px-3 py-1.5 text-[11px] font-bold text-white/80 backdrop-blur-md">
+            <Play className="size-3 fill-current text-gold-light" />
+            {index + 1} / {total}
           </div>
-          <span className="text-[10px] font-semibold text-white/70">Play</span>
-        </button>
-      </div>
+        </div>
 
-      {/* Bottom content */}
-      <div className="absolute inset-x-0 bottom-0 z-20 px-4 pb-24">
         {/* Badges */}
-        <div className="mb-3 flex flex-wrap gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#000]/50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-gold-light backdrop-blur-md">
+        <div className="absolute left-3 top-12 z-20 flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#000]/60 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-gold-light backdrop-blur-md">
             <Play className="size-2.5 fill-current" />
             {property.purpose}
           </span>
           {property.isOwnerVerified && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#000]/50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-md">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#000]/60 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-md">
               <ShieldCheck className="size-3 text-gold-light" />
               Verified
             </span>
           )}
         </div>
 
-        {/* Title & location */}
-        <h2 className="text-xl font-bold leading-snug text-white drop-shadow-lg">
-          {property.title}
-        </h2>
+        {/* Bottom overlay content */}
+        <div className="absolute inset-x-0 bottom-0 z-20 px-4 pb-4">
+          {/* Property info */}
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gold/80">
+            {property.propertyType}
+          </p>
+          <h2 className="mt-1 text-lg font-bold leading-snug text-white drop-shadow-lg line-clamp-2">
+            {property.title}
+          </h2>
 
-        <div className="mt-1.5 flex items-center gap-1.5 text-sm text-white/80">
-          <MapPin className="size-3.5 shrink-0 text-gold/70" />
-          <span className="truncate">
-            {property.district}
-            {property.sector ? `, ${property.sector}` : ""}
-          </span>
-        </div>
-
-        {/* Stats row */}
-        <div className="mt-3 flex items-center gap-3 text-xs font-semibold text-white/85">
-          <span className="flex items-center gap-1">
-            <Bed className="size-3.5 text-gold/65" />
-            {property.bedrooms} bed
-          </span>
-          <span className="flex items-center gap-1">
-            <Bath className="size-3.5 text-gold/65" />
-            {property.bathrooms} bath
-          </span>
-          <span className="flex items-center gap-1">
-            <Square className="size-3.5 text-gold/65" />
-            {property.sizeSqM ? `${property.sizeSqM} m2` : property.propertyType}
-          </span>
-        </div>
-
-        {/* Price + CTA */}
-        <div className="mt-4 flex items-center justify-between rounded-2xl bg-[#000]/50 px-4 py-3 backdrop-blur-md">
-          <div>
-            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-text-secondary/50">
-              Price
-            </p>
-            <p className="text-xl font-black tracking-tight text-gold-light">
-              {formatMoney(property.finalDisplayPrice, property.purpose)}
-            </p>
+          <div className="mt-1.5 flex items-center gap-1.5 text-xs text-white/70">
+            <MapPin className="size-3 shrink-0 text-gold/70" />
+            <span className="truncate">
+              {property.district}
+              {property.sector ? `, ${property.sector}` : ""}
+            </span>
           </div>
-          <Link
-            href={`/properties/${property.id}`}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gold px-5 text-sm font-black text-black transition-colors hover:bg-gold-light active:scale-95"
-          >
-            View
-            <ArrowRight className="size-4" />
-          </Link>
+
+          {/* Stats */}
+          <div className="mt-2 flex items-center gap-2 text-[11px] font-semibold text-white/80">
+            <span className="flex items-center gap-1">
+              <Bed className="size-3 text-gold/60" />
+              {property.bedrooms} bed
+            </span>
+            <span className="flex items-center gap-1">
+              <Bath className="size-3 text-gold/60" />
+              {property.bathrooms} bath
+            </span>
+            <span className="flex items-center gap-1">
+              <Square className="size-3 text-gold/60" />
+              {property.sizeSqM ? `${property.sizeSqM} m2` : property.propertyType}
+            </span>
+          </div>
+
+          {/* Price */}
+          <div className="mt-3 rounded-xl bg-[#000]/60 px-3 py-2.5 backdrop-blur-md">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-text-secondary/50">
+                  Price
+                </p>
+                <p className="text-lg font-black tracking-tight text-gold-light">
+                  {formatMoney(property.finalDisplayPrice, property.purpose)}
+                </p>
+              </div>
+              <Link
+                href={`/properties/${property.id}`}
+                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl bg-gold px-4 text-xs font-black text-black transition-colors active:scale-95"
+              >
+                Details
+                <ArrowRight className="size-3.5" />
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* Scroll indicator */}
-      {index < total - 1 && (
-        <div className="absolute inset-x-0 bottom-6 z-30 flex justify-center">
-          <a
-            href={`#video-${index + 1}`}
-            className="flex flex-col items-center gap-1 animate-bounce"
-          >
-            <div className="size-1 rounded-full bg-white/40" />
-            <div className="size-1 rounded-full bg-white/40" />
-            <div className="size-1 rounded-full bg-white/40" />
-          </a>
-        </div>
-      )}
     </article>
   );
 }

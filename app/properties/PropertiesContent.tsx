@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Building2, Search, RotateCcw, SlidersHorizontal, ArrowRight, X, Home, Play } from "lucide-react";
+import { Building2, Search, RotateCcw, SlidersHorizontal, ArrowRight, X, Home, Play, MapPinned } from "lucide-react";
 import Link from "next/link";
 
 import { PropertyGrid } from "@/components/ui/property-grid";
@@ -259,7 +259,8 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
         {/* Story Viewer Overlay */}
         {storyIndex !== null && filteredProperties[storyIndex] && (
           <div className="fixed inset-0 z-50 flex flex-col bg-black sm:hidden">
-            <div className="flex gap-1 px-2 pt-2">
+            {/* Progress bars */}
+            <div className="flex gap-1 px-2 pt-3">
               {filteredProperties.slice(0, 12).map((_, i) => (
                 <div key={i} className="h-1 flex-1 rounded-full bg-white/20 overflow-hidden">
                   <div className={cn("h-full rounded-full bg-white transition-all duration-500", i === storyIndex ? "w-full" : i < storyIndex ? "w-full" : "w-0")} />
@@ -267,9 +268,10 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
               ))}
             </div>
 
+            {/* Header */}
             <div className="flex items-center justify-between gap-3 px-4 py-3">
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="size-10 shrink-0 overflow-hidden rounded-full border border-white/30">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="size-10 shrink-0 overflow-hidden rounded-full border-2 border-gold/50">
                   {filteredProperties[storyIndex].media.images[0] && (
                     <img
                       src={filteredProperties[storyIndex].media.images[0].url}
@@ -279,38 +281,55 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
                   )}
                 </div>
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-white">
+                  <p className="truncate text-sm font-bold text-white">
                     {filteredProperties[storyIndex].ownerFullName || t("owner")}
                   </p>
-                  <p className="truncate text-[10px] text-white/50">{filteredProperties[storyIndex].title}</p>
+                  <p className="truncate text-[11px] text-white/50">{filteredProperties[storyIndex].title}</p>
                 </div>
               </div>
-              <button onClick={() => setStoryIndex(null)} className="shrink-0">
+              <button onClick={() => setStoryIndex(null)} className="shrink-0 p-2 rounded-full hover:bg-white/10 transition-colors">
                 <X className="size-6 text-white/80" />
               </button>
             </div>
 
-            <div className="relative flex flex-1 items-center justify-center px-2">
-              <div className="absolute inset-0 flex">
-                <button className="w-1/3 h-full" onClick={() => setStoryIndex(Math.max(0, storyIndex - 1))} />
-                <button className="w-1/3 h-full" onClick={() => setStoryIndex(null)} />
-                <button className="w-1/3 h-full" onClick={() => setStoryIndex(Math.min(filteredProperties.slice(0, 12).length - 1, storyIndex + 1))} />
+            {/* Media area - tap sides to navigate */}
+            <div className="relative flex-1 flex items-center justify-center">
+              {/* Navigation zones */}
+              <div className="absolute inset-0 z-10 flex">
+                <button
+                  className="w-1/3 h-full"
+                  onClick={(e) => { e.stopPropagation(); setStoryIndex(Math.max(0, storyIndex - 1)); }}
+                  aria-label="Previous"
+                />
+                <button
+                  className="w-1/3 h-full"
+                  onClick={(e) => { e.stopPropagation(); setStoryIndex(null); }}
+                  aria-label="Close"
+                />
+                <button
+                  className="w-1/3 h-full"
+                  onClick={(e) => { e.stopPropagation(); setStoryIndex(Math.min(filteredProperties.slice(0, 12).length - 1, storyIndex + 1)); }}
+                  aria-label="Next"
+                />
               </div>
 
+              {/* Media content */}
               {filteredProperties[storyIndex].media.video ? (
                 <video
+                  key={`story-video-${storyIndex}-${filteredProperties[storyIndex].id}`}
                   src={filteredProperties[storyIndex].media.video}
                   autoPlay
                   loop
                   playsInline
-                  className="max-h-full w-full rounded-2xl object-contain"
+                  muted
+                  className="h-full w-full object-cover"
                   controls={false}
                 />
               ) : filteredProperties[storyIndex].media.images[0] ? (
                 <img
                   src={filteredProperties[storyIndex].media.images[0].url}
                   alt={filteredProperties[storyIndex].title}
-                  className="max-h-full w-full rounded-2xl object-contain"
+                  className="h-full w-full object-cover"
                 />
               ) : (
                 <div className="flex items-center justify-center text-white/30">
@@ -319,7 +338,20 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
               )}
             </div>
 
-            <div className="px-4 pb-8 pt-4">
+            {/* Bottom: Property info + CTA */}
+            <div className="relative z-20 bg-gradient-to-t from-black via-black/95 to-transparent px-4 pb-8 pt-6">
+              <div className="mb-3">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gold/80">
+                  {filteredProperties[storyIndex].propertyType}
+                </p>
+                <h3 className="mt-1 text-lg font-bold text-white line-clamp-1">
+                  {filteredProperties[storyIndex].title}
+                </h3>
+                <div className="mt-1 flex items-center gap-1.5 text-xs text-white/60">
+                  <MapPinned className="size-3" />
+                  <span className="truncate">{filteredProperties[storyIndex].district}</span>
+                </div>
+              </div>
               <Link
                 href={`/properties/${filteredProperties[storyIndex].id}`}
                 onClick={() => setStoryIndex(null)}

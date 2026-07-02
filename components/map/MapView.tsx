@@ -9,7 +9,7 @@ import Link from "next/link";
 import type { Property, User } from "@/types/models";
 import { Input } from "@/components/ui/input";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
-import { purchaseMapAccess } from "@/app/actions/visits";
+import { checkMapAccess, startMapAccessMtnPayment } from "@/app/actions/visits";
 import { MAP_ACCESS_PRICE_RWF } from "@/lib/pricing";
 
 const LeafletMap = dynamic(() => import("./LeafletMap"), { 
@@ -27,6 +27,7 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
   const [searchQuery, setSearchQuery] = useState("");
   const [pending, startTransition] = useTransition();
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
+  const [phone, setPhone] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   
   const filteredProperties = properties.filter(p => 
@@ -157,23 +158,45 @@ export default function MapView({ properties, currentUser, hasMapAccess }: MapVi
               </p>
               {currentUser ? (
                 <div className="space-y-4">
+                  <label className="block text-left">
+                    <span className="mb-2 block text-[10px] font-black uppercase tracking-[0.2em] text-[#64748b]">
+                      MTN Mobile Money number
+                    </span>
+                    <Input
+                      type="tel"
+                      value={phone}
+                      onChange={(event) => setPhone(event.target.value)}
+                      placeholder="+250 78..."
+                      className="h-12 rounded-xl border-white/10 bg-white/5 text-[#f9fafb] placeholder:text-[#64748b]"
+                    />
+                  </label>
                   <Button
                     className="h-14 sm:h-16 rounded-xl sm:rounded-2xl bg-[#c9a646] hover:bg-[#c9a646]/90 text-main-bg font-black text-base sm:text-lg shadow-xl shadow-[#c9a646]/20 transition-all active:scale-95 w-full"
                     disabled={pending}
                     onClick={() => {
                       startTransition(async () => {
-                        const result = await purchaseMapAccess();
+                        const result = await startMapAccessMtnPayment(phone);
                         if ("error" in result) {
                           setPurchaseMessage(result.error as string);
                         } else {
-                          setPurchaseMessage(result.message || "Success!");
-                          setTimeout(() => window.location.reload(), 1500);
+                          setPurchaseMessage(result.message || "Payment request sent. Approve it on your phone.");
+
+                          const interval = window.setInterval(async () => {
+                            const status = await checkMapAccess();
+                            if (status.paid) {
+                              window.clearInterval(interval);
+                              setPurchaseMessage("Payment confirmed. Unlocking map...");
+                              window.location.reload();
+                            }
+                          }, 3000);
+
+                          window.setTimeout(() => window.clearInterval(interval), 120000);
                         }
                       });
                     }}
                   >
                     <MapIcon className="size-5" />
-                    {pending ? "Processing..." : `Unlock Map - RWF ${MAP_ACCESS_PRICE_RWF.toLocaleString("en-US")}`}
+                    {pending ? "Sending MTN prompt..." : `Pay with MTN - RWF ${MAP_ACCESS_PRICE_RWF.toLocaleString("en-US")}`}
                   </Button>
                   {purchaseMessage && (
                     <p className="text-sm text-[#c9a646] font-medium">{purchaseMessage}</p>

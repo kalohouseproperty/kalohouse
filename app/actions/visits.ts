@@ -22,20 +22,32 @@ type MobileMoneyInput = {
   phone: string;
 };
 
-function getProviderConfig(provider: MobileMoneyProvider) {
-  if (provider === "mtn") {
-    return {
-      name: "MTN Mobile Money",
-      url: process.env.MTN_MOMO_COLLECTION_URL,
-      apiKey: process.env.MTN_MOMO_API_KEY,
-    };
-  }
+type MtnConfig = {
+  name: "MTN Mobile Money";
+  baseUrl?: string;
+  requestToPayUrl?: string;
+  apiUser?: string;
+  apiKey?: string;
+  subscriptionKey?: string;
+  targetEnvironment: string;
+  currency: string;
+  legacyBearerKey?: string;
+};
+
+function getMtnConfig(): MtnConfig {
+  const configuredBaseUrl = process.env.MTN_MOMO_BASE_URL?.replace(/\/+$/, "");
+  const legacyCollectionUrl = process.env.MTN_MOMO_COLLECTION_URL;
 
   return {
-    name: "Airtel Money",
-    baseUrl: process.env.AIRTEL_MONEY_BASE_URL,
-    clientId: process.env.AIRTEL_MONEY_CLIENT_ID,
-    clientSecret: process.env.AIRTEL_MONEY_CLIENT_SECRET,
+    name: "MTN Mobile Money",
+    baseUrl: configuredBaseUrl,
+    requestToPayUrl: legacyCollectionUrl,
+    apiUser: process.env.MTN_MOMO_API_USER,
+    apiKey: process.env.MTN_MOMO_API_KEY,
+    subscriptionKey: process.env.MTN_MOMO_COLLECTION_PRIMARY_KEY,
+    legacyBearerKey: process.env.MTN_MOMO_API_KEY,
+    targetEnvironment: process.env.MTN_MOMO_TARGET_ENVIRONMENT || "sandbox",
+    currency: process.env.MTN_MOMO_CURRENCY || "RWF",
   };
 }
 
@@ -107,33 +119,66 @@ async function requestAirtelCollection(
 }
 
 async function requestMtnCollection(
-  url: string,
-  apiKey: string,
+  config: MtnConfig,
   phone: string,
   amount: string,
   reference: string,
-  propertyId: number,
+  paymentLabel: string,
 ) {
-  const formattedPhone = phone.startsWith("+") ? phone.substring(1) : phone;
+  const formattedPhone = phone.replace(/[^\d]/g, "").replace(/^0+/, "");
+  const msisdn = formattedPhone.startsWith("250") ? formattedPhone : `250${formattedPhone}`;
+  const requestToPayUrl =
+    config.requestToPayUrl ||
+    (config.baseUrl ? `${config.baseUrl}/collection/v1_0/requesttopay` : undefined);
 
-  const res = await fetch(url, {
+  if (!requestToPayUrl || !config.apiKey) {
+    return { configured: false, providerReference: reference };
+  }
+
+  let authorization = `Bearer ${config.legacyBearerKey}`;
+
+  if (config.baseUrl && config.apiUser && config.subscriptionKey) {
+    const tokenRes = await fetch(`${config.baseUrl}/collection/token/`, {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${Buffer.from(`${config.apiUser}:${config.apiKey}`).toString("base64")}`,
+        "Ocp-Apim-Subscription-Key": config.subscriptionKey,
+      },
+    });
+
+    if (!tokenRes.ok) {
+      const text = await tokenRes.text().catch(() => "");
+      throw new Error(`MTN MoMo token request failed${text ? `: ${text}` : ""}`);
+    }
+
+    const tokenData = await tokenRes.json();
+    authorization = `Bearer ${tokenData.access_token}`;
+  }
+
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    Authorization: authorization,
+    "X-Reference-Id": reference,
+    "X-Target-Environment": config.targetEnvironment,
+  };
+
+  if (config.subscriptionKey) {
+    headers["Ocp-Apim-Subscription-Key"] = config.subscriptionKey;
+  }
+
+  const res = await fetch(requestToPayUrl, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-      "X-Reference-Id": reference,
-      "X-Target-Environment": "sandbox",
-    },
+    headers,
     body: JSON.stringify({
       amount,
-      currency: "RWF",
+      currency: config.currency,
       externalId: reference,
       payer: {
         partyIdType: "MSISDN",
-        partyId: formattedPhone,
+        partyId: msisdn,
       },
-      payerMessage: `Kalohouse property ${propertyId}`,
-      payeeNote: "Kalohouse property purchase",
+      payerMessage: paymentLabel,
+      payeeNote: paymentLabel,
     }),
   });
 
@@ -160,15 +205,21 @@ async function requestMobileMoneyCollection({
   propertyId: number;
 }) {
   if (provider === "mtn") {
-    const config = getProviderConfig("mtn");
-    if (!config.url || !config.apiKey) {
-      return { configured: false, providerName: config.name, providerReference: reference };
-    }
-    await requestMtnCollection(config.url, config.apiKey, phone, amount, reference, propertyId);
-    return { configured: true, providerName: config.name, providerReference: reference };
+    const config = getMtnConfig();
+    const result = await requestMtnCollection(config, phone, amount, reference, `Kalohouse property ${propertyId}`);
+    return {
+      configured: result.configured !== false,
+      providerName: config.name,
+      providerReference: result.providerReference,
+    };
   }
 
-  const config = getProviderConfig("airtel");
+  const config = {
+    name: "Airtel Money",
+    baseUrl: process.env.AIRTEL_MONEY_BASE_URL,
+    clientId: process.env.AIRTEL_MONEY_CLIENT_ID,
+    clientSecret: process.env.AIRTEL_MONEY_CLIENT_SECRET,
+  };
   if (!config.baseUrl || !config.clientId || !config.clientSecret) {
     return { configured: false, providerName: config.name, providerReference: reference };
   }
@@ -446,16 +497,61 @@ export async function purchaseMapAccess() {
     return { success: true, message: "Map access already purchased." };
   }
 
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { map_access_paid: true },
-  });
+  return {
+    error: "Use MTN Mobile Money to unlock map access.",
+  };
+}
+
+export async function startMapAccessMtnPayment(phoneInput: string) {
+  const user = await getAuthorizedUser();
+  if (!user) {
+    return { error: "Create an account or sign in to purchase map access." };
+  }
+
+  if (user.map_access_paid) {
+    return { success: true, paid: true, message: "Map access already purchased." };
+  }
+
+  const phone = phoneInput.replace(/[^\d+]/g, "");
+  if (!phone || phone.length < 9) {
+    return { error: "Enter a valid MTN Mobile Money phone number." };
+  }
+
+  const config = getMtnConfig();
+  const reference = `map-${user.id}-${crypto.randomUUID()}`;
+  const result = await requestMtnCollection(
+    config,
+    phone,
+    MAP_ACCESS_PRICE_RWF.toString(),
+    reference,
+    "Kalohouse map access",
+  );
+
+  if (result.configured === false) {
+    return { error: "MTN Mobile Money is not configured yet. Add the MTN MoMo environment variables first." };
+  }
 
   revalidatePath("/map");
   return {
     success: true,
-    message: `Map access purchased successfully for RWF ${MAP_ACCESS_PRICE_RWF.toLocaleString("en-US")}!`,
+    paid: false,
+    reference,
+    message: "MTN payment request sent. Approve it on your phone, then the map will unlock automatically.",
   };
+}
+
+export async function checkMapAccess() {
+  const user = await getAuthorizedUser();
+  if (!user) {
+    return { paid: false };
+  }
+
+  const freshUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { map_access_paid: true },
+  });
+
+  return { paid: Boolean(freshUser?.map_access_paid) };
 }
 
 export async function requestRefund(paymentId: number, reason?: string) {

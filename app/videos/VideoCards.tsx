@@ -26,7 +26,7 @@ export function VideoCard({ property }: VideoCardProps) {
   return (
     <Link href={`/properties/${property.id}`} className="group block">
       {/* Thumbnail */}
-      <div className="relative aspect-video overflow-hidden rounded-xl bg-[#111]">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-[#111]">
         <video
           ref={videoRef}
           src={property.media.video}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Building2, Search, RotateCcw, SlidersHorizontal, ArrowRight, X, Home, Play, MapPinned } from "lucide-react";
+import { Building2, Search, RotateCcw, SlidersHorizontal, ArrowRight, X, Home, Play, MapPinned, Bed, Bath } from "lucide-react";
 import Link from "next/link";
 
 import { PropertyGrid } from "@/components/ui/property-grid";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { useKalohouse } from "@/components/providers/KalohouseProvider";
 import { rwandaLocation } from "@devrw/rwanda-location";
+import { formatMoney } from "@/lib/format";
 import type { Property, User } from "@/types/models";
 import { cn } from "@/lib/utils";
 
@@ -351,6 +352,21 @@ export function PropertiesContent({ properties, currentUser }: PropertiesContent
                   <MapPinned className="size-3" />
                   <span className="truncate">{filteredProperties[storyIndex].district}</span>
                 </div>
+                {/* Stats */}
+                <div className="mt-2 flex items-center gap-3 text-[11px] font-semibold text-white/80">
+                  <span className="flex items-center gap-1">
+                    <Bed className="size-3 text-gold/60" />
+                    {filteredProperties[storyIndex].bedrooms} bed
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Bath className="size-3 text-gold/60" />
+                    {filteredProperties[storyIndex].bathrooms} bath
+                  </span>
+                </div>
+                {/* Price */}
+                <p className="mt-2 text-lg font-black text-gold-light">
+                  {formatMoney(filteredProperties[storyIndex].finalDisplayPrice, filteredProperties[storyIndex].purpose)}
+                </p>
               </div>
               <Link
                 href={`/properties/${filteredProperties[storyIndex].id}`}

@@ -2,9 +2,12 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import type { Adapter, AdapterUser } from "@auth/core/adapters";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { UserRole } from "@/prisma/generated/client";
+
+type DatabaseUser = NonNullable<Awaited<ReturnType<typeof prisma.user.findUnique>>>;
 
 const authSecret =
   process.env.AUTH_SECRET ||
@@ -20,8 +23,88 @@ if (!hasGoogle && process.env.NODE_ENV !== "development") {
   console.warn("[Auth] Google OAuth is not configured. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.");
 }
 
+function toAdapterUser(user: DatabaseUser): AdapterUser & {
+  full_name: string;
+  role: UserRole;
+  created_at: Date;
+} {
+  return {
+    id: String(user.id),
+    email: user.email,
+    emailVerified: user.emailVerified,
+    name: user.full_name,
+    image: user.image,
+    full_name: user.full_name,
+    role: user.role,
+    created_at: user.created_at,
+  };
+}
+
+const baseAdapter = PrismaAdapter(prisma as Parameters<typeof PrismaAdapter>[0]);
+
+const authAdapter: Adapter = {
+  ...baseAdapter,
+  async createUser(user) {
+    const created = await prisma.user.create({
+      data: {
+        email: user.email,
+        emailVerified: user.emailVerified ?? new Date(),
+        full_name: user.name || user.email.split("@")[0] || "User",
+        image: user.image,
+        role: UserRole.owner,
+        is_verified: true,
+      },
+    });
+
+    return toAdapterUser(created);
+  },
+  async getUser(id) {
+    const user = await prisma.user.findUnique({
+      where: { id: Number(id) },
+    });
+
+    return user ? toAdapterUser(user) : null;
+  },
+  async getUserByEmail(email) {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    return user ? toAdapterUser(user) : null;
+  },
+  async getUserByAccount(providerAccountId) {
+    const account = await prisma.account.findUnique({
+      where: { provider_providerAccountId: providerAccountId },
+      include: { user: true },
+    });
+
+    return account?.user ? toAdapterUser(account.user) : null;
+  },
+  async updateUser({ id, name, email, emailVerified, image }) {
+    const updated = await prisma.user.update({
+      where: { id: Number(id) },
+      data: {
+        ...(email !== undefined ? { email } : {}),
+        ...(emailVerified !== undefined ? { emailVerified } : {}),
+        ...(image !== undefined ? { image } : {}),
+        ...(name !== undefined ? { full_name: name || "User" } : {}),
+      },
+    });
+
+    return toAdapterUser(updated);
+  },
+  async linkAccount(account) {
+    await prisma.account.create({
+      data: {
+        ...account,
+        userId: Number(account.userId),
+      },
+    });
+  },
+};
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma as Parameters<typeof PrismaAdapter>[0]),
+  adapter: authAdapter,
   secret: authSecret,
   trustHost: true,
   providers: [

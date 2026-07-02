@@ -84,7 +84,6 @@ export default async function VideosPage() {
                       src={property.media.video}
                       poster={property.media.images[0]?.url}
                       autoPlay
-                      muted
                       loop
                       playsInline
                       preload="metadata"

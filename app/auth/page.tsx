@@ -13,10 +13,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { registerUser, requestPasswordReset } from "@/app/actions/auth";
 
-type SessionRoleUser = {
-  role?: "client" | "owner" | "agent" | "admin";
-};
-
 function AuthPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -45,6 +41,11 @@ function AuthPageContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+
+  const handleGoogleAuth = () => {
+    const callbackUrl = redirectTo.startsWith("/") ? redirectTo : "/properties";
+    signIn("google", { callbackUrl });
+  };
 
   const handleCredentialsAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -334,6 +335,34 @@ function AuthPageContent() {
               </Button>
             )}
           </form>
+
+          {authMode !== "forgot" && (
+            <div className="mt-5 auth-fade-in-up auth-fade-in-up-delay-2">
+              <div className="relative mb-5 flex items-center">
+                <div className="h-px flex-1 bg-white/[0.06]" />
+                <span className="px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary/25">
+                  {t("orContinueWith")}
+                </span>
+                <div className="h-px flex-1 bg-white/[0.06]" />
+              </div>
+              <Button
+                type="button"
+                onClick={handleGoogleAuth}
+                disabled={isLoading}
+                className="auth-google w-full h-[48px] rounded-xl font-bold text-sm"
+              >
+                <span className="mr-2 inline-flex size-5 items-center justify-center rounded-full bg-white">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
+                    <path fill="#4285F4" d="M21.805 10.023h-9.61v3.955h5.527c-.238 1.274-.96 2.353-2.045 3.079v2.56h3.313c1.939-1.779 3.057-4.397 3.057-7.5 0-.711-.064-1.396-.242-2.094z" />
+                    <path fill="#34A853" d="M12.195 22c2.77 0 5.094-.916 6.795-2.484l-3.313-2.56c-.92.615-2.096.979-3.482.979-2.674 0-4.94-1.794-5.749-4.204H3.02v2.64C4.712 19.715 8.184 22 12.195 22z" />
+                    <path fill="#FBBC05" d="M6.446 13.731a5.97 5.97 0 0 1 0-3.462v-2.64H3.02a9.96 9.96 0 0 0 0 8.742l3.426-2.64z" />
+                    <path fill="#EA4335" d="M12.195 6.064c1.506 0 2.858.517 3.922 1.531l2.938-2.927C17.288 3.023 14.965 2 12.195 2 8.184 2 4.712 4.285 3.02 7.629l3.426 2.64c.809-2.41 3.075-4.205 5.749-4.205z" />
+                  </svg>
+                </span>
+                Continue with Google
+              </Button>
+            </div>
+          )}
 
           {/* Terms */}
           <p className="text-[10px] text-center text-text-secondary/20 leading-relaxed mt-6 px-4">

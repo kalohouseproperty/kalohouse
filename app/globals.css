@@ -261,3 +261,18 @@ select option {
 .animate-video-fade-in {
   animation: video-fade-in 0.3s ease-out forwards;
 }
+
+/* Story viewer touch zones */
+.story-nav-zone {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Full screen video on mobile */
+@media (max-width: 1023px) {
+  .snap-y {
+    height: 100dvh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+  }
+}

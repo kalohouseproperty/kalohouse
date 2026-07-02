@@ -124,7 +124,13 @@ export function PropertyDetailsContent({
             <Button asChild variant="secondary" className="rounded-xl border border-white/5">
               <Link href="/properties" className="flex items-center gap-2">
                 <ArrowLeft className="size-4" />
-                Browse properties
+                Properties
+              </Link>
+            </Button>
+            <Button asChild variant="secondary" className="rounded-xl border border-white/5">
+              <Link href="/videos" className="flex items-center gap-2">
+                <Video className="size-4" />
+                Videos
               </Link>
             </Button>
             <LanguageSwitcher />

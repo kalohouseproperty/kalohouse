@@ -37,7 +37,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 name: profile.name || profile.email?.split("@")[0] || "User",
                 email: profile.email,
                 image: profile.picture,
-                role: "owner",
+                role: UserRole.owner,
               };
             },
           }),
@@ -91,7 +91,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         });
 
         await prisma.user.updateMany({
-          where: { email: user.email, role: UserRole.client },
+          where: {
+            email: user.email,
+            role: { notIn: [UserRole.owner, UserRole.agent, UserRole.admin] },
+          },
           data: { role: UserRole.owner },
         });
 
